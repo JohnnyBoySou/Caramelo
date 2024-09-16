@@ -1,26 +1,21 @@
-import React, { useState, useContext, useRef } from 'react';
-import { View, Dimensions } from 'react-native';
-import { ThemeContext } from 'styled-components/native';
-import { Column, Title, Main, Row, Label, Button, C, LabelBT } from '@theme/global';
+import React, { useState, useRef } from 'react';
+import { Column, Title, Main, Row, Label, Button, C, LabelBT, Image, SCREEN_WIDTH, useTheme } from '@theme/global';
 import { ArrowLeft, ArrowRight } from 'lucide-react-native';
 import { AnimatePresence, MotiImage, MotiView, } from 'moti';
 
-const { width, height } = Dimensions.get('window');
 import PagerView from 'react-native-pager-view';
-
-import Animated, { FadeInDown, useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { FadeInDown, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 export default function OnboardingPage({ navigation, route, }) {
-    const { color, font } = useContext(ThemeContext)
+    const { color, font } = useTheme()
 
     const pagerRef = useRef();
     const handleScreen = (position) => {
         pagerRef.current.setPage(position);
         setCurrentIndex(position);
-        console.log(position)
     }
     const [currentIndex, setCurrentIndex] = useState(0);
-    const numberOfDots = 3;
+    const numberOfDots = 5;
 
     const goToNext = () => {
         let next = (currentIndex + 1) % numberOfDots;
@@ -28,38 +23,79 @@ export default function OnboardingPage({ navigation, route, }) {
         pagerRef.current.setPage(next);
     };
 
+    const goToPrevius = () => {
+        if (currentIndex == 0) return;
+        let prev = (currentIndex - 1) % numberOfDots;
+        setCurrentIndex(prev);
+        pagerRef.current.setPage(prev);
+    };
+
+    const data = [
+        {
+            img: require('@imgs/onb1.png'),
+            title: 'Bem-vindo ao Instituto Caramelo!',
+            desc: 'Estamos felizes em ter você aqui! Junte-se a nós na missão de proteger e cuidar dos animais. Explore o app e descubra como sua participação pode fazer a diferença!',
+        },
+        {
+            img: require('@imgs/onb2.png'),
+            title: 'Faça a sua doação direto pelo App!',
+            desc: 'Contribua para o bem-estar dos animais com apenas alguns cliques. Sua doação ajuda a transformar vidas e garantir cuidados essenciais para os nossos peludos. Juntos, podemos fazer a diferença!',
+        },
+        {
+            img: require('@imgs/onb3.png'),
+            title: 'Acompanhe o que estamos fazendo!',
+            desc: 'Fique por dentro das nossas ações e projetos de cuidado animal. Acompanhe de perto nossas iniciativas e veja como estamos transformando vidas, uma patinha de cada vez!',
+        },
+        {
+            img: require('@imgs/onb4.png'),
+            title: 'Conheça mais nossa história!',
+            desc: 'Saiba mais sobre nossa história, valores e ações em defesa dos animais. Entenda como trabalhamos para garantir um futuro melhor para os peludos e como você pode nos ajudar nessa jornada!',
+        },
+        {
+            img: require('@imgs/onb5.png'),
+            title: 'Consulte seu histórico de doações e notas fiscais!',
+            desc: 'Veja todas as suas contribuições em um só lugar. Acompanhe o impacto das suas doações e mantenha-se informado sobre o envio das suas notas fiscais. Sua generosidade faz a diferença!',
+        },
+    ]
 
     return (
         <Main style={{}}>
-            <Row style={{ position: 'absolute', top: 50, left: 30, right: 30, zIndex: 99, justifyContent: 'space-between', alignItems: 'center', }}>
-
+            <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+                <Image source={require('@imgs/logo_h.png')} style={{ width: 130, height: 40, }} />
                 <Button onPress={() => { navigation.goBack() }} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc.sc3}>
                     <ArrowLeft size={20} color="#fff" />
                 </Button>
-                <Button pv={8} ph={20} bg={color.sc.sc3 + 30} onPress={() => { setCurrentIndex(2); pagerRef.current.setPage(2) }} >
-                    <LabelBT color={color.sc.sc3} align="center">Pular</LabelBT>
-                </Button>
-            </Row>
-            <PagerView style={{ flex: 1, }} initialPage={0} ref={pagerRef} onPageSelected={(event) => { handleScreen(event.nativeEvent.position) }}>
-                <Screen0 color={color} />
-                <Screen1 color={color} />
-                <Screen2 color={color} navigation={navigation} />
-            </PagerView>
-            <Row style={{ marginBottom: 30, width: width, zIndex: 99, paddingHorizontal: 30, justifyContent: 'space-between', }}>
                 <PaginationDots
                     index={currentIndex}
                     numberOfDots={numberOfDots}
-                    activityColor={color.sc.sc3}
-                    disableColor={color.sc.sc3 + 70} />
-
-
-                {currentIndex == 2 && <Column style={{ width: 54, height: 54, borderRadius: 100, }}>
-                </Column>}
+                    activityColor={color.sc}
+                    disableColor="#ddd" />
+            </Row>
+            <PagerView style={{ flex: 1, }} initialPage={0} ref={pagerRef} onPageSelected={(event) => { handleScreen(event.nativeEvent.position) }}>
+                {data.map((item, index) => (
+                    <Card item={item} color={color} />
+                ))}
+            </PagerView>
+            <Row style={{ marginBottom: 20, zIndex: 99, paddingHorizontal: 24, justifyContent: 'space-between', }}>
                 <AnimatePresence>
-                    {currentIndex != 2 &&
+                    <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
+                        <Button onPress={goToPrevius} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc + 20, justifyContent: 'center', alignItems: 'center', }}>
+                            <LabelBT color={color.sc}>Voltar</LabelBT>
+                        </Button>
+                    </MotiView>
+                </AnimatePresence>
+                <AnimatePresence>
+                    {currentIndex != 4 &&
                         <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
-                            <Button onPress={goToNext} style={{ width: 54, height: 54, borderRadius: 100, backgroundColor: color.sc.sc1, justifyContent: 'center', alignItems: 'center', }}>
-                                <ArrowRight size={28} color="#fff" />
+                            <Button onPress={goToNext} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
+                                <LabelBT color="#fff">Próximo</LabelBT>
+                            </Button>
+                        </MotiView>
+                    }
+                    {currentIndex == 4 &&
+                        <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
+                            <Button onPress={() => navigation.navigate('AuthLogin')} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
+                                <LabelBT color="#fff">Continuar</LabelBT>
                             </Button>
                         </MotiView>
                     }
@@ -68,52 +104,21 @@ export default function OnboardingPage({ navigation, route, }) {
         </Main>
     )
 }
-const Screen0 = ({ color }) => {
-    return (
-        <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
-            <Title style={{ letterSpacing: -1, fontSize: 32, lineHeight: 34, textAlign: 'center', }}>A primeira rede {'\n'}social <C color={color.green}>para Pets</C> {'\n'}do Brasil!</Title>
-        </Column>
 
-    )
-}
-
-const Screen1 = ({ color }) => {
+const Card = ({ item }) => {
     return (
-        <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
-            <Title style={{ letterSpacing: -1, fontSize: 32, lineHeight: 34, textAlign: 'center', }}><C color="#91A6C4">Acompanhe o {'\n'}diário</C> do seu pet {'\n'}e de pets amigos!</Title>
+        <Column style={{ paddingVertical: 12, paddingHorizontal: 24, }}>
+            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={item?.img} style={{ width: '100%', height: 380, objectFit: 'contain', }} />
+            <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, marginTop: 12, marginBottom: 10, }}>{item?.title}</Title>
+            <Label style={{ fontFamily: 'Font_Light' }}>{item?.desc}</Label>
         </Column>
     )
 }
-
-const Screen2 = ({ color, navigation }) => {
-    return (
-        <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <Animated.Image entering={FadeInDown} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
-            <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, textAlign: 'center', }}>Monitore a <C color="#E5C8C9">agenda e {'\n'}boletim</C> do seu Pet a qualquer momento!</Title>
-            <Label style={{ letterSpacing: -0.5, fontSize: 18, lineHeight: 22, textAlign: 'center', marginTop: 10, }}>Seja bem vindo ao app da Villa Pongo, utilize seu acesso para fazer login</Label>
-            <Column style={{ justifyContent: 'center', alignItems: 'center', columnGap: 20, }}>
-                <Button onPress={() => { navigation.navigate('AuthLogin') }} mtop={20} ph={50} bg={color.sc.sc3}>
-                    <LabelBT color="#fff" align="center">Entrar</LabelBT>
-                </Button>
-                <Button onPress={() => { navigation.navigate('AuthRegister') }} bg={color.sc.sc3 + 40} ph={50} radius={100} mtop={12}>
-                    <LabelBT color={color.sc.sc3} align="center">Criar conta</LabelBT>
-                </Button>
-            </Column>
-        </Column>
-    )
-}
-
 
 const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) => {
-    // Animated styles
     const dotStyle = (dotIndex) => {
         return useAnimatedStyle(() => {
-
-            // Animated width
-            const width = withTiming(index === dotIndex ? 45 : 20);
-
+            const width = withTiming(index === dotIndex ? 35 : 14);
             return {
                 backgroundColor: index === dotIndex ? activityColor : disableColor,
                 width,
@@ -122,23 +127,17 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
     };
 
     return (
-        <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginVertical: 10,
-        }}>
-
+        <Row>
             {Array.from({ length: numberOfDots }).map((_, dotIndex) => (
                 <Animated.View
                     key={dotIndex}
                     style={[{
-                        height: 20,
+                        height: 14,
                         borderRadius: 100,
-                        margin: 5,
+                        marginHorizontal: 3,
                     }, dotStyle(dotIndex)]}
                 />
             ))}
-        </View>
+        </Row>
     );
 };

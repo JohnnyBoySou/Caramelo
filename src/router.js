@@ -4,8 +4,8 @@ import { createStackNavigator, TransitionPresets, } from '@react-navigation/stac
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute, NavigationContainer, useRoute } from '@react-navigation/native';
 const Stack = createStackNavigator();
-const Tab = createBottomTabNavigator();
 
+import { Button, Column, Image, } from '@theme/global';
 //STACK SCREEN
 import OnboardingScreen from '@screens/auth/onboarding';
 import AsyncStaticScreen from '@screens/auth/async';
@@ -15,85 +15,97 @@ import AuthLoginScreen from '@screens/auth/login';
 import AuthRegisterScreen from '@screens/auth/register';
 
 
-
 //TABS SCREEN
 import HomeScreen from '@screens/tabs/home';
-import SearchScreen from '@screens/tabs/search';
+import AboutScreen from '@screens/tabs/about';
 import AccountScreen from '@screens/tabs/account';
+import BlogScreen from '@screens/tabs/blog';
 
 //ICONS
-import Octicons from '@expo/vector-icons/Octicons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 
 export default function Router() {
   return (
     <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false,}} initialRouteName='AuthRegister'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Onboarding'>
 
-            <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{...TransitionPresets.SlideFromRightIOS , }}/>
-            <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{...TransitionPresets.SlideFromRightIOS   , }}/>
-          
-            <Stack.Screen name="Async" component={AsyncStaticScreen} options={{...TransitionPresets.RevealFromBottomAndroid   , }}/>
-            <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{...TransitionPresets.SlideFromRightIOS  , }}/>
+        <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
-            <Stack.Screen name="Tabs" component={Tabs} options={{...TransitionPresets.SlideFromRightIOS , backBehavior: 'none',}}/>
-        </Stack.Navigator>
+        <Stack.Screen name="Async" component={AsyncStaticScreen} options={{ ...TransitionPresets.RevealFromBottomAndroid, }} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+
+        <Stack.Screen name="Tabs" component={Tabs} options={{ ...TransitionPresets.SlideFromRightIOS, backBehavior: 'none', }} />
+      </Stack.Navigator>
     </NavigationContainer>
-   );
-  }
+  );
+}
 
-function Tabs (){
-    const route = useRoute();
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home'
-      return (
-          <Tab.Navigator initialRouteName="Home" 
-              screenOptions={{
-                headerShown: false,
-                backBehavior: 'none',
-                tabBarActiveTintColor: '#FF26BD',
-                tabBarInactiveTintColor: '#5C0D4580',
-                tabBarStyle: {
-                  backgroundColor: '#FFF',
-                  paddingBottom: 12,
-                  paddingTop: 8,
-                  borderTopWidth: 2,
-                  borderColor: '#F1F1F1',
-                  height: 68,
-                  elevation: 0,
-                },
-              }}
-              >
-              <Tab.Screen name="Home" component={HomeScreen} options={{
-              tabBarLabel: 'Início',
-              tabBarLabelStyle: {fontFamily: routeName === 'Home' ? 'Font_Bold' : 'Font_Book',},
-              tabBarIcon: ({ color, size }) => (<Octicons name="home" size={routeName === 'Home' ? size+3 : size} color={color} />),
-          }}/>
-           
-             <Tab.Screen name="Search" component={SearchScreen} options={{
-              tabBarLabel: 'Buscar',
-              tabBarLabelStyle: {fontFamily: routeName === 'Search' ? 'Font_Bold' : 'Font_Book',},
-              tabBarIcon: ({ color, size }) => (<Octicons name="search" size={routeName === 'Seach' ? size+3 : size} color={color} />),
-          }}/>
-         
-           <Tab.Screen name="Account" component={AccountScreen} options={{
-              tabBarLabel: 'Conta',
-              tabBarLabelStyle: {fontFamily: routeName === 'Account' ? 'Font_Bold' : 'Font_Book',},
-              tabBarIcon: ({ color, size }) => (<FontAwesome6 name="user" size={routeName === 'Account' ? size+3 : size} color={color} />),
-          }}/>
-          </Tab.Navigator>
-      )
-  }
+const Tab = createBottomTabNavigator();
 
-  /*
-   Transitions só substituir 
-      ModalSlideFromBottomIOS
-      SlideFromRightIOS
-      SlideFromRightIOS
-      FadeFromBottomAndroid 
-      RevealFromBottomAndroid
-      ScaleFromCenterAndroid 
-      DefaultTransition 
-      ModalTransition
+function Tabs() {
+  const route = useRoute();
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home'
+  return (
+    <Tab.Navigator initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+        backBehavior: 'none',
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#5F101C',
+        tabBarInactiveTintColor: '#FFFFFF',
+        tabBarStyle: {
+          backgroundColor: '#5F101C',
+          position: 'absolute',
+          bottom: 20, left: 20, right: 20,
+          borderRadius: 100,
+          height: 84,
+          elevation: 0,
+        },
+      }}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Column style={{ backgroundColor: routeName == 'Home' ? "#EBB000" : '#5F101C', width: 72, height: 72, justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
+            <Home size={size} color={color} />
+          </Column>
+        ),
+      }} />
+      <Tab.Screen name="Blog" component={BlogScreen} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Column style={{ backgroundColor: routeName == 'Blog' ? "#EBB000" : '#5F101C', width: 72, height: 72, justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
+            <Image source={routeName == 'Blog' ? require('@imgs/tabbar_active.png') : require('@imgs/tabbar.png')} style={{ width: 32, height: 32, objectFit: 'contain', }}/>
+          </Column>
+        ),
+      }} />
+      <Tab.Screen name="About" component={AboutScreen} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Column style={{ backgroundColor: routeName == 'About' ? "#EBB000" : '#5F101C', width: 72, height: 72, justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
+            <HeartHandshake size={size} color={color} />
+          </Column>
+        ),
+      }} />
+
+      <Tab.Screen name="Account" component={AccountScreen} options={{
+        tabBarIcon: ({ color, size }) => (
+          <Column style={{ backgroundColor: routeName == 'Account' ? "#EBB000" : '#5F101C', width: 72, height: 72, justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
+            <UserRound size={size} color={color} />
+          </Column>),
+      }} />
+    </Tab.Navigator>
+  )
+}
+
+/*
+ Transitions só substituir 
+    ModalSlideFromBottomIOS
+    SlideFromRightIOS
+    SlideFromRightIOS
+    FadeFromBottomAndroid 
+    RevealFromBottomAndroid
+    ScaleFromCenterAndroid 
+    DefaultTransition 
+    ModalTransition
 
 
-  */
+*/

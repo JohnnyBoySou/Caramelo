@@ -50,7 +50,7 @@ const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing 
   return (
     <Pressable onPress={() => { inputRef.current.focus() }} >
 
-      <Column style={{ borderColor: disabled ? '#f1f1f1' : focus ? color.label : 'transparent', backgroundColor: '#fff', flexGrow: 1, borderWidth: 2, paddingBottom: 8, paddingTop: 24, paddingHorizontal: 16, borderRadius: 12, }}>
+      <Column style={{ borderColor: disabled ? '#f1f1f1' : focus ? color.label : '#A9798150', backgroundColor: '#fff', flexGrow: 1, borderWidth: 2, paddingBottom: 8, paddingTop: 24, paddingHorizontal: 16, borderRadius: 14, }}>
         <MotiText
           state={inputAnimation}
           style={{ fontFamily: font.medium, color: color.label, letterSpacing: -0.6, position: 'absolute', top: 6, left: 16, zIndex: 1, }}

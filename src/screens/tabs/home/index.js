@@ -10,10 +10,10 @@ export default function HomeScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext);
 
     return (
-        <Main style={{  }}>
+        <Main style={{}}>
             <Scroll>
-               
-               <Title align="center">Home</Title>
+
+                <Title align="center">Home</Title>
             </Scroll>
         </Main>
     )

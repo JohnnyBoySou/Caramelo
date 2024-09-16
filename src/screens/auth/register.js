@@ -1,14 +1,13 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Dimensions } from 'react-native';
+import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { Main, Scroll, Title, Row, Column, Label, Button, SubLabel, U } from '@theme/global';
-import { ArrowLeft, CircleCheck, CircleX } from 'lucide-react-native';
-import Input from '@components/Forms/input';
+import { Main, Scroll, Row, Column, Label, Button, SubLabel, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader } from '@theme/global';
+import { CircleCheck, CircleX, UserPlus } from 'lucide-react-native';
+
 import Modal from '@components/Modal/index';
+import { HeaderLogo } from '@components/Header';
+import { Input, Success, Error } from '@components/Forms/index';
 
-const { width, height } = Dimensions.get('window');
-
-export default function AuthRegisterPage({ navigation, route, }) {
+export default function AuthRegisterScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext)
 
     const [name, setname] = useState();
@@ -16,9 +15,9 @@ export default function AuthRegisterPage({ navigation, route, }) {
     const [email, setemail] = useState();
     const [tel, settel] = useState();
     const [password, setpassword] = useState();
-    const [password2, setpassword2] = useState();
 
-    const passStrong = useRef()
+    const modalTermos = useRef();
+    const passStrong = useRef();
 
     const checkPasswordStrength = (password) => {
         const criteria = {
@@ -30,71 +29,66 @@ export default function AuthRegisterPage({ navigation, route, }) {
         return criteria;
     };
 
-
     const passwordCriteria = checkPasswordStrength(password);
     const porcentagePassword = Object.values(passwordCriteria).filter((e) => e).length / Object.values(passwordCriteria).length * 100;
     const messagePassword = porcentagePassword < 50 ? 'Fraca' : porcentagePassword < 80 ? 'Razoável' : 'Forte';
     const colorPassword = porcentagePassword < 50 ? color.red : porcentagePassword < 80 ? '#f5ad42' : color.green;
 
+    const [success, setSuccess] = useState();
+    const [error, setError] = useState();
+    const [loading, setloading,] = useState(false);
+
+
     return (
-        <Main style={{}}>
+        <Main >
             <Scroll>
-                <Column ph={28}>
-                    <Button onPress={() => { navigation.goBack() }} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc.sc3}>
-                        <ArrowLeft size={20} color="#fff" />
-                    </Button>
-                    <Title style={{ fontSize: 26, marginVertical: 20, }}>Olá! &#128075; Crie sua conta na Villa Pongo aqui</Title>
+                <HeaderLogo />
+                <Column ph={margin.h}>
 
-                    <Input
-                        label="Nome *"
-                        placeholder="Nome"
-                        value={name}
-                        setValue={setname}
-                    />
-                    <Column style={{ height: 16, }} />
-                    <Input
-                        label="CPF *"
-                        placeholder="CPF"
-                        value={cpf}
-                        setValue={setcpf}
-                        mask="CPF"
-                        maxLength={14}
-                    />
-                    <Column style={{ height: 16, }} />
-                    <Input
-                        label="E-mail *"
-                        placeholder="Email"
-                        value={email}
-                        setValue={setemail}
-                    />
-                    <Column style={{ height: 16, }} />
-                    <Input
-                        label="Telefone *"
-                        placeholder="Telefone"
-                        maxLength={16}
-                        value={tel}
-                        setValue={settel}
-                        mask="PHONE"
-                    />
-                    <Column style={{ height: 16, }} />
+                    <HeadTitle size={42}>Criar conta</HeadTitle>
+                    <Label>Crie sua conta para conhecer mais sobre o Instituto Caramelo e poder participar das nossas campanhas!</Label>
 
-                    <Input
-                        label="Senha *"
-                        placeholder="Senha"
-                        value={password}
-                        setValue={setpassword}
-                    />
-                    <Column style={{ height: 16, }} />
-                    <Input
-                        label="Confirme sua senha *"
-                        placeholder="Confirme sua senha"
-                        value={password2}
-                        setValue={setpassword2}
-                    />
-                    <Column style={{ height: 16, }} />
+                    <Column style={{ rowGap: 14, marginTop: 14, }}>
+                        <Input
+                            label="Nome completo *"
+                            placeholder="Nome"
+                            value={name}
+                            setValue={setname}
+                        />
+                        <Input
+                            label="CPF *"
+                            placeholder="CPF"
+                            value={cpf}
+                            setValue={setcpf}
+                            mask="CPF"
+                            maxLength={14}
+                        />
+                        <Input
+                            label="Telefone *"
+                            placeholder="Telefone"
+                            maxLength={16}
+                            value={tel}
+                            setValue={settel}
+                            mask="PHONE"
+                        />
+                        <Input
+                            label="E-mail *"
+                            placeholder="Email"
+                            value={email}
+                            setValue={setemail}
+                        />
+
+                        <Input
+                            label="Senha *"
+                            placeholder="Senha"
+                            value={password}
+                            setValue={setpassword}
+                            pass={true}
+                        />
+                    </Column>
 
                     {password?.length >= 1 &&
-                        <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginTop: 8, marginBottom: -10, }}>
+                        <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginTop: 8, }}>
                             <Column style={{ backgroundColor: color.off, height: 10, borderRadius: 30, width: 100, }}>
                                 <Column style={{ width: porcentagePassword, height: 10, borderRadius: 100, backgroundColor: colorPassword, }} />
                             </Column>
@@ -106,8 +100,32 @@ export default function AuthRegisterPage({ navigation, route, }) {
                         </Row>
                     }
 
+
+                    {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+                    <Column style={{ height: 20, }} />
+                    <Button radius={100} bg={color.sc} style={{ backgroundColor: color.sc, }} pv={1} ph={1}>
+                        <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
+
+
+                            <LabelBT size={24} color="#fff" align="center" style={{ marginLeft: 44, }}>Criar conta</LabelBT>
+                            <Column style={{ width: 64, height: 64, marginRight: -12, marginTop: -6, marginBottom: -6, backgroundColor: '#8A3E49', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
+                                {loading ? <Loader color="#fff" size={32} /> : <UserPlus size={28} color="#fff" />}
+                            </Column>
+                        </Row>
+                    </Button>
+                    <Column style={{ height: 20, }} />
+                    <Column>
+                        <Button style={{ justifyContent: 'center', alignItems: 'center', }} onPress={() => { modalTermos.current?.expand() }} >
+                            <Label align="center">
+                                Ao criar uma conta você aceita os <U>Termos de Uso e Política de Privacidade</U>.
+                            </Label>
+                        </Button>
+                    </Column>
                 </Column>
             </Scroll>
+
+            <Modal ref={modalTermos} snapPoints={[0.1, SCREEN_HEIGHT]}>
+            </Modal>
 
             <Modal ref={passStrong} snapPoints={[0.1, 200]}>
                 <Column style={{ marginHorizontal: margin.h, marginVertical: margin.v, }}>

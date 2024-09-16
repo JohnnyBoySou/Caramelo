@@ -1,9 +1,58 @@
-import styled from 'styled-components/native';
+import { useContext } from "react";
+import styled, { ThemeContext } from 'styled-components/native';
 import { TouchableRipple } from 'react-native-paper';
+import { Dimensions, ScrollView, Image as RNImage, ActivityIndicator } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { ArrowLeft } from 'lucide-react-native';
 
-import { ScrollView } from 'react-native';
+export function Back() {
+  const navigation = useNavigation();
+  return (
+    <Button onPress={() => { navigation.goBack() }} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg='#FFFFFF'>
+      <ArrowLeft size={20} color='#858585' />
+    </Button>
+  )
+}
+
+export function ButtonPrimary({ login = false, type = 'Default', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
+  const { color, } = useTheme();
+  const bg = type === 'Default' ? '#918C8B' : type === 'Light' ? '#ECEBEB' : '#202020';
+  const text = type === 'Default' ? color.light : type === 'Light' ? '#434343' : '#fff';
+  return (
+    <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} >
+      <Row>
+        <SubLabel style={{ fontSize: size, color: text, }}>{label}</SubLabel>
+      </Row>
+    </Button>
+  )
+}
+
+export const Loader = ({ color = '#91A6C4', size = 20 }) => {
+  return (
+    <ActivityIndicator
+      color={color}
+      size={size} />
+  )
+}
+//UTILS
+export const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+export const useTheme = () => {
+  const { color, font, margin } = useContext(ThemeContext);
+  return { color, font, margin };
+}
+
+export const useNavigate = () => {
+  const navigation = useNavigation();
+  return navigation
+}
 
 //COMPONENTES DE LAYOUT
+export const Image = styled(RNImage).attrs(() => ({
+  transition: 300,
+}))`
+background-color: ${props => props.bg || 'transparent'}
+`
+
 export const Main = styled.SafeAreaView`
   flex: 1;
   padding-top: 36;
@@ -46,14 +95,14 @@ export const Card = styled.View`
 `
 
 //COMPONENTES DE UTILIDADE
-export const Button =  styled(TouchableRipple).attrs(() => ({
-  borderless: true, 
+export const Button = styled(TouchableRipple).attrs(() => ({
+  borderless: true,
   rippleColor: "#FFFFFF90",
 }))`
   background-color: ${props => props.bg || 'transparent'};
   border-radius: ${props => props.radius || 100}px;
-  padding-vertical: ${props => props.pv || 12}px;
-  padding-horizontal: ${props => props.ph || 20}px;
+  padding-vertical: ${props => props.pv || 8}px;
+  padding-horizontal: ${props => props.ph || 14}px;
   margin-top: ${props => props.mtop || 0}px;
   margin-bottom: ${props => props.mbottom || 0}px;
   margin-left: ${props => props.mleft || 0}px;
@@ -85,6 +134,7 @@ export const Label = styled.Text`
   color: ${props => props.color || props.theme.color.label};
   font-family: ${props => props.theme.font.regular};
   text-align: ${props => props.align || 'left'};
+  letter-spacing: -.8px;
   line-height: ${props => props.lineHeight || props.size || '20px'};
 `;
 
