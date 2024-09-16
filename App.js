@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ThemeProvider } from 'styled-components/native';
 import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { View, LogBox, useColorScheme,} from 'react-native';
+import { View, LogBox, useColorScheme, } from 'react-native';
 import Router from './src/router';
 import { StatusBar } from 'expo-status-bar';
 import light from '@theme/light';
@@ -15,21 +15,22 @@ preventAutoHideAsync();
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
+
   const theme = useColorScheme();
   const selectTheme = theme === 'light' ? light : dark;
+
   useEffect(() => {
     LogBox.ignoreAllLogs(true);
 
-    //caregamento das fontes local
     async function loadResourcesAndDataAsync() {
       try {
         await Font.loadAsync({
-          Font_Book: require('./assets/fonts/Inter_Book.ttf'),
-          Font_Medium: require('./assets/fonts/Inter_Medium.ttf'),
-          Font_Bold: require('./assets/fonts/Inter_Bold.ttf'),
-          Font_Black: require('./assets/fonts/Inter_Black.ttf'),
-          Voyage_Medium: require('./assets/fonts/Voyage_Medium.otf'),
-          Voyage_Book: require('./assets/fonts/Voyage_Book.otf'),
+          Font_Light: require('./assets/fonts/Alexandria-Light.ttf'),
+          Font_Regular: require('./assets/fonts/Alexandria-Regular.ttf'),
+          Font_Medium: require('./assets/fonts/Alexandria-Medium.ttf'),
+          Font_SemiBold: require('./assets/fonts/Alexandria-SemiBold.ttf'),
+          Font_Bold: require('./assets/fonts/Alexandria-Bold.ttf'),
+          Font_Black: require('./assets/fonts/Alexandria-Black.ttf'),
         });
         setAppIsReady(true);
       } catch (e) {
@@ -46,14 +47,14 @@ export default function App() {
   }, [appIsReady]);
 
   if (!appIsReady) {
-    return null; 
+    return null;
   }
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <ThemeProvider theme={selectTheme}> 
-          <StatusBar translucent animated={true} />
-          <Router />
+      <ThemeProvider theme={selectTheme}>
+        <StatusBar translucent animated={true} />
+        <Router />
       </ThemeProvider>
     </View>
   );

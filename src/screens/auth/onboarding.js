@@ -71,7 +71,7 @@ export default function OnboardingPage({ navigation, route, }) {
 const Screen0 = ({ color }) => {
     return (
         <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onboarding_1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
+            <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
             <Title style={{ letterSpacing: -1, fontSize: 32, lineHeight: 34, textAlign: 'center', }}>A primeira rede {'\n'}social <C color={color.green}>para Pets</C> {'\n'}do Brasil!</Title>
         </Column>
 
@@ -81,7 +81,7 @@ const Screen0 = ({ color }) => {
 const Screen1 = ({ color }) => {
     return (
         <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onboarding_2.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
+            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
             <Title style={{ letterSpacing: -1, fontSize: 32, lineHeight: 34, textAlign: 'center', }}><C color="#91A6C4">Acompanhe o {'\n'}diário</C> do seu pet {'\n'}e de pets amigos!</Title>
         </Column>
     )
@@ -90,14 +90,14 @@ const Screen1 = ({ color }) => {
 const Screen2 = ({ color, navigation }) => {
     return (
         <Column style={{ flex: 1, marginHorizontal: 30, justifyContent: 'center', }}>
-            <Animated.Image entering={FadeInDown} source={require('@imgs/onboarding_3.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
+            <Animated.Image entering={FadeInDown} source={require('@imgs/onb1.png')} style={{ width: '100%', height: 400, objectFit: 'contain', }} />
             <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, textAlign: 'center', }}>Monitore a <C color="#E5C8C9">agenda e {'\n'}boletim</C> do seu Pet a qualquer momento!</Title>
             <Label style={{ letterSpacing: -0.5, fontSize: 18, lineHeight: 22, textAlign: 'center', marginTop: 10, }}>Seja bem vindo ao app da Villa Pongo, utilize seu acesso para fazer login</Label>
             <Column style={{ justifyContent: 'center', alignItems: 'center', columnGap: 20, }}>
                 <Button onPress={() => { navigation.navigate('AuthLogin') }} mtop={20} ph={50} bg={color.sc.sc3}>
                     <LabelBT color="#fff" align="center">Entrar</LabelBT>
                 </Button>
-                <Button onPress={() => { navigation.navigate('AuthRegister') }} bg={color.sc.sc3+40} ph={50} radius={100} mtop={12}>
+                <Button onPress={() => { navigation.navigate('AuthRegister') }} bg={color.sc.sc3 + 40} ph={50} radius={100} mtop={12}>
                     <LabelBT color={color.sc.sc3} align="center">Criar conta</LabelBT>
                 </Button>
             </Column>

@@ -1,77 +1,35 @@
-<<<<<<< HEAD
 export default {
-  background: "#ECEBEB",
-  color: {
-    primary: "#918C8B",
-    secundary: "#D9D9D9",
-    bg: "#ECEBEB",
-
-    light: '#FFFFFF',
-
-    blue: "#00A3FF",
-    red: "#D90000",
-    green: "#37CB84",
-    gray: "#5E5E5E",
-    yellow: "#FFA107",
-    border: "#D7D7D7",
-    title: "#868686",
-    label: "#918C8B",
-    sublabel: "#A1A1A1",
-
-    off: "#F7F7F7",
-    off2: "#FFFFFF",
-    waves: '#91A6C4',
-
-    icons: '#868686',
-    pr: {
-      pr1: '#918C8B',
-      pr2: '#ECEBEB',
-      pr3: '#868686',
-=======
-export default{
   background: "#FFFFFF",
   color: {
-    primary: "#918C8B",
-    secundary: "#5C0D45",
+    pr: "#EBB000",
+    sc: "#5F101C",
+    tr: '#15B9A0',
+    qt: '#FF94A6',
+    bg: '#FFFFFF',
 
     light: '#FFFFFF',
-
     blue: "#91A6C4",
     red: "#E5C8C9",
     green: "#778428",
-  
-    title: "#434343",
-    label: "#918C8B",
-    sublabel: "#A1A1A1",  
-    pr: {
-      pr1: '#918C8B',
-      pr2: '#ECEBEB',
-      pr3: '#434343',
->>>>>>> eb283ca2ee311dea721185daac937a3448434ae9
-      pr4: '#FFFFFF',
-    },
-    sc: {
-      sc1: '#778428',
-      sc2: '#E5C8C9',
-      sc3: '#91A6C4',
-      sc4: '#FDE579',
-    }
+
+    title: "#5F101C",
+    label: "#81464F",
   },
 
   font: {
-    black: "TimesNewRoman_Bold",
-    bold: "TimesNewRoman_Bold",
-    medium: "TimesNewRoman",
-    book: "TimesNewRoman",
-    v_medium: "Voyage_Medium",
-    v_book: "Voyage_Book",
+    black: "Font_Black",
+    bold: "Font_Bold",
+    semibold: "Font_SemiBold",
+    medium: "Font_Medium",
+    regular: "Font_Regular",
+    light: "Font_Light",
   },
   padding: {
-    h: 18,
+    h: 16,
     v: 8,
   },
   margin: {
-    h: 28,
+    h: 24,
     v: 12,
   },
 
