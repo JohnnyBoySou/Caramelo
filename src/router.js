@@ -14,12 +14,26 @@ import AsyncStaticScreen from '@screens/auth/async';
 import AuthLoginScreen from '@screens/auth/login';
 import AuthRegisterScreen from '@screens/auth/register';
 
-
 //TABS SCREEN
-import HomeScreen from '@screens/tabs/home';
 import AboutScreen from '@screens/tabs/about';
+import HomeScreen from '@screens/tabs/home';
 import AccountScreen from '@screens/tabs/account';
 import BlogScreen from '@screens/tabs/blog';
+
+//ABOUT
+
+
+//DONATE
+
+
+//BLOG
+
+
+//ACCOUNT
+import AccountEditScreen from '@screens/tabs/account/edit';
+
+//GERAL
+import FAQScreen from '@screens/tabs/account/faq';
 
 //ICONS
 import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
@@ -27,7 +41,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Onboarding'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='FAQ'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -36,6 +50,9 @@ export default function Router() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="Tabs" component={Tabs} options={{ ...TransitionPresets.SlideFromRightIOS, backBehavior: 'none', }} />
+
+        <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalTransition, }} />
+        <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalTransition, }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -60,6 +77,7 @@ function Tabs() {
           bottom: 20, left: 20, right: 20,
           borderRadius: 100,
           height: 84,
+          paddingBottom: 0,
           elevation: 0,
         },
       }}
@@ -74,7 +92,7 @@ function Tabs() {
       <Tab.Screen name="Blog" component={BlogScreen} options={{
         tabBarIcon: ({ color, size }) => (
           <Column style={{ backgroundColor: routeName == 'Blog' ? "#EBB000" : '#5F101C', width: 72, height: 72, justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
-            <Image source={routeName == 'Blog' ? require('@imgs/tabbar_active.png') : require('@imgs/tabbar.png')} style={{ width: 32, height: 32, objectFit: 'contain', }}/>
+            <Image source={routeName == 'Blog' ? require('@imgs/tabbar_active.png') : require('@imgs/tabbar.png')} style={{ width: 32, height: 32, objectFit: 'contain', }} />
           </Column>
         ),
       }} />

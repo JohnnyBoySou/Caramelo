@@ -14,12 +14,12 @@ export function Back() {
   )
 }
 
-export function ButtonPrimary({ login = false, type = 'Default', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
+export function ButtonPrimary({ login = false, type = 'pr', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
   const { color, } = useTheme();
-  const bg = type === 'Default' ? '#918C8B' : type === 'Light' ? '#ECEBEB' : '#202020';
-  const text = type === 'Default' ? color.light : type === 'Light' ? '#434343' : '#fff';
+  const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : '#202020';
+  const text = type === 'pr' ? color.sc : type === 'sc' ? color.pr : '#fff';
   return (
-    <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} >
+    <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} radius={16}>
       <Row>
         <SubLabel style={{ fontSize: size, color: text, }}>{label}</SubLabel>
       </Row>
@@ -67,24 +67,20 @@ export const Scroll = styled(ScrollView).attrs(() => ({
 export const Row = styled.View`
   flex-direction: row;
   display: flex;
-  padding-vertical: ${props => props.pv || 12}px;
-  padding-horizontal: ${props => props.ph || 20}px;
-  margin-top: ${props => props.mtop || 0}px;
-  margin-bottom: ${props => props.mbottom || 0}px;
-  margin-left: ${props => props.mleft || 0}px;
-  margin-right: ${props => props.mright || 0}px;
+  padding-vertical: ${props => props.pv || 0}px;
+  padding-horizontal: ${props => props.ph || 0}px;
+  margin-vertical: ${props => props.mv || 0}px;
+  margin-horizontal: ${props => props.mh || 0}px;
 `
 export const Column = styled.View`
   flex-direction: column;
   display: flex;
+  background-color: ${props => props.bg || 'transparent'};
   padding-vertical: ${props => props.pv || 0}px;
   padding-horizontal: ${props => props.ph || 0}px;
-  margin-top: ${props => props.mtop || 0}px;
-  margin-bottom: ${props => props.mbottom || 0}px;
-  margin-left: ${props => props.mleft || 0}px;
-  margin-right: ${props => props.mright || 0}px;
+  margin-vertical: ${props => props.mv || 0}px;
+  margin-horizontal: ${props => props.mh || 0}px;
 `
-
 export const Card = styled.View`
   flex-direction: column;
   display: flex;
@@ -115,7 +111,7 @@ export const Spacer = ({ height = 16, width = 16, }) => <Column style={{ height,
 //COMPONENTES DE TEXTO
 export const HeadTitle = styled.Text`
   font-size: ${props => props.size || '28px'};
-  color: ${props => props.theme.color.title};
+  color: ${props => props.color || props.theme.color.title};
   font-family: ${props => props.theme.font.bold};
   text-align: ${props => props.align || 'left'};
   line-height: ${props => props.lineHeight || props.size + 3 || '36px'};
@@ -123,7 +119,7 @@ export const HeadTitle = styled.Text`
 
 export const Title = styled.Text`
   font-size: ${props => props.size || '24px'};
-  color: ${props => props.theme.color.title};
+  color: ${props => props.color || props.theme.color.title};
   font-family: ${props => props.theme.font.semibold};
   text-align: ${props => props.align || 'left'};
   line-height: ${props => props.lineHeight || props.size + 3 || '28px'};
@@ -150,7 +146,7 @@ export const LabelBT = styled.Text`
 
 export const SubLabel = styled.Text`
   font-size: ${props => props.size || '14px'};
-  color: ${props => props.theme.color.sublabel};
+  color: ${props => props.color || props.theme.color.sublabel};
   font-family: ${props => props.theme.font.bold};
   text-align: ${props => props.align || 'left'};
 `;

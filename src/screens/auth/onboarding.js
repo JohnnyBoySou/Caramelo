@@ -53,7 +53,7 @@ export default function OnboardingPage({ navigation, route, }) {
         },
         {
             img: require('@imgs/onb5.png'),
-            title: 'Consulte seu histórico de doações e notas fiscais!',
+            title: 'Consulte seu histórico!',
             desc: 'Veja todas as suas contribuições em um só lugar. Acompanhe o impacto das suas doações e mantenha-se informado sobre o envio das suas notas fiscais. Sua generosidade faz a diferença!',
         },
     ]

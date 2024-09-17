@@ -5,7 +5,7 @@ import { ThemeContext } from 'styled-components/native';
 import { Pressable, TextInput } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 
-const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing = () => {}, pass = false }) => {
+const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing = () => { }, pass = false, keyboard = 'default' }) => {
   const { font, color } = useContext(ThemeContext);
   const [focus, setFocus] = useState(false);
   const inputRef = useRef();
@@ -69,14 +69,15 @@ const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing 
           onChangeText={handleChangeText}
           value={value}
           onSubmitEditing={onSubmitEditing}
+          keyboardType={keyboard}
           secureTextEntry={secure}
         />
 
-        {pass && <Pressable onPress={() => {setsecure(!secure)}} style={{ position: 'absolute', right: 16, top: 18 }}>
+        {pass && <Pressable onPress={() => { setsecure(!secure) }} style={{ position: 'absolute', right: 16, top: 18 }}>
           {secure ? <Eye
             size={24}
             color={color.title}
-          /> : <EyeOff 
+          /> : <EyeOff
             size={24}
             color={color.label}
           />}
