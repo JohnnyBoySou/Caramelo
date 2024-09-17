@@ -33,4 +33,19 @@ const HeaderLogo = ({ }) => {
     )
 }
 
-export { Header, HeaderLogo, };
+const HeaderHistory = ({ title, help }) => {
+    const navigation = useNavigation()
+    const { color, font, margin, } = useTheme()
+
+    return (
+        <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+            <Button onPress={() => { navigation.goBack() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg='#fff'>
+                <ArrowLeft size={24} color={color.sc} />
+            </Button>
+            <Title color="#fff">{title}</Title>
+            <Image source={require('@imgs/logo_history.png')} style={{ width: 48, height: 48, }}/>
+        </Row>
+    )
+}
+
+export { Header, HeaderLogo, HeaderHistory }; 

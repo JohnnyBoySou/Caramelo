@@ -1,0 +1,269 @@
+import React, { useState, useEffect } from 'react';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, LabelBT, Image } from '@theme/global';
+
+import { HeaderHistory } from '@components/Header';
+import { StatusBar } from 'expo-status-bar';
+import { ArrowUpRight, Check, Loader, Search, TriangleAlert } from 'lucide-react-native';
+import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native';
+import { Skeleton } from 'moti/skeleton';
+
+export default function HistoryScreen({ navigation, }) {
+    const { color, font, margin, } = useTheme();
+
+    const [type, settype] = useState('Notas');
+    const [date, setdate] = useState('TUDO');
+    const [data, setdata] = useState(DATA);
+    const [loading, setloading] = useState(false);
+
+    const fetchData = () => {
+        setloading(true)
+        try {
+
+        } catch (error) {
+
+        } finally {
+            setTimeout(() => {
+                setloading(false)
+            }, 2000);
+        }
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    return (
+        <Column style={{ backgroundColor: '#fff', flex: 1, }}>
+            <StatusBar style="light" backgroundColor={color.sc} />
+            <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderRadius: 24, }}>
+                <HeaderHistory title='Histórico' />
+                <Row mv={20} style={{ columnGap: 12, }}>
+                    <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
+                        <LabelBT style={{ color: type == 'Notas' ? color.sc : '#fff', }}>Notas fiscais</LabelBT>
+                    </Button>
+                    <Button style={{ backgroundColor: type == 'Doacoes' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Doacoes') }} >
+                        <LabelBT style={{ color: type == 'Doacoes' ? color.sc : '#fff', }}>Doações</LabelBT>
+                    </Button>
+                    <Button style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', width: 46, height: 46, }}>
+                        <Search size={22} color={color.sc} />
+                    </Button>
+                </Row>
+            </Column>
+
+            <Column>
+                <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={{ columnGap: 8, marginVertical: 12, }}>
+                    <Column style={{ width: 12, }}></Column>
+                    {dates.map((item, index) => (
+                        <Button key={index} pv={10} ph={16} style={{ backgroundColor: date == item.name ? color.sc : '#F1F1F1', justifyContent: 'center', alignItems: 'center', }} onPress={() => { setdate(item.name) }}>
+                            <LabelBT style={{ color: date == item.name ? '#fff' : color.sc, fontSize: 14, }}>{item.name}</LabelBT>
+                        </Button>
+                    ))}
+                    <Column style={{ width: 12, }}></Column>
+                </ScrollView>
+
+                {loading ? <SkeletonBody /> : <>
+                    {type == 'Notas' ?
+                        <FlatList
+                            data={data.notas}
+                            renderItem={({ item }) => <CardNota item={item} navigation={navigation} />}
+                            keyExtractor={item => item.id}
+                            showsVerticalScrollIndicator={false}
+                            refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
+                            contentContainerStyle={{ paddingHorizontal: margin.h, }}
+                            ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
+                        />
+                        :
+                        <FlatList
+                            data={data.doacoes}
+                            renderItem={({ item }) => <CardDoacao item={item} navigation={navigation} />}
+                            keyExtractor={item => item.id}
+                            showsVerticalScrollIndicator={false}
+                            refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
+                            contentContainerStyle={{ paddingHorizontal: margin.h, }}
+                            ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
+                        />}</>}
+            </Column>
+
+
+        </Column>
+    )
+}
+
+const CardNota = ({ item, navigation }) => {
+    const { color, font, margin } = useTheme()
+    const { id, value, date } = item
+    return (
+        <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('HistorySingle', { id: id, type: 'Nota fiscal', item: item, }) }} >
+            <Column>
+                <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+                    <Row>
+                        <Image source={require('@imgs/nota_fiscal.png')} style={{ width: 76, height: 76, borderRadius: 12, }} />
+                        <Column mh={12} style={{ justifyContent: 'center', }}>
+                            <Title size={18}>{value} nota{value > 1 ? 's' : ''} fisca{value > 1 ? 'is' : 'l'}</Title>
+                            <Label size={12} style={{ opacity: .8, marginTop: 4, }}>{date}</Label>
+                        </Column>
+                    </Row>
+                    <Button style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.pr}>
+                        <ArrowUpRight size={24} color={color.sc} />
+                    </Button>
+                </Row>
+            </Column>
+        </Button>
+    )
+}
+
+const CardDoacao = ({ item, navigation }) => {
+    const { color, font, margin } = useTheme()
+    const { id, value, date, label, status } = item
+
+    const cl = status == 'Confirmado' ? '#2ECA6F' : status == 'Análise' ? '#3072C8' : color.sc
+    const icon = status == 'Confirmado' ? <Check size={22} color='#fff' /> : status == 'Análise' ? <Loader size={22} color='#fff' /> : <TriangleAlert size={22} color='#fff' />
+
+    return (
+        <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('HistorySingle', { id: id, type: 'Doação', item: item, }) }} >
+            <Column>
+                <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+                    <Row>
+                        <Image source={require('@imgs/doacao.png')} style={{ width: 76, height: 76, borderRadius: 12, }} />
+                        <Column mh={12} style={{ justifyContent: 'center', }}>
+                            <Title size={20}>R$ {value},00</Title>
+                            <Label size={14} style={{ marginVertical: 4, fontFamily: font.semibold, }} color={cl}>{label}</Label>
+                            <Label size={10} style={{ marginTop: 4, }}>{date}</Label>
+                        </Column>
+                    </Row>
+                    <Button style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={cl}>
+                        <Row>
+                            {icon}
+                        </Row>
+                    </Button>
+                </Row>
+            </Column>
+        </Button>
+    )
+}
+
+const DATA = {
+    notas: [
+        {
+            id: 1,
+            value: 2,
+            date: '30/09/2024 às 09:54',
+        },
+        {
+            id: 2,
+            value: 4,
+            date: '30/09/2024 às 09:32',
+        },
+        {
+            id: 3,
+            value: 1,
+            date: '29/09/2024 às 12:54',
+        }
+    ],
+    doacoes: [
+        {
+            id: 1,
+            label: 'Pagamento confirmado',
+            value: 100,
+            date: '30/09/2024 às 09:54',
+            status: 'Análise',
+            forma: 'Crédito',
+            tipo: 'À vista',
+        },
+        {
+            id: 2,
+            label: 'Pagamento em análise',
+            value: 10,
+            date: '29/09/2024 às 12:32',
+            status: 'Análise',
+            forma: 'Pix',
+            tipo: 'À vista',
+        },
+    ]
+}
+
+const dates = [
+    {
+        id: 1,
+        name: 'TUDO',
+    },
+    {
+        id: 2,
+        name: 'HOJE',
+    },
+    {
+        id: 3,
+        name: 'SEMANA',
+    },
+    {
+        id: 4,
+        name: 'MÊS',
+    },
+    {
+        id: 5,
+        name: 'ANO',
+    }
+]
+
+
+const SkeletonBody = () => {
+    return (
+        <Column style={{ marginHorizontal: 24, marginVertical: 0, rowGap: 16, }}>
+            <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
+                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
+                    <Skeleton radius={12} height={76} width={76} colorMode='light' />
+                    <Column style={{ rowGap: 8, }}>
+                        <Skeleton radius={6} height={32} width={164} colorMode='light' />
+                        <Skeleton radius={6} height={24} width={136} colorMode='light' />
+                    </Column>
+                </Row>
+                <Skeleton radius={100} height={46} width={46} colorMode='light' />
+            </Row>
+            <Column style={{ height: 1, flexGrow: 1, backgroundColor: '#DEDEDE', }} />
+            <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
+                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
+                    <Skeleton radius={12} height={76} width={76} colorMode='light' />
+                    <Column style={{ rowGap: 8, }}>
+                        <Skeleton radius={6} height={32} width={164} colorMode='light' />
+                        <Skeleton radius={6} height={24} width={136} colorMode='light' />
+                    </Column>
+                </Row>
+                <Skeleton radius={100} height={46} width={46} colorMode='light' />
+            </Row>
+            <Column style={{ height: 1, flexGrow: 1, backgroundColor: '#DEDEDE', }} />
+            <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
+                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
+                    <Skeleton radius={12} height={76} width={76} colorMode='light' />
+                    <Column style={{ rowGap: 8, }}>
+                        <Skeleton radius={6} height={32} width={164} colorMode='light' />
+                        <Skeleton radius={6} height={24} width={136} colorMode='light' />
+                    </Column>
+                </Row>
+                <Skeleton radius={100} height={46} width={46} colorMode='light' />
+            </Row>
+            <Column style={{ height: 1, flexGrow: 1, backgroundColor: '#DEDEDE', }} />
+            <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
+                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
+                    <Skeleton radius={12} height={76} width={76} colorMode='light' />
+                    <Column style={{ rowGap: 8, }}>
+                        <Skeleton radius={6} height={32} width={164} colorMode='light' />
+                        <Skeleton radius={6} height={24} width={136} colorMode='light' />
+                    </Column>
+                </Row>
+                <Skeleton radius={100} height={46} width={46} colorMode='light' />
+            </Row>
+            <Column style={{ height: 1, flexGrow: 1, backgroundColor: '#DEDEDE', }} />
+            <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
+                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
+                    <Skeleton radius={12} height={76} width={76} colorMode='light' />
+                    <Column style={{ rowGap: 8, }}>
+                        <Skeleton radius={6} height={32} width={164} colorMode='light' />
+                        <Skeleton radius={6} height={24} width={136} colorMode='light' />
+                    </Column>
+                </Row>
+                <Skeleton radius={100} height={46} width={46} colorMode='light' />
+            </Row>
+            <Column style={{ height: 1, flexGrow: 1, backgroundColor: '#DEDEDE', }} />
+        </Column>
+    )
+}

@@ -25,7 +25,7 @@ export default function AccountScreen({ navigation, }) {
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
                         <Image source={{ uri: user.avatar }} style={{ width: 154, height: 154, borderRadius: 100, }} />
-                        <Button bg={color.sc} onPress={() => {navigation.navigate('AccountEdit')}}  style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
+                        <Button bg={color.sc} onPress={() => { navigation.navigate('AccountEdit') }} style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Pencil size={20} color="#fff" />
                         </Button>
                     </Column>
@@ -39,11 +39,11 @@ export default function AccountScreen({ navigation, }) {
                         </Row>
                     </Column>
 
-                    <Column>
+                    <Column style={{ rowGap: 24, marginTop: 12, }}>
                         <Row style={{ columnGap: 24, }}>
                             <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
                                 <Newspaper size={32} color={color.tr} />
-                                <Title color={color.tr} size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Notas doadas</Title>
+                                <Title color={color.tr} size={17} style={{ fontFamily: font.medium, marginVertical: 6, }}>Notas doadas</Title>
                                 <HeadTitle color={color.tr} size={42}>{user?.notas}</HeadTitle>
                             </Column>
                             <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>

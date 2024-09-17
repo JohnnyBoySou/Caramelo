@@ -11,6 +11,7 @@ export default function HomeScreen({ navigation, }) {
 
     return (
         <Main style={{}}>
+            <StatusBar style='dark' />
             <Scroll>
 
                 <Title align="center">Home</Title>

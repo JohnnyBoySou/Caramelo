@@ -32,6 +32,10 @@ import BlogScreen from '@screens/tabs/blog';
 //ACCOUNT
 import AccountEditScreen from '@screens/tabs/account/edit';
 
+//HISTORY
+import HistoryScreen from '@screens/history';
+import HistorySingleScreen from '@screens/history/single';
+
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
 
@@ -41,7 +45,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='FAQ'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -51,8 +55,11 @@ export default function Router() {
 
         <Stack.Screen name="Tabs" component={Tabs} options={{ ...TransitionPresets.SlideFromRightIOS, backBehavior: 'none', }} />
 
-        <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalTransition, }} />
-        <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalTransition, }} />
+        <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+
+        <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
