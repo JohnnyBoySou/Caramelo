@@ -1,20 +1,19 @@
-import React, { useEffect, useState, useContext, } from 'react';
-import { ActivityIndicator, TextInput, Vibration } from 'react-native';
-import { Column, Label, Title, Row, Button, LabelBT } from '@theme/global';
+import React, { useEffect, useState, useContext, useRef, } from 'react';
+import { ActivityIndicator, KeyboardAvoidingView, Vibration } from 'react-native';
+import { Column, Label, Title, Row, Button, LabelBT, useTheme, Loader, } from '@theme/global';
 import { payCredito, } from '@api/request/payments';
-
 import { MotiView } from 'moti';
-import { ThemeContext } from 'styled-components/native';
 import { BookUser, Calendar, Check, CreditCard, X, Lock } from 'lucide-react-native';
-import { TextInputMask } from 'react-native-masked-text';
 
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-
+import { Input } from '@components/Forms'
 import { useNavigation } from '@react-navigation/native';
+import { Header } from '@components/Header';
 
-export default function PaymentCredito({ item, settype, destino, }) {
-    console.log(destino)
-    const { plano, meses, dias, desc, } = item
+export default function PaymentCredito({ value }) {
+
+    const { color, margin, font } = useTheme();
+
     const [error, seterror] = useState();
     const [loading, setloading] = useState(false);
     const [success, setsuccess] = useState();
@@ -23,31 +22,24 @@ export default function PaymentCredito({ item, settype, destino, }) {
     const [cvv, setcvv] = useState('');
     const [mes, setmes] = useState('');
     const [numerocartao, setnumerocartao] = useState('');
+    const cvvref = useRef()
+    const mesref = useRef()
+    const numerocartaoref = useRef()
 
-    const [focusNome, setfocusNome] = useState();
-    const [focusCvv, setfocusCvv] = useState();
-    const [focusMes, setfocusMes] = useState();
-    const [focusNumerocartao, setfocusNumerocartao] = useState();
-
-    const { color, font } = useContext(ThemeContext);
 
     const handleBuyService = async () => {
         setloading(true)
         seterror()
         setsuccess()
         const params = {
-            plano: plano,
-            meses: meses,
-            dias: dias,
-            desc: desc,
-
+            value: value,
             nome: nome,
             cvv: cvv,
             meseano: mes,
             numerocartao: numerocartao,
         }
         try {
-            const res = await payCredito(params)
+            // const res = await payCredito(params)
             setsuccess(true)
             seterror()
             Vibration.vibrate(300);
@@ -59,108 +51,91 @@ export default function PaymentCredito({ item, settype, destino, }) {
         }
     }
 
-    const visible = nome.length > 0 && cvv.length === 3 && mes.length === 5 && numerocartao.length === 19 ? true : false
 
     return (
-        <Column >
-            <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
-                <Title size={20} >Dados do cartão</Title>
-                <Button bg={color.sc.sc3 + 30} ph={20} pv={10} onPress={() => { settype(null) }} >
-                    <Label style={{ fontFamily: font.medium, color: color.sc.sc3 }} size={14}>Alterar</Label>
-                </Button>
-            </Row>
+        <KeyboardAvoidingView behavior={"position"} style={{ flex: 1, }}>
+            <Column style={{ marginHorizontal: margin.h, }}>
 
-            <Column style={{ marginTop: 12, marginHorizontal: 26, }}>
-                <Column style={{ backgroundColor: color.blue, borderRadius: 12, flexGrow: 1, paddingVertical: 16, paddingHorizontal: 16, }}>
-                    <Title style={{ fontSize: 8, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>NOME COMPLETO</Title>
-                    <Column style={{ width: 180, height: 20, backgroundColor: focusNome ? '#fff' : '#ffffff60', borderRadius: 4, marginBottom: 8, }} />
-                    <Title style={{ fontSize: 8, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>NÚMERO DO CARTÃO</Title>
-                    <Column style={{ width: 200, height: 20, backgroundColor: focusNumerocartao ? '#fff' : '#ffffff60', borderRadius: 4, }} />
-                    <Row style={{ marginVertical: 6, }}>
-                        <Column style={{ marginRight: 12, }}>
-                            <Title style={{ fontSize: 8, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>CVV</Title>
-                            <Column style={{ width: 60, height: 20, backgroundColor: focusCvv ? '#fff' : '#ffffff60', borderRadius: 4, }} />
+                <Header title="Dados do cartão" />
+                <Column style={{ marginVertical: 20, }}>
+                    <Column style={{ backgroundColor: color.pr, borderRadius: 18, paddingVertical: 20, paddingHorizontal: 20, }}>
+
+                        <Title style={{ fontSize: 12, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>NOME COMPLETO</Title>
+                        <Column style={{ width: 180, height: 20, backgroundColor: '#ffffff60', borderRadius: 4, marginTop: 4, }} />
+                        <Title style={{ fontSize: 12, lineHeight: 16, marginTop: 12, letterSpacing: 1, color: "#fff", }}>NÚMERO DO CARTÃO</Title>
+                        <Column style={{ width: 200, height: 20, backgroundColor: '#ffffff60', borderRadius: 4, marginTop: 4, }} />
+                        <Row style={{ marginTop: 12, }}>
+                            <Column style={{ marginRight: 32, }}>
+                                <Title style={{ fontSize: 12, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>CVV</Title>
+                                <Column style={{ width: 60, height: 20, backgroundColor: '#ffffff60', borderRadius: 4, marginTop: 4, }} />
+                            </Column>
+                            <Column>
+                                <Title style={{ fontSize: 12, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>VENCIMENTO</Title>
+                                <Column style={{ width: 80, height: 20, backgroundColor: '#ffffff60', borderRadius: 4, marginTop: 4, }} />
+                            </Column>
+                        </Row>
+                    </Column>
+                </Column>
+                <Title>Complete os campos</Title>
+                <Column style={{ rowGap: 16, marginTop: 12, }}>
+                    <Input
+                        label="Nome completo do titular"
+                        setValue={setnome}
+                        value={nome}
+                        onSubmitEditing={() => numerocartaoref.current?.focus()}
+                    />
+                    <Input
+                        label="Número do cartão"
+                        value={numerocartao}
+                        setValue={setnumerocartao}
+                        keyboard="number-pad"
+                        onSubmitEditing={() => cvvref.current?.focus()}
+                        mask="CARD"
+                        ref={numerocartaoref}
+                    />
+
+                    <Row style={{ columnGap: 12, }}>
+                        <Column style={{ flexGrow: 1, }} >
+
+                            <Input
+                                label="CVV"
+                                value={cvv}
+                                setValue={setcvv}
+                                mask="CVV"
+                                onSubmitEditing={() => mesref.current?.focus()}
+                                keyboard="number-pad"
+                                ref={cvvref}
+                            />
+
                         </Column>
-                        <Column>
-                            <Title style={{ fontSize: 8, lineHeight: 16, letterSpacing: 1, color: "#fff", }}>VENCIMENTO</Title>
-                            <Column style={{ width: 80, height: 20, backgroundColor: focusMes ? '#fff' : '#ffffff60', borderRadius: 4, }} />
+                        <Column style={{ flexGrow: 1, }} >
+
+                            <Input
+                                mask="EXPIRATION_DATE"
+                                label="Vencimento"
+                                keyboard="number-pad"
+                                setValue={setmes}
+                                value={mes}
+                                onSubmitEditing={handleBuyService}
+                                ref={mesref}
+                            />
                         </Column>
                     </Row>
+
+                    <Column style={{ flexGrow: 1, height: 2, backgroundColor: '#d1d1d1', }} />
+
+                    <BuyService handleBuyService={handleBuyService} loading={loading} error={error} success={success} />
                 </Column>
             </Column>
-
-            <Column>
-                <Row style={{ borderRadius: 8, marginTop: 24, borderWidth: 2, borderColor: focusNome ? color.blue : color.border, }}>
-                    <Column style={{ justifyContent: 'center', width: 52, height: 52, alignItems: 'center', borderRadius: 100, }}>
-                        <BookUser color={focusNome ? color.blue : "#00000080"} size={22} />
-                    </Column>
-                    <TextInput
-                        onFocus={() => setfocusNome(true)}
-                        onBlur={() => setfocusNome(false)}
-                        onChangeText={(e) => setnome(e)}
-                        value={nome}
-                        autoFocus={true}
-                        style={{ fontFamily: font.medium, fontSize: 18, color: color.secundary, paddingVertical: 12, width: '78%', }} placeholder='Nome completo' placeholderTextColor="#11111190" />
-                </Row>
-
-                <Row style={{ borderRadius: 8, marginTop: 12, borderWidth: 2, borderColor: focusNumerocartao ? color.blue : color.border, }}>
-                    <Column style={{ justifyContent: 'center', width: 52, height: 52, alignItems: 'center', borderRadius: 100, }}>
-                        <CreditCard color={focusNumerocartao ? color.blue : '#00000080'} size={22} />
-                    </Column>
-                    <TextInputMask
-                        type={'credit-card'}
-                        onFocus={() => setfocusNumerocartao(true)}
-                        onBlur={() => setfocusNumerocartao(false)}
-                        onChangeText={(e) => setnumerocartao(e)}
-                        value={numerocartao}
-                        keyboardType='number-pad'
-                        style={{ fontFamily: font.medium, fontSize: 18, color: color.secundary, paddingVertical: 12, width: '78%', }} placeholder='Número do cartão' placeholderTextColor="#11111190" />
-                </Row>
-
-                <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
-                    <Row style={{ borderRadius: 8, marginTop: 12, borderWidth: 2, borderColor: focusCvv ? color.blue : color.border, width: '42%', }}>
-                        <Column style={{ justifyContent: 'center', width: 52, height: 52, alignItems: 'center', borderRadius: 100, }}>
-                            <Lock color={focusCvv ? color.blue : '#00000080'} size={22} />
-                        </Column>
-                        <TextInputMask
-                            type={'custom'}
-                            options={{ mask: '999' }}
-                            onFocus={() => setfocusCvv(true)}
-                            onBlur={() => setfocusCvv(false)}
-                            onChangeText={(e) => setcvv(e)}
-                            value={cvv}
-                            keyboardType='number-pad'
-                            style={{ fontFamily: font.medium, fontSize: 18, color: color.secundary, paddingVertical: 12, flexGrow: 1, }} placeholder='CVV' placeholderTextColor="#11111190" />
-                    </Row>
-                    <Row style={{ borderRadius: 8, marginTop: 12, borderWidth: 2, borderColor: focusMes ? color.blue : color.border, width: '52%', }}>
-                        <Column style={{ justifyContent: 'center', width: 52, height: 52, alignItems: 'center', borderRadius: 100, }}>
-                            <Calendar color={focusMes ? color.blue : '#00000080'} size={22} />
-                        </Column>
-                        <TextInputMask
-                            type={'custom'}
-                            options={{ mask: '99/99' }}
-                            onFocus={() => setfocusMes(true)}
-                            onBlur={() => setfocusMes(false)}
-                            onChangeText={(e) => setmes(e)}
-                            value={mes}
-                            keyboardType='number-pad'
-                            style={{ fontFamily: font.medium, fontSize: 18, color: color.secundary, paddingVertical: 12, flexGrow: 1, }} placeholder='Mês/Ano' placeholderTextColor="#11111190" />
-                    </Row>
-                </Row>
-            </Column>
-
-            <BuyService handleBuyService={handleBuyService} loading={loading} error={error} success={success} disabled={!visible} />
-            <Column style={{ height: 100, }} />
-        </Column>
+        </KeyboardAvoidingView>
     )
 }
 
-const BuyService = ({ handleBuyService, loading, error, success, disabled }) => {
-    const { color } = useContext(ThemeContext);
+const BuyService = ({ handleBuyService, loading, error, success, }) => {
+    const { color } = useTheme();
     const widthValue = useSharedValue(162);
     const heightValue = useSharedValue(52);
-    const radiusValue = useSharedValue(100);
-    const bottomValue = useSharedValue(20);
+    const radiusValue = useSharedValue(12);
     const backgroundValue = useSharedValue(error ? '#850505' : '#00A3FF');
     const navigation = useNavigation();
 
@@ -173,7 +148,6 @@ const BuyService = ({ handleBuyService, loading, error, success, disabled }) => 
             }, 1500);
         } else if (error && !loading) {
             // Erro
-            bottomValue.value = withTiming(20, { duration: 300 });
             widthValue.value = withTiming(284, { duration: 300 });
             heightValue.value = withTiming(52, { duration: 300 });
             radiusValue.value = withTiming(100, { duration: 300 });
@@ -184,14 +158,12 @@ const BuyService = ({ handleBuyService, loading, error, success, disabled }) => 
             radiusValue.value = withTiming(100, { duration: 600, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
             widthValue.value = withTiming(52, { duration: 600, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
             heightValue.value = withTiming(52, { duration: 600, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-            bottomValue.value = withSpring(20);
         } else if (!loading && !error && !success) {
             // Normal
-            bottomValue.value = withTiming(20, { duration: 300 });
-            widthValue.value = withTiming(214, { duration: 300 });
+            widthValue.value = withTiming('100%', { duration: 300 });
             heightValue.value = withTiming(52, { duration: 300 });
-            radiusValue.value = withTiming(100, { duration: 300 });
-            backgroundValue.value = withTiming('#00A3FF', { duration: 300 });
+            radiusValue.value = withTiming(12, { duration: 300 });
+            backgroundValue.value = withTiming('#2ECA6F', { duration: 300 });
         }
     }, [success, error, loading]);
 
@@ -201,12 +173,12 @@ const BuyService = ({ handleBuyService, loading, error, success, disabled }) => 
             width: widthValue.value,
             height: heightValue.value,
             backgroundColor: backgroundValue.value,
-            bottom: bottomValue.value,
+            //  bottom: bottomValue.value,
             borderRadius: radiusValue.value,
         };
     });
     return (
-        <Animated.View style={[{ borderRadius: 100, position: 'absolute', bottom: 20, alignSelf: 'center', zIndex: 99, backgroundColor: 'red', }, animatedStyle]}>
+        <Animated.View style={[{}, animatedStyle]}>
             <Column style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
                 {loading ? <ActivityIndicator size="large" color="#fff" />
                     : <Label style={{ color: '#fff', textAlign: 'center', fontFamily: 'Font_Medium', }}>{error?.length > 0 ? error : 'Verificar e continuar'}</Label>}

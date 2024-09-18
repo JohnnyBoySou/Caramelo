@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { MotiImage } from 'moti';
 
 import { Clipboard as Clip, X } from 'lucide-react-native';
+import { Header } from '@components/Header';
 
 
 export default function PaymentPix({ item, settype }) {
@@ -73,12 +74,7 @@ export default function PaymentPix({ item, settype }) {
     </Column>
     return (
         <Column style={{ justifyContent: 'center', paddingHorizontal: 28, }}>
-            <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
-                <Title size={20} >PIX</Title>
-                <Button bg={color.sc.sc3 + 30} ph={20} pv={10} onPress={() => { settype(null) }} >
-                    <Label style={{ fontFamily: font.medium, color: color.sc.sc3 }} size={14}>Alterar</Label>
-                </Button>
-            </Row>
+            <Header title='Pix' />
 
             <Column style={{ borderRadius: 18, backgroundColor: "#f7f7f7", paddingVertical: 28, justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
                 <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={300} source={{ uri: data?.qrcode }} style={{ width: 250, marginBottom: 12, height: 250, borderRadius: 12, }} />

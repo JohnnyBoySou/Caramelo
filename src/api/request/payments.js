@@ -1,7 +1,6 @@
-import axios from 'axios';
-
-import getToken from '@hooks/getToken';
-import getBaseURL from '@hooks/getBaseUrl';
+import axios from 'axios'; 
+import getToken from '@hooks/token';
+import getBaseURL from '@hooks/urls';
 
 export async function payPix(params) {
     const BASE_URL = await getBaseURL()

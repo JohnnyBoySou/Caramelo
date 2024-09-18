@@ -20,6 +20,10 @@ export default function AuthLoginScren({ navigation, }) {
   const [loading, setloading,] = useState(false);
 
   const [tel, settel] = useState();
+  const passRef =  useRef(null)
+
+  const handleLogin = () => {
+  }
   return (
     <Main >
       <Scroll>
@@ -33,6 +37,7 @@ export default function AuthLoginScren({ navigation, }) {
               label="E-mail *"
               placeholder="Email"
               value={email}
+              onSubmitEditing={() => { passRef.current?.focus() }}
               setValue={setemail}
             />
 
@@ -41,7 +46,9 @@ export default function AuthLoginScren({ navigation, }) {
               placeholder="Senha"
               value={password}
               setValue={setpassword}
+              ref={passRef}
               pass={true}
+              onSubmitEditing={handleLogin}
             />
           </Column>
 

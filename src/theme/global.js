@@ -16,8 +16,8 @@ export function Back() {
 
 export function ButtonPrimary({ login = false, type = 'pr', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
   const { color, } = useTheme();
-  const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : '#202020';
-  const text = type === 'pr' ? color.sc : type === 'sc' ? '#fff' : '#fff';
+  const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : type == 'lg' ? '#FFF' : '#202020';
+  const text = type === 'pr' ? color.sc : type === 'sc' ? '#fff' : type == 'lg' ? color.sc : '#';
   return (
     <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} radius={16}>
       <Row>

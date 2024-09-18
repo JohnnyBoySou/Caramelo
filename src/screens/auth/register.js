@@ -38,7 +38,14 @@ export default function AuthRegisterScreen({ navigation, }) {
     const [error, setError] = useState();
     const [loading, setloading,] = useState(false);
 
+    const cpfRef = useRef(null);
+    const emailRef = useRef(null);
+    const telRef = useRef(null);
+    const passwordRef = useRef(null);
 
+
+    const handleRegister = () => {
+    }
     return (
         <Main >
             <Scroll>
@@ -53,6 +60,7 @@ export default function AuthRegisterScreen({ navigation, }) {
                             label="Nome completo *"
                             placeholder="Nome"
                             value={name}
+                            onSubmitEditing={() => { cpfRef.current?.focus() }}
                             setValue={setname}
                         />
                         <Input
@@ -60,6 +68,8 @@ export default function AuthRegisterScreen({ navigation, }) {
                             placeholder="CPF"
                             value={cpf}
                             setValue={setcpf}
+                            ref={cpfRef}
+                            onSubmitEditing={() => { telRef.current?.focus() }}
                             mask="CPF"
                             maxLength={14}
                         />
@@ -68,12 +78,16 @@ export default function AuthRegisterScreen({ navigation, }) {
                             placeholder="Telefone"
                             maxLength={16}
                             value={tel}
+                            onSubmitEditing={() => { emailRef.current?.focus() }}
+                            ref={telRef}
                             setValue={settel}
                             mask="PHONE"
                         />
                         <Input
                             label="E-mail *"
                             placeholder="Email"
+                            ref={emailRef}
+                            onSubmitEditing={() => { passwordRef.current?.focus() }}
                             value={email}
                             setValue={setemail}
                         />
@@ -82,6 +96,8 @@ export default function AuthRegisterScreen({ navigation, }) {
                             label="Senha *"
                             placeholder="Senha"
                             value={password}
+                            ref={passwordRef}
+                            onSubmitEditing={handleRegister}
                             setValue={setpassword}
                             pass={true}
                         />
@@ -103,7 +119,7 @@ export default function AuthRegisterScreen({ navigation, }) {
 
                     {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
                     <Column style={{ height: 20, }} />
-                    <Button radius={100} bg={color.sc} style={{ backgroundColor: color.sc, }} pv={1} ph={1}>
+                    <Button radius={100} bg={color.sc} style={{ backgroundColor: color.sc, }} pv={1} ph={1} onPress={handleRegister} >
                         <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
 
 

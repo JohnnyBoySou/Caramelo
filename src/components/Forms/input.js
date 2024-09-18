@@ -1,14 +1,18 @@
-import { useRef, useState, useContext, useEffect } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import { useAnimationState, MotiText } from 'moti';
 import { Column, Label } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { Pressable, TextInput } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 
-const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing = () => { }, pass = false, keyboard = 'default' }) => {
+const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props, onSubmitEditing = () => { }, pass = false, keyboard = 'default' }, ref) => {
   const { font, color } = useContext(ThemeContext);
   const [focus, setFocus] = useState(false);
-  const inputRef = useRef();
+
+  const internalRef = useRef(null);
+  const inputRef = ref || internalRef;
+
+
   const [secure, setsecure] = useState(pass);
   const inputAnimation = useAnimationState({
     from: { translateY: 10, fontSize: 18, },
@@ -85,10 +89,9 @@ const Input = ({ value, setValue, disabled, label, mask, props, onSubmitEditing 
       </Column>
     </Pressable>
   );
-};
+});
 
 export default Input;
-
 const getMaskFunction = (mask) => {
   switch (mask) {
     case 'CPF':
@@ -97,12 +100,37 @@ const getMaskFunction = (mask) => {
       return { maskFunction: applyPhoneMask, maxLength: 16 };
     case 'CEP':
       return { maskFunction: applyCepMask, maxLength: 9 };
+    case 'CARD':
+      return { maskFunction: applyCardMask, maxLength: 19 }; // 16 dígitos + 3 espaços
+    case 'CVV':
+      return { maskFunction: applyCvvMask, maxLength: 4 };
+    case 'EXPIRATION_DATE':
+      return { maskFunction: applyExpirationDateMask, maxLength: 5 }; // MM/AA
     default:
       return { maskFunction: (text) => text, maxLength: undefined };
   }
 };
 
+function applyCardMask(value) {
+  return value
+    .replace(/\D/g, '') // Remove tudo o que não é dígito
+    .slice(0, 16) // Limita a 16 dígitos
+    .replace(/(\d{4})(\d)/g, '$1 $2') // Coloca um espaço a cada 4 dígitos
+    .trim(); // Remove o espaço final
+}
 
+function applyCvvMask(value) {
+  return value
+    .replace(/\D/g, '') // Remove tudo o que não é dígito
+    .slice(0, 4); // Limita a 3 ou 4 dígitos, dependendo do cartão
+}
+
+function applyExpirationDateMask(value) {
+  return value
+    .replace(/\D/g, '') // Remove tudo o que não é dígito
+    .slice(0, 4) // Limita a 4 dígitos (MMYY)
+    .replace(/(\d{2})(\d)/, '$1/$2'); // Coloca uma barra entre o segundo e o terceiro dígito
+}
 const isValidEmail = (text) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(text);
