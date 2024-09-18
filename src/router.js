@@ -24,7 +24,7 @@ import BlogScreen from '@screens/tabs/blog';
 
 
 //DONATE
-
+import DonateTypeScreen from '@screens/donate/type';
 
 //BLOG
 
@@ -36,6 +36,9 @@ import AccountEditScreen from '@screens/tabs/account/edit';
 import HistoryScreen from '@screens/history';
 import HistorySingleScreen from '@screens/history/single';
 
+//NOTA FISCAL
+import NotafiscalScreen from '@screens/notafiscal'
+
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
 
@@ -45,7 +48,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='DonateType'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -60,6 +63,11 @@ export default function Router() {
 
         <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+
+        <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+
+        <Stack.Screen name="DonateType" component={DonateTypeScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

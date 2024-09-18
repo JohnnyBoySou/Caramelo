@@ -6,8 +6,6 @@ import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-rea
 
 export default function AccountScreen({ navigation, }) {
     const { color, font, margin } = useContext(ThemeContext);
-
-
     const [user, setuser] = useState({
         name: 'João de Sousa',
         email: 'joaosousa@gmail.com',

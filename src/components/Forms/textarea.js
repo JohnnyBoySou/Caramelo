@@ -49,19 +49,18 @@ const TextArea = ({ value, setValue, disabled, label, mask, props }) => {
   return (
     <Pressable onPress={() => { inputRef.current.focus() }} >
 
-      <Column style={{ borderColor: disabled ? '#f1f1f1' : focus ? color.sc.sc3 : color.sc.sc3 + 50, backgroundColor: '#fff', flexGrow: 1, borderWidth: 1, paddingBottom: 8, paddingTop: 24, paddingHorizontal: 16, borderRadius: 12, }}>
+      <Column style={{ borderColor: disabled ? '#f1f1f1' : focus ? color.label: '#A9798150', backgroundColor: '#fff', flexGrow: 1, borderWidth: 1, paddingBottom: 8, paddingTop: 24, paddingHorizontal: 16, borderRadius: 12, }}>
         <MotiText
           state={inputAnimation}
-          style={{ fontFamily: font.medium, color: '#788BA4', letterSpacing: -0.6, position: 'absolute', top: 6, left: 16, zIndex: 1, }}
+          style={{ fontFamily: font.medium, color: color.label, letterSpacing: -0.6, position: 'absolute', top: 6, left: 16, zIndex: 1, }}
           transition={{ type: 'timing', duration: 200 }}
         >
           {label}
         </MotiText>
 
-
         <TextInput
           {...props}
-          style={{ fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : '#425a7a', }}
+          style={{ fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : '#425a7a', height: 120, }}
           ref={inputRef}
           onFocus={handleFocus}
           numberOfLines={3}
