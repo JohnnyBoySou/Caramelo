@@ -114,7 +114,7 @@ export default function BlogScreen({ navigation, route }) {
                             <Button bg="#F2EDED">
                                 <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
                                     <MessageCircle size={16} color={color.sc} />
-                                    <Label size={12} style={{ lineHeight: 14, }}>{destaque?.likes} comentários </Label>
+                                    <Label size={12} style={{ lineHeight: 14, }}>{destaque?.comments} comentários </Label>
                                 </Row>
                             </Button>
                             <Button bg="#F2EDED">
@@ -138,7 +138,7 @@ export default function BlogScreen({ navigation, route }) {
     )
 }
 
-const Carrousel = ({ imgs }) => {
+export const Carrousel = ({ imgs }) => {
     const { color, margin } = useTheme();
     const pagerRef = useRef();
     const handleScreen = (position) => {

@@ -13,7 +13,7 @@ export default function AccountScreen({ navigation, }) {
         doacoes: 21,
         comments: 30,
         likes: 62,
-        avatar: 'https://i.pinimg.com/564x/b6/f9/07/b6f9073a96f7408459f82df4b21e4643.jpg',
+        avatar: 'https://avatar.iran.liara.run/public/24',
     });
     return (
         <Main style={{ backgroundColor: '#fff', }}>

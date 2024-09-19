@@ -16,10 +16,13 @@ import AuthRegisterScreen from '@screens/auth/register';
 
 //TABS SCREEN
 import AboutScreen from '@screens/tabs/about';
+import AboutGalleryScreen from '@screens/tabs/about/gallery';
 import HomeScreen from '@screens/tabs/home';
-import AccountScreen from '@screens/tabs/account';
-import BlogScreen from '@screens/tabs/blog';
 
+//BLOG
+import BlogScreen from '@screens/tabs/blog';
+import BlogSearchScreen from './screens/tabs/blog/search';
+import BlogSingleScreen from '@screens/tabs/blog/single';
 //ABOUT
 
 
@@ -27,10 +30,9 @@ import BlogScreen from '@screens/tabs/blog';
 import DonateTypeScreen from '@screens/donate/type';
 import DonateValueScreen from '@screens/donate';
 import DonatePaymentScreen from '@screens/donate/payment';
-//BLOG
-
 
 //ACCOUNT
+import AccountScreen from '@screens/tabs/account';
 import AccountEditScreen from '@screens/tabs/account/edit';
 
 //HISTORY
@@ -49,7 +51,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Tabs'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -65,11 +67,17 @@ export default function Router() {
         <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
 
-        <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="DonateType" component={DonateTypeScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonateValue" component={DonateValueScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonatePayment" component={DonatePaymentScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+
+        <Stack.Screen name="BlogSearch" component={BlogSearchScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="BlogSingle" component={BlogSingleScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+
+        <Stack.Screen name="AboutGallery" component={AboutGalleryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -79,9 +87,9 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
   const route = useRoute();
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Blog'
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'About'
   return (
-    <Tab.Navigator initialRouteName="Blog"
+    <Tab.Navigator initialRouteName="About"
       screenOptions={{
         headerShown: false,
         backBehavior: 'none',

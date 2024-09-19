@@ -15,7 +15,7 @@ export default function AccountEditScreen({ navigation, }) {
         email: 'joaosousa@gmail.com',
         cpf: '00000000000',
         tel: '00000000000',
-        avatar: 'https://i.pinimg.com/564x/b6/f9/07/b6f9073a96f7408459f82df4b21e4643.jpg',
+        avatar: 'https://avatar.iran.liara.run/public/24',
     });
 
     useEffect(() => {

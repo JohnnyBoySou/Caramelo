@@ -8,7 +8,7 @@ export default function AsyncStaticScreen({ navigation, }) {
 
     useEffect(() => {
         setTimeout(() => {
-            navigation.navigate('Tabs')
+            navigation.replace('Tabs')
         }, 2000)
     }, [])
     return (

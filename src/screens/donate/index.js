@@ -40,14 +40,14 @@ export default function DonateValueScreen({ navigation, }) {
                     <Title>R$</Title>
                     <HeadTitle size={56} style={{ lineHeight: 60, }}><U>{formatValue(value)}</U>,00</HeadTitle>
 
-                    <Row style={{ columnGap: 12, marginVertical: 20, }} onPress={() => { setvalue(25) }} >
-                        <Button bg='#F8E7E9'>
+                    <Row style={{ columnGap: 12, marginVertical: 20, }}>
+                        <Button bg='#F8E7E9'  onPress={() => { setvalue('25') }} >
                             <LabelBT color={color.title}>R$ 25,00</LabelBT>
                         </Button>
-                        <Button bg='#F8E7E9' onPress={() => { setvalue(40) }} >
+                        <Button bg='#F8E7E9' onPress={() => { setvalue('40') }} >
                             <LabelBT color={color.title}>R$ 40,00</LabelBT>
                         </Button>
-                        <Button bg='#F8E7E9' onPress={() => { setvalue(60) }} >
+                        <Button bg='#F8E7E9' onPress={() => { setvalue('60') }} >
                             <LabelBT color={color.title}>R$ 60,00</LabelBT>
                         </Button>
                     </Row>
@@ -56,7 +56,7 @@ export default function DonateValueScreen({ navigation, }) {
             </Column>
             <Column style={{ flex: 1, borderTopLeftRadius: 24, borderTopRightRadius: 24, alignItems: 'center', marginBottom: -40, paddingBottom: 40,}} bg={color.pr}>
 
-                <Row style={{ flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
+                <Row style={{ flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', marginVertical: 20, zIndex: 99,}}>
                     {nums.map((num, index) => (
                         <Button style={{ width: '28%', height: '25%', justifyContent: 'center', alignItems: 'center', }} radius={12} onPress={() => { handleClick(`${num}`) }} >
                             <Title size={42} font={font.black}>{num}</Title>
