@@ -45,9 +45,6 @@ export default function NotafiscalScreen({ navigation }) {
         ]);
     };
 
-
-
-
     const modalList = useRef(null);
     const modalHelp = useRef(null);
     const modalDigit = useRef(null);
@@ -56,12 +53,15 @@ export default function NotafiscalScreen({ navigation }) {
         modalDigit.current?.close()
     }
 
-
     if (hasPermission === null) {
-        return <Title>Solicitando permissão para usar a câmera...</Title>;
+        return <Column style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+            <Title align="center">Solicitando permissão para usar a câmera...</Title>
+        </Column>
     }
     if (hasPermission === false) {
-        return <Title>Permissão para acessar a câmera foi negada</Title>;
+        return <Column style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+            <Title align="center" >Permissão para acessar a câmera foi negada</Title>
+        </Column>
     }
 
     return (
@@ -130,7 +130,7 @@ export default function NotafiscalScreen({ navigation }) {
                 </Column>
             </Modal>
 
-            <Modal ref={modalHelp} snapPoints={[0.1, 450]}>
+            <Modal ref={modalHelp} snapPoints={[0.1, 500]}>
                 <Column style={{ marginHorizontal: margin.h, flexGrow: 1, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Title>Como escanear</Title>

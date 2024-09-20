@@ -56,7 +56,7 @@ export default function BlogSingleScreen({ navigation, route }) {
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             
-            <StatusBar style="dark" backgroundColor="#fff" animated />
+            <StatusBar style="light" backgroundColor={color.sc} animated />
             <Row ph={margin.h} style={{ backgroundColor: color.sc, paddingBottom: 20, paddingTop: 50, borderBottomLeftRadius: 12, borderBottomRightRadius: 12, }}>
                 <Button onPress={() => { navigation.goBack() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg='#fff'>
                     <ArrowLeft size={24} color={color.sc} />

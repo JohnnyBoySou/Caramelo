@@ -27,8 +27,9 @@ export default function AuthLoginScren({ navigation, }) {
   return (
     <Main >
       <Scroll>
-        <HeaderLogo />
         <Column ph={margin.h}>
+        <HeaderLogo />
+        <Column style={{height: 12, }} />
           <HeadTitle size={42}>Entrar</HeadTitle>
           <Label>Entre em nossa comunidade e veja o que estamos fazendo agora!</Label>
 

@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, LabelBT } from '@theme/global';
 import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 
 import PagerView from 'react-native-pager-view';
 import Animated, { useAnimatedStyle, withTiming, interpolateColor } from 'react-native-reanimated';
 import { FlatList } from 'react-native';
-
+import { useIsFocused } from '@react-navigation/native';
+import { Skeleton } from 'moti/skeleton';
 export default function BlogScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
 
@@ -84,6 +85,26 @@ export default function BlogScreen({ navigation, route }) {
     ]
     );
 
+    const [loading, setloading] = useState(true);
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        const fetchData = () => {
+            setloading(true)
+            try {
+                
+            } catch (error) {
+                
+            } finally{
+                setTimeout(() => {
+                    setloading(false)
+                }, 3000);
+            }
+        }
+
+        fetchData()
+
+    },[isFocused])
+   // if(loading){return <SkeletonBody />}
     return (
         <Main>
             <Scroll>
@@ -100,31 +121,35 @@ export default function BlogScreen({ navigation, route }) {
 
                 <Column style={{ marginVertical: 8, }}>
                     <Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, }}>Em destaque</Title>
-                    <Carrousel imgs={destaque?.imgs} />
-                    <Column style={{ marginHorizontal: margin.h, }}>
-                        <Title size={20} style={{ letterSpacing: -.7, }}>{destaque?.title}</Title>
-                        <Label style={{ fontSize: 15, fontFamily: font.light, marginTop: 6, }}>{destaque?.desc}</Label>
-                        <Row style={{ columnGap: 12, marginVertical: 12, }}>
-                            <Button bg="#F2EDED">
-                                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                    <Heart size={16} color={color.sc} />
-                                    <Label size={12} style={{ lineHeight: 14, }}>{destaque?.likes} curtidas </Label>
+                    <Button pv={1} ph={1} radius={2} onPress={() => { navigation.navigate('BlogSingle', { id: destaque?.id }) }} >
+                        <>
+                            <Carrousel imgs={destaque?.imgs} />
+                            <Column style={{ marginHorizontal: margin.h, }}>
+                                <Title size={20} style={{ letterSpacing: -.7, }}>{destaque?.title}</Title>
+                                <Label style={{ fontSize: 15, fontFamily: font.light, marginTop: 6, }}>{destaque?.desc}</Label>
+                                <Row style={{ columnGap: 12, marginVertical: 12, }}>
+                                    <Button bg="#F2EDED">
+                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
+                                            <Heart size={16} color={color.sc} />
+                                            <Label size={12} style={{ lineHeight: 14, }}>{destaque?.likes} curtidas </Label>
+                                        </Row>
+                                    </Button>
+                                    <Button bg="#F2EDED">
+                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
+                                            <MessageCircle size={16} color={color.sc} />
+                                            <Label size={12} style={{ lineHeight: 14, }}>{destaque?.comments} comentários </Label>
+                                        </Row>
+                                    </Button>
+                                    <Button bg="#F2EDED">
+                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
+                                            <Send size={16} color={color.sc} />
+                                            <Label size={12} style={{ lineHeight: 14, }}>Enviar</Label>
+                                        </Row>
+                                    </Button>
                                 </Row>
-                            </Button>
-                            <Button bg="#F2EDED">
-                                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                    <MessageCircle size={16} color={color.sc} />
-                                    <Label size={12} style={{ lineHeight: 14, }}>{destaque?.comments} comentários </Label>
-                                </Row>
-                            </Button>
-                            <Button bg="#F2EDED">
-                                <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                    <Send size={16} color={color.sc} />
-                                    <Label size={12} style={{ lineHeight: 14, }}>Enviar</Label>
-                                </Row>
-                            </Button>
-                        </Row>
-                    </Column>
+                            </Column>
+                        </>
+                    </Button>
                 </Column>
 
                 <Column style={{ flexGrow: 1, height: 1, backgroundColor: '#f1f1f1', }} />
@@ -132,6 +157,7 @@ export default function BlogScreen({ navigation, route }) {
                 <Column style={{ marginHorizontal: margin.h, marginVertical: margin.v, }}>
                     <Title style={{ letterSpacing: -.7, }}>Recentes</Title>
                     <ListPosts data={recentes} navigation={navigation} />
+                    <Column style={{ height: 120, }}></Column>
                 </Column>
             </Scroll>
         </Main>
@@ -163,7 +189,7 @@ export const Carrousel = ({ imgs }) => {
     )
 }
 
-const ListPosts = ({ data, navigation }) => {
+export const ListPosts = ({ data, navigation }) => {
     const { color, font, margin } = useTheme()
     const Post = ({ item }) => {
         return (
@@ -202,7 +228,6 @@ const ListPosts = ({ data, navigation }) => {
                 ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#f1f1f1', marginVertical: 15, }} />}
             />
 
-            <Column style={{ height: 120, }}></Column>
         </Column>
     )
 }
@@ -212,9 +237,9 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
         return useAnimatedStyle(() => {
             const width = withTiming(index === dotIndex ? 35 : 14, { duration: 300 });
             const backgroundColor = interpolateColor(
-                index === dotIndex ? 1 : 0, 
-                [0, 1], 
-                [disableColor, activityColor] 
+                index === dotIndex ? 1 : 0,
+                [0, 1],
+                [disableColor, activityColor]
             );
 
             return {
@@ -239,3 +264,23 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
         </Row>
     );
 };
+
+
+const SkeletonBody = () => {
+
+    return(
+    <Column mh={24} mv={50}>
+        <Row style={{ justifyContent: 'space-between', marginBottom: 20, alignItems: 'center',  }}>
+            <Skeleton width={200} height={72} radius={12} colorMode="light"/>
+            <Skeleton width={72} height={72} radius={120} colorMode="light"/>
+        </Row>
+        <Skeleton width={200} height={52} radius={12} colorMode="light"/>
+        <Column style={{height: 12, }} />
+        <Skeleton width={120} height={120} colorMode="light"/>
+        <Column style={{height: 12, }} />
+        <Skeleton width={120} height={120} colorMode="light"/>
+        <Column style={{height: 12, }} />
+        <Skeleton width={120} height={120} colorMode="light"/>
+    
+    </Column>
+)}

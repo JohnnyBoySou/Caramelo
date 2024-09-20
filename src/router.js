@@ -25,7 +25,6 @@ import BlogSearchScreen from './screens/tabs/blog/search';
 import BlogSingleScreen from '@screens/tabs/blog/single';
 //ABOUT
 
-
 //DONATE
 import DonateTypeScreen from '@screens/donate/type';
 import DonateValueScreen from '@screens/donate';
@@ -87,9 +86,9 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
   const route = useRoute();
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'About'
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
   return (
-    <Tab.Navigator initialRouteName="About"
+    <Tab.Navigator initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         backBehavior: 'none',
