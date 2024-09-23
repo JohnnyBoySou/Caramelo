@@ -27,6 +27,8 @@ export function ButtonPrimary({ login = false, type = 'pr', label, pv = 12, ph =
   )
 }
 
+
+
 export const Loader = ({ color = '#91A6C4', size = 20 }) => {
   return (
     <ActivityIndicator
