@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef, } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Vibration } from 'react-native';
 import { Column, Label, Title, Row, Button, LabelBT, useTheme, Loader, } from '@theme/global';
-import { payCredito, } from '@api/request/payments';
+import { payCredito, } from '@api/request/donate/payments';
 import { MotiView } from 'moti';
 import { BookUser, Calendar, Check, CreditCard, X, Lock } from 'lucide-react-native';
 

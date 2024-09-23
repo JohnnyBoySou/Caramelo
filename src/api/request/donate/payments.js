@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getToken from '@hooks/token';
+import { getToken } from '@hooks/token';
 import getBaseURL from '@hooks/urls';
 
 async function postData(endpoint, data) {

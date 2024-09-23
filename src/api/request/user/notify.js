@@ -1,5 +1,5 @@
 import axios from 'axios';
-import getToken  from '@hooks/getToken';
+import {getToken}  from '@hooks/getToken';
 import getBaseURL from '@hooks/getBaseUrl';
 
 

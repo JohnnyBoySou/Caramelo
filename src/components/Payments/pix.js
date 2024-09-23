@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { Column, Label, Title, Row, Button, useTheme } from '@theme/global';
 import { ActivityIndicator } from 'react-native'
 
-import { payPix, getStatusPay } from '@api/request/payments';
+import { payPix, getStatusPay } from '@api/request/donate/payments';
 //Components
 import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';

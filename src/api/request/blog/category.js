@@ -1,6 +1,6 @@
 import axios from "axios";
-import getToken from '@hooks/getToken';
-import getBaseURL from '@hooks/getBaseUrl';
+import {getToken} from '@hooks/token';
+import getBaseURL from '@hooks/urls';
 
 
 export async function getListCategory() {

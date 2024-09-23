@@ -1,11 +1,13 @@
 import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { Main, Scroll, Row, Column, Label, Button, SubLabel, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader } from '@theme/global';
-import { CircleCheck, CircleX, UserPlus } from 'lucide-react-native';
-
+import { Main, Scroll, Row, Column, Label, Title, Button, SubLabel, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, useTheme } from '@theme/global';
+import { CircleCheck, CircleX, UserPlus, X } from 'lucide-react-native';
+import { ActivityIndicator } from 'react-native';
 import Modal from '@components/Modal/index';
 import { HeaderLogo } from '@components/Header';
 import { Input, Success, Error } from '@components/Forms/index';
+import { useNavigation } from '@react-navigation/native';
+import { resetPassword, resetPasswordCode, resetPasswordNew, registerUser } from '@api/request/user';
 
 export default function AuthRegisterScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext)
@@ -18,6 +20,7 @@ export default function AuthRegisterScreen({ navigation, }) {
 
     const modalTermos = useRef();
     const passStrong = useRef();
+    const modalConfirm = useRef();
 
     const checkPasswordStrength = (password) => {
         const criteria = {
@@ -43,16 +46,31 @@ export default function AuthRegisterScreen({ navigation, }) {
     const telRef = useRef(null);
     const passwordRef = useRef(null);
 
-
-    const handleRegister = () => {
+    const handleRegister = async () => {
+        setloading(true)
+        modalConfirm.current?.expand()
+        try {
+            const res = await registerUser(email, password)
+            console.log(res)
+            await createToken(res.token)
+            setSuccess('Confirme seu número de telefone!')
+            setTimeout(() => {
+                modalConfirm.current?.expand()
+            }, 1500);
+        } catch (error) {
+            setError(error.message)
+        } finally {
+            setloading(false)
+        }
     }
+
+
     return (
         <Main >
             <Scroll>
-                <HeaderLogo />
                 <Column ph={margin.h}>
-
-                    <HeadTitle size={42}>Criar conta</HeadTitle>
+                    <HeaderLogo />
+                    <HeadTitle style={{ marginTop: 24, }} size={42}>Criar conta</HeadTitle>
                     <Label>Crie sua conta para conhecer mais sobre o Instituto Caramelo e poder participar das nossas campanhas!</Label>
 
                     <Column style={{ rowGap: 14, marginTop: 14, }}>
@@ -119,7 +137,7 @@ export default function AuthRegisterScreen({ navigation, }) {
 
                     {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
                     <Column style={{ height: 20, }} />
-                    <Button radius={100} bg={color.sc} style={{ backgroundColor: color.sc, }} pv={1} ph={1} onPress={handleRegister} >
+                    <Button radius={100} bg={color.sc} style={{ backgroundColor: color.sc, }} pv={14} ph={20} onPress={handleRegister} >
                         <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
 
 
@@ -139,6 +157,22 @@ export default function AuthRegisterScreen({ navigation, }) {
                     </Column>
                 </Column>
             </Scroll>
+
+
+            <Modal ref={modalConfirm} snapPoints={[0.1, 400]} >
+                <Column style={{ marginHorizontal: margin.h, }}>
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, }}>
+                        <Column>
+                            <Title>Recuperar senha</Title>
+                            <Label>Preencha seu telefone</Label>
+                        </Column>
+                        <Button onPress={() => { modalConfirm?.current.close() }} style={{ backgroundColor: color.sc, width: 48, height: 48, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
+                            <X size={24} color='#fff' />
+                        </Button>
+                    </Row>
+                    <ForgetPassword />
+                </Column>
+            </Modal>
 
             <Modal ref={modalTermos} snapPoints={[0.1, SCREEN_HEIGHT]}>
             </Modal>
@@ -165,6 +199,170 @@ export default function AuthRegisterScreen({ navigation, }) {
                 </Column>
             </Modal>
         </Main>
+    )
+}
+
+
+const ForgetPassword = (forgetPassword) => {
+    const { color, margin, font } = useTheme()
+    const [email, setemail] = useState('');
+    const [password, setpassword] = useState();
+    const [repeatPassword, setrepeatPasswors] = useState();
+    const [success, setsuccess] = useState('');
+    const [error, seterror] = useState('');
+    const [loading, setloading] = useState(false);
+    const [step, setstep] = useState(1);
+    const navigation = useNavigation();
+    const [code, setCode] = useState(new Array(4).fill(''));
+    const repPassword = useRef(null);
+    const inputs = useRef([]);
+    const handleChange = (text, index) => { if (isNaN(text)) return; const newCode = [...code]; newCode[index] = text; setCode(newCode); if (text !== '' && index < 3) { inputs.current[index + 1].focus(); } };
+    const handleKeyPress = (event, index) => { if (event.nativeEvent.key === 'Backspace' && index > 0 && code[index] === '') { inputs.current[index - 1].focus(); } };
+
+
+    const handleVerify = async () => {
+        setloading(true);
+        try {
+            const res = await resetPassword(email);
+            setsuccess(res.message)
+            setTimeout(() => {
+                setstep(2)
+                setsuccess()
+            }, 1500);
+        } catch (error) {
+            console.log(error)
+            seterror(error.message)
+        } finally {
+            setloading(false);
+        }
+    }
+
+    const handleValidate = async () => {
+        setloading(true);
+        try {
+            const res = await resetPasswordCode(email, code.join(''));
+            setsuccess(res.message)
+            setTimeout(() => {
+                setstep(3)
+                setsuccess()
+            }, 1500);
+        } catch (error) {
+            console.log(error)
+            seterror(error.message)
+        } finally {
+            setloading(false);
+        }
+    }
+
+    const handleNewpassword = async () => {
+        setloading(true);
+        if (password !== repeatPassword) {
+            seterror('As senhas não coincidem')
+            setloading(false)
+            return
+        }
+        try {
+            const res = await resetPasswordNew(email, code.join(''), password);
+            setsuccess(res.message)
+            await createToken(res.token)
+            setTimeout(() => {
+                setstep(3)
+                setsuccess()
+                navigation.replace('Tabs');
+            }, 1500);
+        } catch (error) {
+            console.log(error)
+            seterror(error.message)
+        } finally {
+            setloading(false);
+        }
+    }
+
+
+    return (
+        <Column style={{ rowGap: 16, }}>
+            {step == 1 && <Column style={{ rowGap: 16, }}>
+
+                <Input
+                    value={email}
+                    label="Telefone *"
+                    keyboard="numeric"
+                    onSubmitEditing={handleVerify}
+                    placeholder='Ex.: 11 9 9876-5432' setValue={setemail} />
+                {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+                <Button disabled={loading} onPress={handleVerify} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }}>
+                    <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
+                        {loading ? <ActivityIndicator size="small" color={color.title} /> :
+                            <Title size={18} color={color.title} >Enviar</Title>
+                        }
+                    </Row>
+                </Button>
+            </Column>}
+
+            {step == 2 && <Column style={{ rowGap: 16, }}>
+                <Title>Confirme seu Código</Title>
+                <Label>Insira o código enviado para o seu telefone</Label>
+                <Row style={{ columnGap: 12, }}>
+                    {code.map((digit, index) => (
+                        <TextInput
+                            key={index}
+                            value={digit}
+                            onChangeText={(text) => handleChange(text, index)}
+                            onKeyPress={(e) => handleKeyPress(e, index)}
+                            style={{
+                                height: 84,
+                                backgroundColor: digit == index ? '#505050' : '#303030',
+                                color: "#fff",
+                                fontFamily: font.medium,
+                                borderRadius: 12,
+                                flexGrow: 1,
+                                textAlign: 'center',
+                                fontSize: 32,
+                            }}
+                            keyboardType="number-pad"
+                            maxLength={1}
+                            ref={(input) => (inputs.current[index] = input)}
+                        />
+                    ))}
+                </Row>
+                {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+                <Button disabled={loading} onPress={handleValidate} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }}>
+                    <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
+                        {loading ? <ActivityIndicator size="small" color={color.title} /> :
+                            <Title size={18} color={color.title} >Validar</Title>
+                        }
+                    </Row>
+                </Button>
+            </Column>}
+
+            {step == 3 && <Column style={{ rowGap: 16, }}>
+                <Title>Nova senha</Title>
+                <Label>Preencha sua nova senha</Label>
+                <Input
+                    value={password}
+                    label="Senha *"
+                    onSubmitEditing={() => { repPassword.current?.focus() }}
+                    placeholder='Ex.: *********' setValue={setpassword}
+                    pass={true}
+                />
+                <Input
+                    value={repeatPassword}
+                    label="Repita a Senha *"
+                    ref={repPassword}
+                    onSubmitEditing={handleNewpassword}
+                    placeholder='Ex.: *********' setValue={setrepeatPasswors}
+                    pass={true}
+                />
+                {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+                <Button disabled={loading} onPress={handleNewpassword} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }}>
+                    <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
+                        {loading ? <ActivityIndicator size="small" color={color.title} /> :
+                            <Title size={18} color={color.title} >Definir nova senha</Title>
+                        }
+                    </Row>
+                </Button>
+            </Column>}
+        </Column>
     )
 }
 

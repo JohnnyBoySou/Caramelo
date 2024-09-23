@@ -1,7 +1,7 @@
 import axios from 'axios';
 import validator from 'validator';
-import getToken from '@hooks/getToken';
-import getBaseURL from '@hooks/getBaseUrl';
+import { getToken } from '@hooks/token';
+import getBaseURL from '@hooks/urls';
 
 // Função auxiliar para requisições POST
 async function postData(endpoint, data, token = null) {
@@ -24,7 +24,7 @@ async function postData(endpoint, data, token = null) {
 }
 
 // Login do usuário
-export const getUser = async (email, password) => {
+export const loginUser = async (email, password) => {
   const sanitizedEmail = validator.normalizeEmail(email);
   const sanitizedPassword = validator.escape(password);
 
@@ -108,20 +108,9 @@ export const verifyEmail = async (email, code) => {
   });
 };
 
-// Indicação de usuário
-export const indicacaoUser = async () => {
-  const token = await getToken();
-  return await postData('/usuarios/indicacao', {}, token);
-};
-
 // Exclusão de usuário
 export const excludeUser = async (password, message) => {
   const token = await getToken();
   return await postData('/usuarios/exclusao', { password, message }, token);
 };
 
-// Verificar estabelecimento pelo email
-export const verifyEstabelecimento = async (email) => {
-  const sanitizedEmail = validator.normalizeEmail(email);
-  return await postData('/usuarios/emailestabelecimento', { email: sanitizedEmail });
-};

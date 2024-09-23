@@ -1,11 +1,13 @@
 import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { Main, Scroll, Row, Column, Label, Button, Title, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, Image } from '@theme/global';
+import { Main, Scroll, Row, Column, Label, Button, Title, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, Image, ButtonPrimary } from '@theme/global';
 import { ArrowRight, UserPlus } from 'lucide-react-native';
 
 import Modal from '@components/Modal/index';
 import { HeaderLogo, Header } from '@components/Header';
 import { Input, Success, Error } from '@components/Forms/index';
+import { loginUser } from '@api/request/user';
+import { createToken } from '@hooks/token';
 
 export default function AuthLoginScren({ navigation, }) {
   const { color, font, margin, } = useContext(ThemeContext)
@@ -20,16 +22,29 @@ export default function AuthLoginScren({ navigation, }) {
   const [loading, setloading,] = useState(false);
 
   const [tel, settel] = useState();
-  const passRef =  useRef(null)
+  const passRef = useRef(null)
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    try {
+      const res = await loginUser(email, password)
+      console.log(res)
+      await createToken(res.token)
+      setSuccess('Logado com sucesso!')
+      setTimeout(() => {
+        navigation.navigate('Tabs')
+      }, 2000);
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setloading(false)
+    }
   }
   return (
     <Main >
       <Scroll>
         <Column ph={margin.h}>
-        <HeaderLogo />
-        <Column style={{height: 12, }} />
+          <HeaderLogo />
+          <Column style={{ height: 12, }} />
           <HeadTitle size={42}>Entrar</HeadTitle>
           <Label>Entre em nossa comunidade e veja o que estamos fazendo agora!</Label>
 
@@ -61,7 +76,7 @@ export default function AuthLoginScren({ navigation, }) {
 
           <Column style={{ height: 20, }} />
 
-          <Button radius={100} bg={color.pr} pv={1} ph={1} onPress={() => {navigation.navigate('Tabs')}} >
+          <Button radius={100} bg={color.pr} pv={14} ph={20} onPress={() => { navigation.navigate('Tabs') }}>
             <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
               <LabelBT size={24} color="#fff" align="center" style={{ marginLeft: 94, }}>Entrar</LabelBT>
               <Column style={{ width: 64, height: 64, marginRight: -12, marginTop: -6, marginBottom: -6, backgroundColor: '#FAC423', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
@@ -70,7 +85,7 @@ export default function AuthLoginScren({ navigation, }) {
             </Row>
           </Button>
           <Title align="center" style={{ marginVertical: 20, }}>ou</Title>
-          <Button radius={100} bg="#AB7C8380" pv={1} ph={1} onPress={() => { navigation.navigate('AuthRegister') }} >
+          <Button radius={100} bg="#AB7C8380" pv={14} ph={20} onPress={() => { navigation.navigate('AuthRegister') }} >
             <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
               <LabelBT size={24} color={color.sc} align="center" style={{ marginLeft: 44, }}>Criar conta</LabelBT>
               <Column style={{ width: 64, height: 64, marginRight: -12, marginTop: -6, marginBottom: -6, backgroundColor: color.sc, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
@@ -87,8 +102,9 @@ export default function AuthLoginScren({ navigation, }) {
         </Column>
       </Scroll>
       <Modal ref={modalPassword} snapPoints={[0.1, SCREEN_HEIGHT]}>
-        <Header title="Recuperar senha" />
         <Column ph={24}>
+          <Header title="Recuperar senha" />
+          <Column style={{ height: 10, }} />
           <Label>Enviaremos um SMS com o código de verificação para o seu telefone.</Label>
           <Column style={{ height: 20, }} />
           <Input
@@ -97,6 +113,8 @@ export default function AuthLoginScren({ navigation, }) {
             value={tel}
             setValue={settel}
           />
+          <Column style={{ height: 20, }} />
+          <ButtonPrimary label="Enviar" onPress={() => { }} type='pr' />
         </Column>
       </Modal>
     </Main>
