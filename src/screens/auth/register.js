@@ -1,22 +1,24 @@
 import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
-import { Main, Scroll, Row, Column, Label, Title, Button, SubLabel, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, useTheme } from '@theme/global';
+import { Main, Scroll, Row, Column, Label, Title, Button, SubLabel, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, useTheme, ButtonPrimary } from '@theme/global';
 import { CircleCheck, CircleX, UserPlus, X } from 'lucide-react-native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, TextInput } from 'react-native';
 import Modal from '@components/Modal/index';
 import { HeaderLogo } from '@components/Header';
 import { Input, Success, Error } from '@components/Forms/index';
 import { useNavigation } from '@react-navigation/native';
 import { resetPassword, resetPasswordCode, resetPasswordNew, registerUser } from '@api/request/user';
+import { verifyEmail } from '@api/request/user';
+import { createToken } from '@hooks/token';
 
 export default function AuthRegisterScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext)
 
-    const [name, setname] = useState();
-    const [cpf, setcpf] = useState();
-    const [email, setemail] = useState();
-    const [tel, settel] = useState();
-    const [password, setpassword] = useState();
+    const [name, setname] = useState('João de SOsua');
+    const [cpf, setcpf] = useState('12345678901');
+    const [email, setemail] = useState('joaodesousa101@gmail.com');
+    const [tel, settel] = useState('49991935657');
+    const [password, setpassword] = useState('223761de');
 
     const modalTermos = useRef();
     const passStrong = useRef();
@@ -47,23 +49,25 @@ export default function AuthRegisterScreen({ navigation, }) {
     const passwordRef = useRef(null);
 
     const handleRegister = async () => {
-        setloading(true)
         modalConfirm.current?.expand()
+        setloading(true)
+        setError('')
+        setSuccess('')
+        const params = { name, cpf, email, tel, password }
         try {
-            const res = await registerUser(email, password)
-            console.log(res)
-            await createToken(res.token)
-            setSuccess('Confirme seu número de telefone!')
-            setTimeout(() => {
-                modalConfirm.current?.expand()
-            }, 1500);
+            const res = await registerUser(params)
+            if (res.email) {
+                setSuccess('Confirme seu número de telefone!')
+                setTimeout(() => {
+                    modalConfirm.current?.expand()
+                }, 1500);
+            }
         } catch (error) {
             setError(error.message)
         } finally {
             setloading(false)
         }
     }
-
 
     return (
         <Main >
@@ -161,16 +165,18 @@ export default function AuthRegisterScreen({ navigation, }) {
 
             <Modal ref={modalConfirm} snapPoints={[0.1, 400]} >
                 <Column style={{ marginHorizontal: margin.h, }}>
-                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, }}>
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Column>
-                            <Title>Recuperar senha</Title>
-                            <Label>Preencha seu telefone</Label>
+                            <Title>Confirme seu e-mail</Title>
+                            <Column style={{ height: 6, }} />
+                            <Label size={14}>Preencha o código enviado no seu e-mail</Label>
                         </Column>
-                        <Button onPress={() => { modalConfirm?.current.close() }} style={{ backgroundColor: color.sc, width: 48, height: 48, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
+                        <Button onPress={() => { modalConfirm?.current.close() }} style={{ backgroundColor: color.sc, width: 42, height: 42, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <X size={24} color='#fff' />
                         </Button>
                     </Row>
-                    <ForgetPassword />
+
+                    <ConfirmEmail email={email} navigation={navigation} />
                 </Column>
             </Modal>
 
@@ -199,6 +205,74 @@ export default function AuthRegisterScreen({ navigation, }) {
                 </Column>
             </Modal>
         </Main>
+    )
+}
+
+const ConfirmEmail = ({ email, navigation }) => {
+
+    const { color, font, margin, } = useContext(ThemeContext)
+    const inputs = useRef([]);
+    const [code, setCode] = useState(new Array(4).fill(''));
+
+    const [loading, setloading] = useState(false);
+    const [error, seterror] = useState();
+    const [success, setsuccess] = useState();
+    const handleChange = (text, index) => { if (isNaN(text)) return; const newCode = [...code]; newCode[index] = text; setCode(newCode); if (text !== '' && index < 3) { inputs.current[index + 1].focus(); } };
+    const handleKeyPress = (event, index) => { if (event.nativeEvent.key === 'Backspace' && index > 0 && code[index] === '') { inputs.current[index - 1].focus(); } };
+    const handleVerify = async () => {
+        seterror()
+        setsuccess()
+        setloading(true)
+        if (code.join('').length == 4) {
+            try {
+                const res = await verifyEmail(email, code.join(''));
+                if (res?.token) {
+                    setsuccess('Email verificado com sucesso! Aguarde um momento...')
+                    await createToken(res, token)
+                    setTimeout(() => {
+                        navigation.replace('Tabs')
+                    }, 500);
+                }
+            } catch (error) {
+                console.log(error)
+                seterror(error.message)
+            } finally {
+                setloading(false)
+            }
+        } else {
+            seterror('Preencha o código de verificação')
+            setloading(false)
+        }
+    }
+
+    return (
+        <Column>
+            <Row style={{ columnGap: 8, marginVertical: 24, }}>
+                {code.map((digit, index) => (
+                    <TextInput
+                        key={index}
+                        value={digit}
+                        onChangeText={(text) => handleChange(text, index)}
+                        onKeyPress={(e) => handleKeyPress(e, index)}
+                        style={{
+                            height: 84,
+                            backgroundColor: '#D1D1D190',
+                            color: color.title,
+                            fontFamily: font.medium,
+                            borderRadius: 12,
+                            flexGrow: 1,
+                            textAlign: 'center',
+                            fontSize: 28,
+                        }}
+                        keyboardType="number-pad"
+                        maxLength={1}
+                        ref={(input) => (inputs.current[index] = input)}
+                    />
+                ))}
+            </Row>
+            {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+            <ButtonPrimary label='Verificar' disabled={loading} onPress={handleVerify} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }} />
+        </Column>
     )
 }
 

@@ -1,26 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, ButtonPrimary, U, SubLabel } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, ButtonPrimary, U, Loader } from '@theme/global';
 import { Header } from '@components/Header';
-import { Check, Loader, TriangleAlert } from 'lucide-react-native';
+import { Check,  TriangleAlert } from 'lucide-react-native';
 import { MotiView } from 'moti';
+import { singleExtract } from '@api/request/history';
 
 export default function HistorySingleScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
-    const { value } = route.params ? route.params : { value: 1 };
     const type = route.params ? route.params.type : 'Doação';
-    const item = route.params?.item
+    const id = route.params ? route.params.id : 1;
+    const [item, setItem] = useState(null);
+
+    const [loading, setloading] = useState(true);
+    const fetchData = async () => {
+        setloading(true)
+        try {
+            const res = await singleExtract(id, type);
+            setItem(res);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloading(false)
+        }
+    }
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+
     return (
         <Scroll style={{ backgroundColor: '#fff', }}>
             <Column mh={margin.h} mv={24}>
                 <Header title="Detalhes" />
-                {type === 'Doação' ? <Doacao item={item} navigation={navigation} /> : <Nota item={item} navigation={navigation} />}
+                <Column style={{ justifyContent: 'center', alignItems: 'center', }}>
+                    {loading ? <Column style={{ justifyContent: 'center', alignItems: 'center', height: 500, }}><Loader size={32} color={color.sc} /></Column> : <>{type === 'Doação' ? <Doacao item={item} navigation={navigation} /> : <Nota item={item} navigation={navigation} />}</>}
+                </Column>
             </Column>
         </Scroll>
     )
 }
 
 const Nota = ({ item, navigation }) => {
-    const { value, date } = item;
+    const value = item?.value;
+    const date = item?.date;
     return (
         <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 12, }}>
             <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} style={{ backgroundColor: '#C0EFD4', width: 124, height: 124, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>

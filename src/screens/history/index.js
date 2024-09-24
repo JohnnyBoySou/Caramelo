@@ -1,37 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, LabelBT, Image } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, LabelBT, Image, ButtonPrimary } from '@theme/global';
 
 import { HeaderHistory } from '@components/Header';
 import { StatusBar } from 'expo-status-bar';
-import { ArrowUpRight, Check, Loader, Search, TriangleAlert } from 'lucide-react-native';
+import { ArrowUpRight, Check, Loader, Plus, Search, TriangleAlert } from 'lucide-react-native';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { FlatList } from 'react-native';
 import { Skeleton } from 'moti/skeleton';
+import { listDonate, listNotas } from '@api/request/history';
+import { useNavigation } from '@react-navigation/native';
 
 export default function HistoryScreen({ navigation, }) {
     const { color, font, margin, } = useTheme();
 
     const [type, settype] = useState('Notas');
     const [date, setdate] = useState('TUDO');
-    const [data, setdata] = useState(DATA);
     const [loading, setloading] = useState(false);
 
-    const fetchData = () => {
+    const [donate, setdonate] = useState();
+    const [notas, setnotas] = useState();
+
+    const fetchData = async () => {
         setloading(true)
         try {
-
+            const donateres = await listDonate();
+            const notasres = await listNotas();
+            setdonate(donateres);
+            setnotas(notasres);
         } catch (error) {
-
+            console.log(error)
         } finally {
-            setTimeout(() => {
-                setloading(false)
-            }, 2000);
+            setloading(false)
         }
     }
+
     useEffect(() => {
         fetchData()
     }, [])
 
+    const a = false;
     return (
         <Column style={{ backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style="light" backgroundColor={color.sc} />
@@ -51,7 +58,7 @@ export default function HistoryScreen({ navigation, }) {
             </Column>
 
             <Column>
-                <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={{ columnGap: 8, marginVertical: 12, }}>
+                {a && <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={{ columnGap: 8, marginVertical: 12, }}>
                     <Column style={{ width: 12, }}></Column>
                     {dates.map((item, index) => (
                         <Button key={index} pv={10} ph={16} style={{ backgroundColor: date == item.name ? color.sc : '#F1F1F1', justifyContent: 'center', alignItems: 'center', }} onPress={() => { setdate(item.name) }}>
@@ -59,25 +66,27 @@ export default function HistoryScreen({ navigation, }) {
                         </Button>
                     ))}
                     <Column style={{ width: 12, }}></Column>
-                </ScrollView>
-
+                </ScrollView>}
+                <Column style={{ height: 20, }}></Column>
                 {loading ? <SkeletonBody /> : <>
                     {type == 'Notas' ?
                         <FlatList
-                            data={data.notas}
+                            data={notas}
                             renderItem={({ item }) => <CardNota item={item} navigation={navigation} />}
                             keyExtractor={item => item.id}
                             showsVerticalScrollIndicator={false}
+                            ListEmptyComponent={<EmptyNota />}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
                         />
                         :
                         <FlatList
-                            data={data.doacoes}
+                            data={donate}
                             renderItem={({ item }) => <CardDoacao item={item} navigation={navigation} />}
                             keyExtractor={item => item.id}
                             showsVerticalScrollIndicator={false}
+                            ListEmptyComponent={<EmptyDonate />}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
@@ -88,6 +97,33 @@ export default function HistoryScreen({ navigation, }) {
         </Column>
     )
 }
+
+const EmptyNota = () => {
+    const navigation = useNavigation();
+    return (
+        <Column style={{ justifyContent: 'center', alignItems: 'center', rowGap: 18, backgroundColor: '#f1f1f1', borderRadius: 12, paddingVertical: 20, paddingHorizontal: 20, }}>
+            <Column style={{ width: 64, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffff', height: 64, borderRadius: 100, }}>
+                <Plus size={28} color='#5F101C' />
+            </Column>
+            <Title style={{ textAlign: 'center', }} size={18}>Nenhuma nota fiscal enviada ainda.</Title>
+            <ButtonPrimary pv={8} label='Enviar nota' onPress={() => { navigation.navigate('Notafiscal') }} />
+        </Column>
+    )
+}
+
+const EmptyDonate = () => {
+    const navigation = useNavigation();
+    return (
+        <Column style={{ justifyContent: 'center', alignItems: 'center', rowGap: 18, backgroundColor: '#f1f1f1', borderRadius: 12, paddingVertical: 20, paddingHorizontal: 20, }}>
+            <Column style={{ width: 64, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffff', height: 64, borderRadius: 100, }}>
+                <Plus size={28} color='#5F101C' />
+            </Column>
+            <Title style={{ textAlign: 'center', }} size={18}>Nenhuma doação feita ainda.</Title>
+            <ButtonPrimary pv={8} label='Fazer doação' onPress={() => { navigation.navigate('DonateValue') }} />
+        </Column>
+    )
+}
+
 
 const CardNota = ({ item, navigation }) => {
     const { color, font, margin } = useTheme()

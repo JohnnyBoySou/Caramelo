@@ -12,8 +12,8 @@ import { createToken } from '@hooks/token';
 export default function AuthLoginScren({ navigation, }) {
   const { color, font, margin, } = useContext(ThemeContext)
 
-  const [email, setemail] = useState();
-  const [password, setpassword] = useState();
+  const [email, setemail] = useState('joaodesousa101@gmail.com');
+  const [password, setpassword] = useState('223761de');
 
   const modalPassword = useRef();
 
@@ -25,18 +25,27 @@ export default function AuthLoginScren({ navigation, }) {
   const passRef = useRef(null)
 
   const handleLogin = async () => {
-    try {
-      const res = await loginUser(email, password)
-      console.log(res)
-      await createToken(res.token)
-      setSuccess('Logado com sucesso!')
-      setTimeout(() => {
-        navigation.navigate('Tabs')
-      }, 2000);
-    } catch (error) {
-      setError(error.message)
-    } finally {
-      setloading(false)
+    if (email === '' || password === '') {
+      setError('Preencha todos os campos')
+      return
+    }
+    else {
+      setloading(true)
+      try {
+        const res = await loginUser(email, password)
+        console.log(res)
+        if (res.token) {
+          await createToken(res.token)
+          setSuccess('Logado com sucesso!')
+          setTimeout(() => {
+            navigation.navigate('Tabs')
+          }, 2000);
+        }
+      } catch (error) {
+        setError(error.message)
+      } finally {
+        setloading(false)
+      }
     }
   }
   return (
@@ -76,7 +85,7 @@ export default function AuthLoginScren({ navigation, }) {
 
           <Column style={{ height: 20, }} />
 
-          <Button radius={100} bg={color.pr} pv={14} ph={20} onPress={() => { navigation.navigate('Tabs') }}>
+          <Button radius={100} bg={color.pr} pv={14} ph={20} onPress={handleLogin}>
             <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
               <LabelBT size={24} color="#fff" align="center" style={{ marginLeft: 94, }}>Entrar</LabelBT>
               <Column style={{ width: 64, height: 64, marginRight: -12, marginTop: -6, marginBottom: -6, backgroundColor: '#FAC423', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
@@ -89,7 +98,7 @@ export default function AuthLoginScren({ navigation, }) {
             <Row style={{ alignItems: 'center', justifyContent: 'space-between', }}>
               <LabelBT size={24} color={color.sc} align="center" style={{ marginLeft: 44, }}>Criar conta</LabelBT>
               <Column style={{ width: 64, height: 64, marginRight: -12, marginTop: -6, marginBottom: -6, backgroundColor: color.sc, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
-                {loading ? <Loader color="#fff" size={32} /> : <UserPlus size={28} color="#fff" />}
+                <UserPlus size={28} color="#fff" />
               </Column>
             </Row>
           </Button>

@@ -22,15 +22,13 @@ async function postData(endpoint, data, token = null) {
     }
 }
 
-export async function sendNotafiscal(params) {
+export async function sendNotafiscal(notas) {
     const token = await getToken();
-    const { id, notas } = params;
-    return await postData('/usuarios/doar/nota', { instituicao_id: id, notas }, token);
+    return await postData('/usuarios/doar/nota', {notas: notas, instituicao_id: 16, }, token);
 }
 
-export async function sendNotafiscalAnonima(params) {
-    const { id, notas } = params;
-    return await postData('/usuarios/doar/variasanonima', { instituicao_id: id, notas, });
+export async function sendNotafiscalAnonima(notas) {
+    return await postData('/usuarios/doar/variasanonima', { instituicao_id: 16, notas, });
 }
 
 export async function verifyNota(params) {

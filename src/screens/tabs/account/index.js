@@ -1,11 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-react-native';
+import { listUser } from '@api/request/user';
 
 export default function AccountScreen({ navigation, }) {
     const { color, font, margin } = useContext(ThemeContext);
+    const [loading, setloading] = useState();
     const [user, setuser] = useState({
         name: 'João de Sousa',
         email: 'joaosousa@gmail.com',
@@ -15,6 +17,23 @@ export default function AccountScreen({ navigation, }) {
         likes: 62,
         avatar: 'https://avatar.iran.liara.run/public/24',
     });
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+    const fetchData = async () => {
+        setloading(true)
+        try {
+            const res = await listUser()
+            setuser(res);
+        } catch (error) {
+            console.log(error)
+        } finally{
+            setloading(false)
+        }
+    }
+
     return (
         <Main style={{ backgroundColor: '#fff', }}>
             <StatusBar style="dark" backgroundColor="#fff" animated />

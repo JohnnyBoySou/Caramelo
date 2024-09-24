@@ -40,7 +40,8 @@ import HistorySingleScreen from '@screens/history/single';
 
 //NOTA FISCAL
 import NotafiscalScreen from '@screens/notafiscal'
-
+import NotafiscalSuccessScreen from './screens/notafiscal/success';
+import NotafiscalErrorScreen from './screens/notafiscal/error';
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
 
@@ -50,7 +51,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='AuthLogin'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -64,9 +65,13 @@ export default function Router() {
         <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
 
         <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
-        <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true, }}>
+          <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        </Stack.Group>
 
         <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="NotafiscalSuccess" component={NotafiscalSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="NotafiscalError" component={NotafiscalErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
 
         <Stack.Screen name="DonateType" component={DonateTypeScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonateValue" component={DonateValueScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />

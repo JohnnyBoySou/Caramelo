@@ -2,13 +2,24 @@ import React, { useEffect } from 'react';
 import { Main, Title, Label, } from '@theme/global';
 import { MotiImage, MotiView } from 'moti';
 import { StatusBar } from 'expo-status-bar';
+import { getToken } from '@hooks/token';
 
 
 export default function AsyncStaticScreen({ navigation, }) {
 
     useEffect(() => {
+        const fetchData =  async () => {
+            try {
+                const user = await getToken();
+                if(user){
+                    navigation.replace('Tabs')
+                }
+            } catch (error) {
+                navigation.replace('Onboarding')
+            }
+        }
         setTimeout(() => {
-            navigation.replace('Onboarding')
+            fetchData()
         }, 2000)
     }, [])
     return (

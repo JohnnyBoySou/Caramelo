@@ -12,6 +12,8 @@
         "@imgs/*": ["src/assets/imgs/*"],
         "@env": ["../src/env"],
         "@request/*": ["src/api/request/*"],
+        "@anim/*": ["src/assets/anim/*"],
+        "@lottie/*": ["src/assets/lottie/*"],
       }
     }
   }
