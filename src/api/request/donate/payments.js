@@ -12,9 +12,11 @@ async function postData(endpoint, data) {
                 Authorization: `Bearer ${token}`,
             },
         });
+        console.log(res.data)
         return res.data;
     } catch (error) {
         console.error(error);
+        console.log(error.request)
         let errMsg;
         try {
             const err = error?.response?.data || { message: 'An error occurred' };
@@ -26,17 +28,17 @@ async function postData(endpoint, data) {
     }
 }
 
-export async function payPix(params) {
+export async function payPix(value) {
     return await postData('/usuarios/criadoacaopix', {
-        'IDinstituicao': params.ong,
-        'valor': params.value,
+        'IDinstituicao': 16,
+        'valor': value,
     });
 }
 
 export async function payBoleto(params) {
     return await postData('/usuarios/criadoacaoboleto', {
-        'IDinstituicao': params.ong,
-        'valor': params.value,
+        'IDinstituicao': 16,
+        'valor': value,
     });
 }
 
@@ -47,7 +49,8 @@ export async function getStatusPay(transacao) {
 }
 
 export async function payCredito(params) {
-    const { ong, value, nome, cvv, meseano, numerocartao } = params;
+    console.log(params)
+    const { value, nome, cvv, meseano, numerocartao } = params;
     return await postData('/usuarios/criadoacaocartao', {
         "nome": nome,
         "numerocartao": numerocartao,
@@ -55,7 +58,7 @@ export async function payCredito(params) {
         "mes": meseano.slice(0, 2),
         "ano": meseano.slice(3, 5),
         "valor": value,
-        "IDinstituicao": ong,
+        "IDinstituicao": 16,
     });
 }
 

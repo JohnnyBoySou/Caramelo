@@ -1,27 +1,27 @@
 import React, { useEffect, useState, useContext, useRef, } from 'react';
-import { ActivityIndicator, KeyboardAvoidingView, Vibration } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Pressable, Vibration } from 'react-native';
 import { Column, Label, Title, Row, Button, LabelBT, useTheme, Loader, } from '@theme/global';
 import { payCredito, } from '@api/request/donate/payments';
 import { MotiView } from 'moti';
 import { BookUser, Calendar, Check, CreditCard, X, Lock } from 'lucide-react-native';
 
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { Input } from '@components/Forms'
+import { Input, Success, Error } from '@components/Forms'
 import { useNavigation } from '@react-navigation/native';
 import { Header } from '@components/Header';
 
 export default function PaymentCredito({ value }) {
 
     const { color, margin, font } = useTheme();
-
+    const navigation = useNavigation();
     const [error, seterror] = useState();
     const [loading, setloading] = useState(false);
     const [success, setsuccess] = useState();
 
-    const [nome, setnome] = useState('');
-    const [cvv, setcvv] = useState('');
-    const [mes, setmes] = useState('');
-    const [numerocartao, setnumerocartao] = useState('');
+    const [nome, setnome] = useState('TESTE DA SILVA');
+    const [cvv, setcvv] = useState('123');
+    const [mes, setmes] = useState('12/32');
+    const [numerocartao, setnumerocartao] = useState('4111111111111111');
     const cvvref = useRef()
     const mesref = useRef()
     const numerocartaoref = useRef()
@@ -39,10 +39,12 @@ export default function PaymentCredito({ value }) {
             numerocartao: numerocartao,
         }
         try {
-            // const res = await payCredito(params)
-            setsuccess(true)
-            seterror()
-            Vibration.vibrate(300);
+            const res = await payCredito(params)
+            if(res.status == 'captured'){
+                Vibration.vibrate(300);
+                setsuccess('Pagamento realizado com sucesso!')
+                navigation.navigate('DonateSuccess', { status: 'Pagamento realizado com sucesso!' });
+            }
         } catch (error) {
             seterror(error.message)
             Vibration.vibrate(300);
@@ -124,7 +126,15 @@ export default function PaymentCredito({ value }) {
 
                     <Column style={{ flexGrow: 1, height: 2, backgroundColor: '#d1d1d1', }} />
 
-                    <BuyService handleBuyService={handleBuyService} loading={loading} error={error} success={success} />
+                    {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+
+                    <Button pv={14} onPress={handleBuyService} style={{ backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center',  }} radius={12}>
+                        <Row style={{ justifyContent: 'center', alignItems: 'center',  }}>
+                            {loading ? <Loader color={color?.pr}/> : <LabelBT color='#fff'>Finalizar</LabelBT>}
+                        </Row>
+                    </Button>
+
+
                 </Column>
             </Column>
         </KeyboardAvoidingView>
@@ -148,7 +158,7 @@ const BuyService = ({ handleBuyService, loading, error, success, }) => {
             }, 1500);
         } else if (error && !loading) {
             // Erro
-            widthValue.value = withTiming(284, { duration: 300 });
+            widthValue.value = withTiming(124, { duration: 300 });
             heightValue.value = withTiming(52, { duration: 300 });
             radiusValue.value = withTiming(100, { duration: 300 });
             backgroundValue.value = withTiming('#f55353');
@@ -178,17 +188,20 @@ const BuyService = ({ handleBuyService, loading, error, success, }) => {
         };
     });
     return (
-        <Animated.View style={[{}, animatedStyle]}>
-            <Column style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
-                {loading ? <ActivityIndicator size="large" color="#fff" />
-                    : <Label style={{ color: '#fff', textAlign: 'center', fontFamily: 'Font_Medium', }}>{error?.length > 0 ? error : 'Verificar e continuar'}</Label>}
-            </Column>
-            {success &&
-                <MotiView from={{ opacity: 0, }} animate={{ opacity: 1, }} transition={{ type: 'timing', duration: 500, }} delay={500} style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
-                    <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} style={{ width: 100, height: 100, borderRadius: 100, backgroundColor: "#ffffff50", justifyContent: 'center', alignItems: 'center', }}>
-                        <Check size={32} color="#fff" />
-                    </MotiView>
-                </MotiView>}
-        </Animated.View>
+        <Pressable onPress={handleBuyService}>
+
+            <Animated.View style={[{}, animatedStyle]}>
+                <Column style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+                    {loading ? <ActivityIndicator size="large" color="#fff" />
+                        : <Label style={{ color: '#fff', textAlign: 'center', fontFamily: 'Font_Medium', }}>{error?.length > 0 ? error : 'Verificar e continuar'}</Label>}
+                </Column>
+                {success &&
+                    <MotiView from={{ opacity: 0, }} animate={{ opacity: 1, }} transition={{ type: 'timing', duration: 500, }} delay={500} style={{ justifyContent: 'center', alignItems: 'center', flex: 1, }}>
+                        <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} style={{ width: 100, height: 100, borderRadius: 100, backgroundColor: "#ffffff50", justifyContent: 'center', alignItems: 'center', }}>
+                            <Check size={32} color="#fff" />
+                        </MotiView>
+                    </MotiView>}
+            </Animated.View>
+        </Pressable>
     );
 };

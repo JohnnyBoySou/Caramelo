@@ -10,7 +10,7 @@ const Error = ({ msg }) => {
                 <Column style={{ width: 32, height: 32, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                     <AlertCircle size={24} color="#fff" />
                 </Column>
-                <Title style={{ fontSize: 14, marginLeft: 6, color: '#fff', lineHeight: 16, fontFamily: font.medium, marginRight: 12, }}>{msg}</Title>
+                <Title style={{ fontSize: 14, maxWidth: 260, marginLeft: 6, color: '#fff', lineHeight: 16, fontFamily: font.medium, marginRight: 12, }}>{msg}</Title>
             </Column>
         </Animated.View>
     )

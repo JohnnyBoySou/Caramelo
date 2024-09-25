@@ -13,7 +13,7 @@ import { Clipboard as Clip, X } from 'lucide-react-native';
 import { Header } from '@components/Header';
 
 
-export default function PaymentPix({ value, settype }) {
+export default function StatusPix({ value, settype }) {
     const { color, font, margin } = useTheme();
     const [loading, setloading] = useState(true);
     const [data, setdata] = useState();

@@ -104,7 +104,7 @@ export default function BlogScreen({ navigation, route }) {
         fetchData()
 
     },[isFocused])
-   // if(loading){return <SkeletonBody />}
+    if(loading){return <SkeletonBody />}
     return (
         <Main>
             <Scroll>

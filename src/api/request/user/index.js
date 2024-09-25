@@ -2,6 +2,7 @@ import axios from 'axios';
 import validator from 'validator';
 import { getToken } from '@hooks/token';
 import getBaseURL from '@hooks/urls';
+import { excludeToken } from '../../../hooks/token';
 
 // Função auxiliar para requisições POST
 async function postData(endpoint, data, token = null) {
@@ -29,15 +30,16 @@ async function postData(endpoint, data, token = null) {
   }
 }
 
-async function getData(endpoint, data,) {
+async function getData(endpoint) {
   const BASE_URL = await getBaseURL();
   const token = await getToken();
   const headers = { Authorization: `Bearer ${token}` };
   try {
-    const res = await axios.get(`${BASE_URL}${endpoint}`, data, { headers });
+    const res = await axios.get(`${BASE_URL}${endpoint}`, { headers });
     return res.data;
   } catch (error) {
     let errMsg;
+    console.log(error.request)
 
     if (error.response) {
       const err = error.response.data;
@@ -113,6 +115,7 @@ export const validateToken = async (token) => {
 export const updateUser = async (params) => {
   const token = await getToken();
   return await postData('/usuarios/editarperfil', {
+    email: params.email,
     name: params.name,
     whatsapp: params.whatsapp,
     avatar: params.avatar,
@@ -133,6 +136,15 @@ export const verifyEmail = async (email, code) => {
     codigo: code,
   });
 };
+
+export const logoutUser = async () => {
+  try {
+    const res = await excludeToken();
+    return true;
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 // Exclusão de usuário
 export const excludeUser = async (password, message) => {

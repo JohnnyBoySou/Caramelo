@@ -1,4 +1,4 @@
-import React, { useContext, useState, } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Dimensions, } from 'react-native';
 import { Main, Scroll, Column, Row, Title, Image, Button, Label, ButtonPrimary, LabelBT } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
@@ -12,21 +12,32 @@ import { Carrousel } from '../blog';
 import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 import { ListPosts } from '../blog';
 import { MotiImage } from 'moti';
+import { listUser } from '@api/request/user';
 
-const { width } = Dimensions.get('window');
 
 export default function HomeScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext);
     const isFocused = useIsFocused();
-    const [user, setuser] = useState({
-        name: 'João de Sousa',
-        email: 'joaosousa@gmail.com',
-        notas: 14,
-        doacoes: 21,
-        comments: 30,
-        likes: 62,
-        avatar: 'https://avatar.iran.liara.run/public/24',
-    });
+
+    const [user, setuser] = useState();
+    const [loading, setloading] = useState();
+
+    useEffect(() => {
+        fetchData()
+    }, [isFocused])
+
+    const fetchData = async () => {
+        setloading(true)
+        try {
+            const res = await listUser()
+            setuser(res);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloading(false)
+        }
+    }
+
 
     const [destaque, setdestaque] = useState({
         imgs: ['https://i.pinimg.com/564x/a4/fd/b2/a4fdb25d1b4b63415423ec8440f7c884.jpg', 'https://i.pinimg.com/564x/40/e1/d2/40e1d24a3bfd76fb441c2335229503c3.jpg', 'https://i.pinimg.com/564x/9c/cd/ea/9ccdea1580bd0add9bafa75bc920e90c.jpg'],
@@ -67,7 +78,7 @@ export default function HomeScreen({ navigation, }) {
                 <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
-                        <MotiImage from={{opacity: 0, scale: 0,}} animate={{opacity: 1, scale: 1,}} delay={400} source={{ uri: user.avatar }} style={{ width: 48, height: 48, }} />
+                        <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={400} source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 48, height: 48, borderRadius: 100,}} />
                     </Row>
                     <Title align="center">Boa tarde, {'\n'}{user?.name}</Title>
                 </Column>
@@ -112,13 +123,15 @@ export default function HomeScreen({ navigation, }) {
 
                 <Column style={{ height: 1, backgroundColor: '#d1d1d1', }} />
 
-                <Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, marginTop: 20, }}>Em destaque</Title>
                 <Button pv={1} ph={1} radius={2} onPress={() => { navigation.navigate('BlogSingle', { id: destaque?.id }) }} >
+
                     <>
-                        <Carrousel imgs={destaque?.imgs} />
+                        <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 30, right: 40, zIndex: 99, borderRadius: 12, }}>
+                            <Title style={{ letterSpacing: -.7, fontSize: 12, }}>EM DESTAQUE</Title>
+                        </Column>
+                        <MotiImage source={{ uri: destaque?.imgs[0] }} style={{ flexGrow: 1, marginHorizontal: 24, height: 300, borderRadius: 12, marginVertical: 12, }} />
                         <Column style={{ marginHorizontal: margin.h, }}>
                             <Title size={20} style={{ letterSpacing: -.7, }}>{destaque?.title}</Title>
-                            <Label style={{ fontSize: 15, fontFamily: font.light, marginTop: 6, }}>{destaque?.desc}</Label>
                             <Row style={{ columnGap: 12, marginVertical: 12, }}>
                                 <Button bg="#F2EDED">
                                     <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
@@ -140,10 +153,12 @@ export default function HomeScreen({ navigation, }) {
                                 </Button>
                             </Row>
                         </Column>
+                        <Button bg={color.pr} style={{ alignSelf: 'flex-end', width: 48, height: 48, justifyContent: 'center', alignItems: 'center', marginRight: 24, }}>
+                            <ArrowRight size={24} color={color.sc} />
+                        </Button>
                     </>
 
                 </Button>
-
 
                 <Column style={{ height: 1, backgroundColor: '#d1d1d1', marginVertical: 12, }} />
 

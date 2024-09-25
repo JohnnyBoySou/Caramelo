@@ -1,26 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, } from '@theme/global';
+import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, Loader } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-react-native';
 import { listUser } from '@api/request/user';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function AccountScreen({ navigation, }) {
     const { color, font, margin } = useContext(ThemeContext);
     const [loading, setloading] = useState();
-    const [user, setuser] = useState({
-        name: 'João de Sousa',
-        email: 'joaosousa@gmail.com',
-        notas: 14,
-        doacoes: 21,
-        comments: 30,
-        likes: 62,
-        avatar: 'https://avatar.iran.liara.run/public/24',
-    });
+    const [user, setuser] = useState();
 
+
+    const isFocused = useIsFocused();
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [isFocused])
 
     const fetchData = async () => {
         setloading(true)
@@ -29,10 +24,12 @@ export default function AccountScreen({ navigation, }) {
             setuser(res);
         } catch (error) {
             console.log(error)
-        } finally{
+        } finally {
             setloading(false)
         }
     }
+
+    if (loading) return <Loader />
 
     return (
         <Main style={{ backgroundColor: '#fff', }}>
@@ -41,7 +38,7 @@ export default function AccountScreen({ navigation, }) {
                 <Column style={{ marginHorizontal: margin.h, }}>
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
-                        <Image source={{ uri: user.avatar }} style={{ width: 154, height: 154, borderRadius: 100, }} />
+                        <Image source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
                         <Button bg={color.sc} onPress={() => { navigation.navigate('AccountEdit') }} style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Pencil size={20} color="#fff" />
                         </Button>

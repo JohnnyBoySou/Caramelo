@@ -14,14 +14,14 @@ export function Back() {
   )
 }
 
-export function ButtonPrimary({ login = false, type = 'pr', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
+export function ButtonPrimary({ login = false, loading, type = 'pr', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
   const { color, } = useTheme();
   const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : type == 'lg' ? '#FFF' : type == 'tr' ? color.tr : '#fff';
   const text = type === 'pr' ? color.sc : type === 'sc' ? '#fff' : type == 'lg' ? color.sc : type == 'tr' ? '#fff' : '#fff';
   return (
     <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} radius={16}>
       <Row>
-        <SubLabel style={{ fontSize: size, color: text, }}>{label}</SubLabel>
+        {loading ? <Loader size={24} color={text}/> : <SubLabel style={{ fontSize: size, color: text, }}>{label}</SubLabel>}
       </Row>
     </Button>
   )

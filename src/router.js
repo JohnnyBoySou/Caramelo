@@ -29,7 +29,7 @@ import BlogSingleScreen from '@screens/tabs/blog/single';
 import DonateTypeScreen from '@screens/donate/type';
 import DonateValueScreen from '@screens/donate';
 import DonatePaymentScreen from '@screens/donate/payment';
-
+import DonateSuccessScreen from '@screens/donate/success';
 //ACCOUNT
 import AccountScreen from '@screens/tabs/account';
 import AccountEditScreen from '@screens/tabs/account/edit';
@@ -61,7 +61,9 @@ export default function Router() {
 
         <Stack.Screen name="Tabs" component={Tabs} options={{ ...TransitionPresets.SlideFromRightIOS, backBehavior: 'none', }} />
 
-        <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true, }}>
+          <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        </Stack.Group>
         <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
 
         <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -76,6 +78,7 @@ export default function Router() {
         <Stack.Screen name="DonateType" component={DonateTypeScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonateValue" component={DonateValueScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonatePayment" component={DonatePaymentScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="DonateSuccess" component={DonateSuccessScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="BlogSearch" component={BlogSearchScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="BlogSingle" component={BlogSingleScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />

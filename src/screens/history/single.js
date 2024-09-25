@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, ButtonPrimary, U, Loader } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, ButtonPrimary, U, } from '@theme/global';
 import { Header } from '@components/Header';
-import { Check,  TriangleAlert } from 'lucide-react-native';
+import { Check, TriangleAlert, Loader } from 'lucide-react-native';
 import { MotiView } from 'moti';
 import { singleExtract } from '@api/request/history';
+import { formatValue } from '@hooks/utils';
+import { ActivityIndicator } from 'react-native';
 
 export default function HistorySingleScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
@@ -33,7 +35,7 @@ export default function HistorySingleScreen({ navigation, route }) {
             <Column mh={margin.h} mv={24}>
                 <Header title="Detalhes" />
                 <Column style={{ justifyContent: 'center', alignItems: 'center', }}>
-                    {loading ? <Column style={{ justifyContent: 'center', alignItems: 'center', height: 500, }}><Loader size={32} color={color.sc} /></Column> : <>{type === 'Doação' ? <Doacao item={item} navigation={navigation} /> : <Nota item={item} navigation={navigation} />}</>}
+                    {loading ? <Column style={{ justifyContent: 'center', alignItems: 'center', height: 500, }}><ActivityIndicator size={32} color={color.sc} /></Column> : <>{type === 'Doação' ? <Doacao item={item} navigation={navigation} /> : <Nota item={item} navigation={navigation} />}</>}
                 </Column>
             </Column>
         </Scroll>
@@ -43,6 +45,8 @@ export default function HistorySingleScreen({ navigation, route }) {
 const Nota = ({ item, navigation }) => {
     const value = item?.value;
     const date = item?.date;
+
+    const { color } = useTheme();
     return (
         <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 12, }}>
             <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} style={{ backgroundColor: '#C0EFD4', width: 124, height: 124, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
@@ -54,20 +58,17 @@ const Nota = ({ item, navigation }) => {
             <Label>{date}</Label>
 
             <HeadTitle style={{ font: 'Font_Black', letterSpacing: -1, lineHeight: 32, fontSize: 32, textAlign: 'center', marginTop: 30, marginBottom: 20, }}>Agradecemos muito por usa ajuda!</HeadTitle>
-            <Label align='center' size={18}>Você está contribuindo para projetos como esse: </Label>
 
-            <Column style={{ height: 20, }}>
-
-            </Column>
-            <ButtonPrimary ph={50} onPress={() => { navigation.navigate('Tabs', { screen: 'Blog' }) }} label='Ver mais' type='sc' />
+            <ButtonPrimary ph={50} onPress={() => { navigation.navigate('Tabs', { screen: 'Blog' }) }} label='Ver projetos' type='sc' />
         </Column>
     )
 }
 
 const Doacao = ({ item, }) => {
+    const { color } = useTheme();
     const { status, value, date, label, forma, tipo } = item;
-    const cl = status == 'Confirmado' ? '#2ECA6F' : status == 'Análise' ? '#3072C8' : color.sc
-    const icon = status == 'Confirmado' ? <Check size={32} color='#fff' /> : status == 'Análise' ? <Loader size={32} color='#fff' /> : <TriangleAlert size={32} color='#fff' />
+    const cl = status == 'Pagamento confirmado' ? '#2ECA6F' : status == 'Pagamento em análise' ? '#3072C8' : color.sc
+    const icon = status == 'Pagamento confirmado' ? <Check size={22} color='#fff' /> : status == 'Pagamento em análise' ? <Loader size={22} color='#fff' /> : <TriangleAlert size={22} color='#fff' />
 
     return (
         <Column style={{ justifyContent: 'center', marginTop: 12, marginBottom: 20, }}>
@@ -76,8 +77,8 @@ const Doacao = ({ item, }) => {
                     {icon}
                 </Column>
             </MotiView>
-            <Title color={cl} style={{ marginTop: 12, marginBottom: 12, textAlign: 'center', }}>{label}</Title>
-            <HeadTitle style={{ font: 'Font_Black', letterSpacing: -1, lineHeight: 32, fontSize: 32, textAlign: 'center', marginBottom: 20, }}><U>R$ {value},00</U></HeadTitle>
+            <Title color={cl} style={{ marginTop: 12, marginBottom: 12, textAlign: 'center', }}>{status}</Title>
+            <HeadTitle style={{ font: 'Font_Black', letterSpacing: -1, lineHeight: 32, fontSize: 32, textAlign: 'center', marginBottom: 20, }}><U>R$ {formatValue(value)},00</U></HeadTitle>
 
             <Column style={{ backgroundColor: '#f1f1f1', paddingVertical: 24, paddingHorizontal: 20, borderRadius: 12, rowGap: 16, marginBottom: 20, }}>
                 <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
@@ -107,7 +108,7 @@ const Doacao = ({ item, }) => {
                 </Row>
             </Column>
             <Column style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                {status === 'Confirmado' ? <ButtonPrimary ph={40} pv={16} label='Exportar recibo' type='sc' /> : <ButtonPrimary ph={40} pv={16} label='Efetuar o pagamento' type='pr' />}
+                {status === 'Pagamento confirmado' ? <ButtonPrimary ph={40} pv={16} label='Exportar recibo' type='sc' /> : <ButtonPrimary ph={40} pv={16} label='Efetuar o pagamento' type='pr' />}
             </Column>
         </Column>
     )

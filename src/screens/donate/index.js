@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, U, LabelBT, ButtonPrimary } from '@theme/global';
 import { Header } from '@components/Header';
 import { Delete } from 'lucide-react-native';
-
+import { formatValue } from '@hooks/utils';
 
 export default function DonateValueScreen({ navigation, }) {
     const { color, font, margin, } = useTheme();
@@ -29,9 +29,7 @@ export default function DonateValueScreen({ navigation, }) {
     const handleClean = () => {
         setvalue('0');
     }
-    const formatValue = (val) => {
-        return parseInt(val).toLocaleString('pt-BR');
-    };
+   
     return (
         <Main>
             <Column mh={margin.h}>

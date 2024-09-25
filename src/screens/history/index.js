@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, LabelBT, Image, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, LabelBT, Image, ButtonPrimary, SCREEN_HEIGHT } from '@theme/global';
 
 import { HeaderHistory } from '@components/Header';
 import { StatusBar } from 'expo-status-bar';
 import { ArrowUpRight, Check, Loader, Plus, Search, TriangleAlert } from 'lucide-react-native';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
-import { FlatList } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 import { Skeleton } from 'moti/skeleton';
 import { listDonate, listNotas } from '@api/request/history';
 import { useNavigation } from '@react-navigation/native';
+import { formatValue } from '../../hooks/utils';
 
 export default function HistoryScreen({ navigation, }) {
     const { color, font, margin, } = useTheme();
@@ -40,7 +41,7 @@ export default function HistoryScreen({ navigation, }) {
 
     const a = false;
     return (
-        <Column style={{ backgroundColor: '#fff', flex: 1, }}>
+        <Main style={{ paddingTop: 0, backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style="light" backgroundColor={color.sc} />
             <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderRadius: 24, }}>
                 <HeaderHistory title='Histórico' />
@@ -67,7 +68,8 @@ export default function HistoryScreen({ navigation, }) {
                     ))}
                     <Column style={{ width: 12, }}></Column>
                 </ScrollView>}
-                <Column style={{ height: 20, }}></Column>
+
+
                 {loading ? <SkeletonBody /> : <>
                     {type == 'Notas' ?
                         <FlatList
@@ -76,6 +78,8 @@ export default function HistoryScreen({ navigation, }) {
                             keyExtractor={item => item.id}
                             showsVerticalScrollIndicator={false}
                             ListEmptyComponent={<EmptyNota />}
+                            ListHeaderComponent={<Column style={{ height: 20, }}></Column>}
+                            ListFooterComponent={<Column style={{ height: 50, }}></Column>}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
@@ -86,15 +90,17 @@ export default function HistoryScreen({ navigation, }) {
                             renderItem={({ item }) => <CardDoacao item={item} navigation={navigation} />}
                             keyExtractor={item => item.id}
                             showsVerticalScrollIndicator={false}
+                            style={{height: 0.8 * SCREEN_HEIGHT, }}
                             ListEmptyComponent={<EmptyDonate />}
+                            ListHeaderComponent={<Column style={{ height: 20, }}></Column>}
+                            ListFooterComponent={<Column style={{ height: 50, }}></Column>}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
                         />}</>}
+
             </Column>
-
-
-        </Column>
+        </Main>
     )
 }
 
@@ -150,10 +156,9 @@ const CardNota = ({ item, navigation }) => {
 
 const CardDoacao = ({ item, navigation }) => {
     const { color, font, margin } = useTheme()
-    const { id, value, date, label, status } = item
-
-    const cl = status == 'Confirmado' ? '#2ECA6F' : status == 'Análise' ? '#3072C8' : color.sc
-    const icon = status == 'Confirmado' ? <Check size={22} color='#fff' /> : status == 'Análise' ? <Loader size={22} color='#fff' /> : <TriangleAlert size={22} color='#fff' />
+    const { id, value, date, label, Status } = item
+    const cl = Status == 'aprovado' ? '#2ECA6F' : Status == 'aguardando' ? '#3072C8' : color.sc
+    const icon = Status == 'aprovado' ? <Check size={22} color='#fff' /> : Status == 'aguardando' ? <Loader size={22} color='#fff' /> : <TriangleAlert size={22} color='#fff' />
 
     return (
         <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('HistorySingle', { id: id, type: 'Doação', item: item, }) }} >
@@ -162,7 +167,7 @@ const CardDoacao = ({ item, navigation }) => {
                     <Row>
                         <Image source={require('@imgs/doacao.png')} style={{ width: 76, height: 76, borderRadius: 12, }} />
                         <Column mh={12} style={{ justifyContent: 'center', }}>
-                            <Title size={20}>R$ {value},00</Title>
+                            <Title size={20}>R$ {formatValue(value)},00</Title>
                             <Label size={14} style={{ marginVertical: 4, fontFamily: font.semibold, }} color={cl}>{label}</Label>
                             <Label size={10} style={{ marginTop: 4, }}>{date}</Label>
                         </Column>
@@ -178,45 +183,6 @@ const CardDoacao = ({ item, navigation }) => {
     )
 }
 
-const DATA = {
-    notas: [
-        {
-            id: 1,
-            value: 2,
-            date: '30/09/2024 às 09:54',
-        },
-        {
-            id: 2,
-            value: 4,
-            date: '30/09/2024 às 09:32',
-        },
-        {
-            id: 3,
-            value: 1,
-            date: '29/09/2024 às 12:54',
-        }
-    ],
-    doacoes: [
-        {
-            id: 1,
-            label: 'Pagamento confirmado',
-            value: 100,
-            date: '30/09/2024 às 09:54',
-            status: 'Análise',
-            forma: 'Crédito',
-            tipo: 'À vista',
-        },
-        {
-            id: 2,
-            label: 'Pagamento em análise',
-            value: 10,
-            date: '29/09/2024 às 12:32',
-            status: 'Análise',
-            forma: 'Pix',
-            tipo: 'À vista',
-        },
-    ]
-}
 
 const dates = [
     {

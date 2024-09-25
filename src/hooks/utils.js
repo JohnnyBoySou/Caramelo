@@ -16,4 +16,8 @@ const formatDateTime = (dateTimeString) => {
 const formatCurrency = (value) => {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
-export { formatDateTime, formatCurrency }
+const formatValue = (val) => {
+  return parseInt(val).toLocaleString('pt-BR');
+};
+
+export { formatDateTime, formatCurrency, formatValue }

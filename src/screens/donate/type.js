@@ -3,13 +3,14 @@ import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, HeadTitle, B
 import { Header } from '@components/Header';
 import { Pencil } from 'lucide-react-native';
 import { Select } from '@components/Forms';
+import { formatValue } from '@hooks/utils';
 
 export default function DonateTypeScreen({ navigation, route }) {
     const { color, font, margin, } = useTheme();
     const value = route.params?.value ? route.params.value : 40;
 
     const [type, settype] = useState();
-
+    
     return (
         <Main style={{ backgroundColor: color.pr, }}>
             <Column mh={margin.h}>
@@ -17,7 +18,7 @@ export default function DonateTypeScreen({ navigation, route }) {
                 <Column mv={20}>
                     <Title>R$</Title>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
-                        <HeadTitle style={{ fontFamily: font.bold, fontSize: 58, lineHeight: 68, }}>{value},00</HeadTitle>
+                        <HeadTitle style={{ fontFamily: font.bold, fontSize: 58, lineHeight: 68, }}>{formatValue(value)},00</HeadTitle>
                         <Button pv={1} ph={1} mv={1} mh={1} bg='#fff' onPress={() => { navigation.goBack() }} style={{ width: 36, height: 36, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Pencil size={18} color={color.sc} />
                         </Button>

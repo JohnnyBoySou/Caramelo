@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, Image, U, SCREEN_HEIGHT, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, Image, U, SCREEN_HEIGHT, ButtonPrimary, Loader } from '@theme/global';
 
 //COMPONENTS
 import { Carrousel } from '.';
@@ -10,6 +10,7 @@ import { ArrowLeft, Heart, HelpCircle, MessageCircle, Send } from 'lucide-react-
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { FlatList } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
+import { Input } from '@components/Forms';
 
 
 export default function BlogSingleScreen({ navigation, route }) {
@@ -55,7 +56,7 @@ export default function BlogSingleScreen({ navigation, route }) {
 
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
-            
+
             <StatusBar style="light" backgroundColor={color.sc} animated />
             <Row ph={margin.h} style={{ backgroundColor: color.sc, paddingBottom: 20, paddingTop: 50, borderBottomLeftRadius: 12, borderBottomRightRadius: 12, }}>
                 <Button onPress={() => { navigation.goBack() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg='#fff'>
@@ -121,7 +122,7 @@ export default function BlogSingleScreen({ navigation, route }) {
                 </Button>
             </Row>
             <Modal ref={commentsRef} snapPoints={[0.1, 0.94 * SCREEN_HEIGHT]}>
-                <Column mh={margin.h}>
+                <Column mh={margin.h} style={{ flex: 1, backgroundColor: 'red', }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Button onPress={() => { commentsRef.current?.close() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc}>
                             <ArrowLeft size={24} color="#fff" />
@@ -133,7 +134,7 @@ export default function BlogSingleScreen({ navigation, route }) {
                     </Row>
 
 
-                    <ListComments data={comments} />
+                    <ListComments data={comments} id={id} />
                 </Column>
             </Modal>
         </Column>
@@ -141,8 +142,8 @@ export default function BlogSingleScreen({ navigation, route }) {
 }
 
 
-const ListComments = ({ data }) => {
-
+const ListComments = ({ data, id, }) => {
+    const { color, font, margin } = useTheme()
     const CommentItem = ({ item }) => {
         return (
             <Row mv={12}>
@@ -154,8 +155,22 @@ const ListComments = ({ data }) => {
             </Row>
         )
     }
+
+    const [comment, setcomment] = useState();
+    const [loading, setloading] = useState(false);
+    const handleComment = async () => {
+        setloading(true);
+        try {
+            const res = await publishComment(comment, id);
+            console.log(res)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloading(false);
+        }
+    }
     return (
-        <Column>
+        <Column style={{ flex: 1, }}>
 
             <FlatList
                 data={data}
@@ -170,7 +185,16 @@ const ListComments = ({ data }) => {
                     <ButtonPrimary label="Comentar!" type="sc" pv={14} ph={36} />
                 </Column>}
             />
-
+            <Row style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -20, }}>
+                <Column style={{ flexGrow: 1, }}>
+                    <Input label="Comentário" />
+                </Column>
+                <Button bg={color.sc} style={{ width: 64, justifyContent: 'center', alignItems: 'center', height: 64, }} radius={12}>
+                    <Row>
+                        {loading ? <Loader size={24} /> : <Send size={24} color="#fff" />}
+                    </Row>
+                </Button>
+            </Row>
         </Column>
     )
 }
