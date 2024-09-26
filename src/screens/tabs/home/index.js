@@ -38,7 +38,6 @@ export default function HomeScreen({ navigation, }) {
         }
     }
 
-
     const [destaque, setdestaque] = useState({
         imgs: ['https://i.pinimg.com/564x/a4/fd/b2/a4fdb25d1b4b63415423ec8440f7c884.jpg', 'https://i.pinimg.com/564x/40/e1/d2/40e1d24a3bfd76fb441c2335229503c3.jpg', 'https://i.pinimg.com/564x/9c/cd/ea/9ccdea1580bd0add9bafa75bc920e90c.jpg'],
         title: 'Mais de 550 animais resgatados!',
@@ -47,7 +46,6 @@ export default function HomeScreen({ navigation, }) {
         comments: 12,
         id: 1,
     });
-
     const [recentes, setrecentes] = useState([
         {
             id: 1,
