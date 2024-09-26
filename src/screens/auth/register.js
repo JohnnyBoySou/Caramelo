@@ -49,7 +49,6 @@ export default function AuthRegisterScreen({ navigation, }) {
     const passwordRef = useRef(null);
 
     const handleRegister = async () => {
-        modalConfirm.current?.expand()
         setloading(true)
         setError('')
         setSuccess('')
@@ -57,7 +56,7 @@ export default function AuthRegisterScreen({ navigation, }) {
         try {
             const res = await registerUser(params)
             if (res.email) {
-                setSuccess('Confirme seu número de telefone!')
+                setSuccess('Confirme seu e-mail!')
                 setTimeout(() => {
                     modalConfirm.current?.expand()
                 }, 1500);
@@ -90,6 +89,7 @@ export default function AuthRegisterScreen({ navigation, }) {
                             placeholder="CPF"
                             value={cpf}
                             setValue={setcpf}
+                            keyboard="numeric"
                             ref={cpfRef}
                             onSubmitEditing={() => { telRef.current?.focus() }}
                             mask="CPF"
@@ -102,6 +102,7 @@ export default function AuthRegisterScreen({ navigation, }) {
                             value={tel}
                             onSubmitEditing={() => { emailRef.current?.focus() }}
                             ref={telRef}
+                            keyboard="numeric"
                             setValue={settel}
                             mask="PHONE"
                         />
@@ -112,6 +113,7 @@ export default function AuthRegisterScreen({ navigation, }) {
                             onSubmitEditing={() => { passwordRef.current?.focus() }}
                             value={email}
                             setValue={setemail}
+                            keyboard="email-address"
                         />
 
                         <Input
@@ -228,7 +230,7 @@ const ConfirmEmail = ({ email, navigation }) => {
                 const res = await verifyEmail(email, code.join(''));
                 if (res?.token) {
                     setsuccess('Email verificado com sucesso! Aguarde um momento...')
-                    await createToken(res, token)
+                    await createToken(res?.token)
                     setTimeout(() => {
                         navigation.replace('Tabs')
                     }, 500);
@@ -271,7 +273,7 @@ const ConfirmEmail = ({ email, navigation }) => {
                 ))}
             </Row>
             {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
-            <ButtonPrimary label='Verificar' disabled={loading} onPress={handleVerify} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }} />
+            <ButtonPrimary loading={loading} label='Verificar' disabled={loading} onPress={handleVerify} bg={color.pr} pv={14} ph={24} style={{ borderRadius: 18 }} />
         </Column>
     )
 }

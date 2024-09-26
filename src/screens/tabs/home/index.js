@@ -1,24 +1,26 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Dimensions, } from 'react-native';
-import { Main, Scroll, Column, Row, Title, Image, Button, Label, ButtonPrimary, LabelBT } from '@theme/global';
+import { Linking } from 'react-native';
+import { Main, Scroll, Column, Row, Title, Image, Button, Label, ButtonPrimary, LabelBT, HeadTitle } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ArrowRight, HeartHandshake, History } from 'lucide-react-native';
+import { ArrowRight, ArrowUpRight, HeartHandshake, History } from 'lucide-react-native';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
-import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 import { ListPosts } from '../blog';
 import { MotiImage } from 'moti';
 import { listUser } from '@api/request/user';
-
+import { listPosts } from '@api/request/blog';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function HomeScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext);
     const isFocused = useIsFocused();
 
     const [user, setuser] = useState();
+    const [data, setdata] = useState();
+    const [destaque, setdestaque] = useState();
     const [loading, setloading] = useState();
 
     useEffect(() => {
@@ -29,6 +31,9 @@ export default function HomeScreen({ navigation, }) {
         setloading(true)
         try {
             const res = await listUser()
+            const posts = await listPosts()
+            setdata(posts.data.slice(0, 4))
+            setdestaque(posts.data[4])
             setuser(res);
         } catch (error) {
             console.log(error)
@@ -37,36 +42,9 @@ export default function HomeScreen({ navigation, }) {
         }
     }
 
-    const [destaque, setdestaque] = useState({
-        imgs: ['https://i.pinimg.com/564x/a4/fd/b2/a4fdb25d1b4b63415423ec8440f7c884.jpg', 'https://i.pinimg.com/564x/40/e1/d2/40e1d24a3bfd76fb441c2335229503c3.jpg', 'https://i.pinimg.com/564x/9c/cd/ea/9ccdea1580bd0add9bafa75bc920e90c.jpg'],
-        title: 'Mais de 550 animais resgatados!',
-        desc: 'Atingimos um novo marco em nosso instituto, alcançamos 550 animais em nosso canil!',
-        likes: 32,
-        comments: 12,
-        id: 1,
-    });
-    const [recentes, setrecentes] = useState([
-        {
-            id: 1,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 2 dias',
-            img: 'https://i.pinimg.com/564x/00/e8/de/00e8de172206673e7f1d53917ee78835.jpg'
-        },
-        {
-            id: 2,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 3 dias',
-            img: 'https://i.pinimg.com/564x/79/d1/0a/79d10aa540504de8bb11fb0e12c56295.jpg'
-        },
-        {
-            id: 3,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 1 semana',
-            img: 'https://i.pinimg.com/564x/9c/32/7e/9c327ea4d95b89d230c10fc1588a88cb.jpg'
-        }]);
+    const handleOpen = (item) => {
+        Linking.openURL(item)
+    }
 
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
@@ -75,7 +53,7 @@ export default function HomeScreen({ navigation, }) {
                 <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
-                        <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={400} source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 48, height: 48, borderRadius: 100,}} />
+                        <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={400} source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 48, height: 48, borderRadius: 100, }} />
                     </Row>
                     <Title align="center">Boa tarde, {'\n'}{user?.name}</Title>
                 </Column>
@@ -118,46 +96,23 @@ export default function HomeScreen({ navigation, }) {
                     <Column style={{ width: 12 }} />
                 </ScrollView>
 
-                <Column style={{ height: 1, backgroundColor: '#d1d1d1', }} />
-
-                <Button pv={1} ph={1} radius={2} onPress={() => { navigation.navigate('BlogSingle', { id: destaque?.id }) }} >
+                <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(destaque?.permalink) }} >
 
                     <>
                         <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 30, right: 40, zIndex: 99, borderRadius: 12, }}>
                             <Title style={{ letterSpacing: -.7, fontSize: 12, }}>EM DESTAQUE</Title>
                         </Column>
-                        <MotiImage source={{ uri: destaque?.imgs[0] }} style={{ flexGrow: 1, marginHorizontal: 24, height: 300, borderRadius: 12, marginVertical: 12, }} />
-                        <Column style={{ marginHorizontal: margin.h, }}>
-                            <Title size={20} style={{ letterSpacing: -.7, }}>{destaque?.title}</Title>
-                            <Row style={{ columnGap: 12, marginVertical: 12, }}>
-                                <Button bg="#F2EDED">
-                                    <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                        <Heart size={16} color={color.sc} />
-                                        <Label size={12} style={{ lineHeight: 14, }}>{destaque?.likes} curtidas </Label>
-                                    </Row>
-                                </Button>
-                                <Button bg="#F2EDED">
-                                    <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                        <MessageCircle size={16} color={color.sc} />
-                                        <Label size={12} style={{ lineHeight: 14, }}>{destaque?.comments} comentários </Label>
-                                    </Row>
-                                </Button>
-                                <Button bg="#F2EDED">
-                                    <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                        <Send size={16} color={color.sc} />
-                                        <Label size={12} style={{ lineHeight: 14, }}>Enviar</Label>
-                                    </Row>
-                                </Button>
-                            </Row>
-                        </Column>
-                        <Button bg={color.pr} style={{ alignSelf: 'flex-end', width: 48, height: 48, justifyContent: 'center', alignItems: 'center', marginRight: 24, }}>
-                            <ArrowRight size={24} color={color.sc} />
-                        </Button>
+                        <MotiImage source={{ uri: destaque?.media_url }} style={{ flexGrow: 1, marginHorizontal: 24, height: 300, borderRadius: 12, marginVertical: 12, }} />
+                        <Row style={{ marginHorizontal: margin.h, justifyContent: 'space-between', alignItems: 'center', }}>
+                            <Title size={20} style={{ letterSpacing: -.7, width: '80%', }}>{destaque?.caption?.length > 32 ? destaque?.caption?.slice(0, 32) + '...' : destaque?.caption}</Title>
+                            <Button bg={color.pr} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <ArrowUpRight size={24} color={color.sc} />
+                            </Button>
+                        </Row>
                     </>
 
                 </Button>
 
-                <Column style={{ height: 1, backgroundColor: '#d1d1d1', marginVertical: 12, }} />
 
                 <Column ph={margin.h} pv={20}>
                     <Title color={color.tr}>Ajude</Title>
@@ -221,18 +176,60 @@ export default function HomeScreen({ navigation, }) {
 
                 </Column>
 
-                <Column style={{ height: 1, backgroundColor: '#d1d1d1', marginVertical: 12, }} />
-
                 <Column style={{ marginHorizontal: margin.h, marginVertical: margin.v, }}>
                     <Title style={{ letterSpacing: -.7, }}>Recentes</Title>
-                    <ListPosts data={recentes} navigation={navigation} />
+                    <ListPosts data={data} navigation={navigation} />
                     <Column style={{ height: 20, }} />
                     <ButtonPrimary label="Ver mais" type="sc" onPress={() => { navigation.navigate('Blog') }} />
                 </Column>
 
-                <Column style={{ height: 20, }} />
 
-                <Column style={{ height: 1, backgroundColor: '#d1d1d1', }} />
+                <Column mh={margin.h} mv={20}>
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+                        <Column style={{ width: 200, }}>
+                            <HeadTitle>Nossas redes</HeadTitle>
+                            <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
+                            <Row style={{ columnGap: 12, marginVertical: 12, }}>
+                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                </Button>
+                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                    <FontAwesome6 name="facebook" size={22} color={color.sc} />
+                                </Button>
+                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                    <FontAwesome6 name="tiktok" size={22} color={color.sc} />
+                                </Button>
+                            </Row>
+                        </Column>
+                        <Image source={require('@imgs/about4.png')} />
+                    </Row>
+                </Column>
+                <Column style={{ height: 20, }} />
+                <Column mh={margin.h} mv={20}>
+                    <Column style={{  }}>
+                        <HeadTitle style={{ lineHeight: 28, textAlign: 'center',}}>Como posso ajudar?</HeadTitle>
+                        <Column style={{ columnGap: 12, marginVertical: 12, rowGap: 14, }}>
+                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
+                                <Column>
+                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                                </Column>
+                            </Button>
+                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
+                                <Column>
+                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                                </Column>
+                            </Button>
+                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
+                                <Column>
+                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                                </Column>
+                            </Button>
+                        </Column>
+                    </Column>
+                </Column>
                 <Column style={{ height: 120, }} />
             </Scroll>
         </Column>

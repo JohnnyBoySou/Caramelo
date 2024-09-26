@@ -1,12 +1,12 @@
 import React, { useContext, useState, useRef } from 'react';
 import { ThemeContext } from 'styled-components/native';
 import { Main, Scroll, Row, Column, Label, Button, Title, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, Image, ButtonPrimary } from '@theme/global';
-import { ArrowRight, UserPlus } from 'lucide-react-native';
+import { ArrowRight, UserPlus, X } from 'lucide-react-native';
 
 import Modal from '@components/Modal/index';
 import { HeaderLogo, Header } from '@components/Header';
 import { Input, Success, Error } from '@components/Forms/index';
-import { loginUser } from '@api/request/user';
+import { loginUser, verifyEstabelecimento } from '@api/request/user';
 import { createToken } from '@hooks/token';
 
 export default function AuthLoginScren({ navigation, }) {
@@ -16,6 +16,7 @@ export default function AuthLoginScren({ navigation, }) {
   const [password, setpassword] = useState('223761de');
 
   const modalPassword = useRef();
+  const modalAnonim = useRef();
 
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
@@ -48,6 +49,27 @@ export default function AuthLoginScren({ navigation, }) {
       }
     }
   }
+
+  const handleForget = () => {
+
+  }
+  const [loadingAnonimo, setloadingAnonimo] = useState(false);
+  const [successAnonimo, setSuccessAnonimo] = useState();
+  const [errorAnonimo, setErrorAnonimo] = useState();
+  const handleAnonimo = async () => {
+    setloadingAnonimo(true)
+    try {
+      const res = await verifyEstabelecimento(email)
+      setSuccessAnonimo(res.message)
+      console.log(res)
+    } catch (error) {
+      setErrorAnonimo(error.message)
+      console.log(error)
+    } finally {
+      setloadingAnonimo(false)
+    }
+  }
+
   return (
     <Main >
       <Scroll>
@@ -103,29 +125,60 @@ export default function AuthLoginScren({ navigation, }) {
             </Row>
           </Button>
 
-
-
-
+          <Button onPress={() => { modalAnonim.current?.expand() }} bg={color.sc + 20} style={{ marginTop: 30, alignSelf: 'center', paddingHorizontal: 24, marginBottom: -30, }}>
+            <LabelBT>Entrar como estabelecimento</LabelBT>
+          </Button>
           <Image source={require('@imgs/pata.png')} style={{ width: 430, height: 100, objectFit: 'contain', marginLeft: -40, marginTop: 50, }} />
           <Column style={{ height: 20, }} />
         </Column>
       </Scroll>
+
+
       <Modal ref={modalPassword} snapPoints={[0.1, SCREEN_HEIGHT]}>
         <Column ph={24}>
           <Header title="Recuperar senha" />
           <Column style={{ height: 10, }} />
-          <Label>Enviaremos um SMS com o código de verificação para o seu telefone.</Label>
+          <Label>Enviaremos um e-mail com o código de verificação.</Label>
           <Column style={{ height: 20, }} />
           <Input
-            label="Telefone *"
-            placeholder="Telefone"
-            value={tel}
-            setValue={settel}
+            label="E-mail *"
+            value={email}
+            setValue={setemail}
           />
           <Column style={{ height: 20, }} />
-          <ButtonPrimary label="Enviar" onPress={() => { }} type='pr' />
+          <ButtonPrimary label="Enviar" onPress={handleForget} type='pr' />
         </Column>
       </Modal>
+
+
+      <Modal ref={modalAnonim} snapPoints={[0.1, 400]}>
+        <Column>
+
+          <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 20, }}>
+            <Column>
+              <Title>Preencha o email</Title>
+              <Label>Confirme o email do estabelecimento</Label>
+            </Column>
+            <Button onPress={() => { modalAnonim.current?.close() }} style={{ width: 48, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
+              <X size={24} color='#fff' />
+            </Button>
+          </Row>
+          <Column mh={20} mv={12}>
+            <Input
+              label="Email"
+              value={email}
+              setValue={setemail}
+            />
+            <Column style={{height: 12, }} />
+
+            {successAnonimo ? <Success msg={successAnonimo} /> : errorAnonimo ? <Error msg={errorAnonimo} /> : null}
+
+
+            <ButtonPrimary loading={loadingAnonimo} label='Verificar' onPress={handleAnonimo} />
+          </Column>
+        </Column>
+      </Modal>
+
     </Main>
   )
 }

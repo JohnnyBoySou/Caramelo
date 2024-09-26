@@ -20,4 +20,7 @@ const formatValue = (val) => {
   return parseInt(val).toLocaleString('pt-BR');
 };
 
+
+
+
 export { formatDateTime, formatCurrency, formatValue }

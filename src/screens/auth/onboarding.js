@@ -141,3 +141,4 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
         </Row>
     );
 };
+

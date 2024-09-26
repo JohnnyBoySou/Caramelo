@@ -152,3 +152,19 @@ export const excludeUser = async (password, message) => {
   return await postData('/usuarios/exclusao', { password, message }, token);
 };
 
+
+
+export const verifyEstabelecimento = async (email) => {
+  const BASE_URL = await getBaseURL();
+  try {
+    const res = await axios.post(`${BASE_URL}/usuarios/emailestabelecimento`, {
+      email: email,
+    });
+    return res.data
+  } catch (error) {
+    console.log(error)
+    const err = JSON.parse(error?.request?.response);
+    throw new Error(err.message)
+  }
+};
+

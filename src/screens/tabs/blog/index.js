@@ -1,168 +1,106 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, LabelBT } from '@theme/global';
+import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, LabelBT, ButtonPrimary } from '@theme/global';
 import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 
 import PagerView from 'react-native-pager-view';
 import Animated, { useAnimatedStyle, withTiming, interpolateColor } from 'react-native-reanimated';
-import { FlatList } from 'react-native';
+
+import { FlatList, Linking } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Skeleton } from 'moti/skeleton';
+
+import { listPosts } from '@api/request/blog';
+import { MotiImage, MotiView } from 'moti';
+import { formatDateTime } from '@hooks/utils';
+
+import { Swiper } from 'rn-swiper-list';
+import { MaterialIcons } from '@expo/vector-icons';
+
+
+
+
 export default function BlogScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
 
-    const [destaque, setdestaque] = useState({
-        imgs: ['https://i.pinimg.com/564x/a4/fd/b2/a4fdb25d1b4b63415423ec8440f7c884.jpg', 'https://i.pinimg.com/564x/40/e1/d2/40e1d24a3bfd76fb441c2335229503c3.jpg', 'https://i.pinimg.com/564x/9c/cd/ea/9ccdea1580bd0add9bafa75bc920e90c.jpg'],
-        title: 'Mais de 550 animais resgatados!',
-        desc: 'Atingimos um novo marco em nosso instituto, alcançamos 550 animais em nosso canil!',
-        likes: 32,
-        comments: 12,
-        id: 1,
-    });
-    const [recentes, setrecentes] = useState([
-        {
-            id: 1,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 2 dias',
-            img: 'https://i.pinimg.com/564x/00/e8/de/00e8de172206673e7f1d53917ee78835.jpg'
-        },
-        {
-            id: 2,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 3 dias',
-            img: 'https://i.pinimg.com/564x/79/d1/0a/79d10aa540504de8bb11fb0e12c56295.jpg'
-        },
-        {
-            id: 3,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 1 semana',
-            img: 'https://i.pinimg.com/564x/9c/32/7e/9c327ea4d95b89d230c10fc1588a88cb.jpg'
-        },
-        {
-            id: 4,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 2 dias',
-            img: 'https://i.pinimg.com/736x/41/5d/82/415d820a90cec9779bfa73fe57596711.jpg'
-        },
-        {
-            id: 5,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 3 dias',
-            img: 'https://i.pinimg.com/564x/20/f0/f3/20f0f3148da5c022d19e93e230a5ab5f.jpg'
-        },
-        {
-            id: 6,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 1 semana',
-            img: 'https://i.pinimg.com/564x/0e/d9/22/0ed922bf60e63bc9cfe715a62b7bfccf.jpg'
-        },
-        {
-            id: 7,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 2 dias',
-            img: 'https://i.pinimg.com/564x/2e/a0/48/2ea048b875052b305d3a67a035bc6ba3.jpg'
-        },
-        {
-            id: 8,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 3 dias',
-            img: 'https://i.pinimg.com/564x/2a/72/58/2a725871bf962e2a574156efe3e9d097.jpg'
-        },
-        {
-            id: 9,
-            title: 'Mais de 550 animais resgatados!',
-            categories: ['Resgate', 'Adoção'],
-            date: 'há 1 semana',
-            img: 'https://i.pinimg.com/564x/0f/a6/22/0fa622e2c927b0b031880f7303e0ae0c.jpg'
-        },
-    ]
-    );
+    const [destaque, setdestaque] = useState();
+    const [data, setdata] = useState();
+
 
     const [loading, setloading] = useState(true);
     const isFocused = useIsFocused();
     useEffect(() => {
-        const fetchData = () => {
+        const fetchData = async () => {
             setloading(true)
             try {
-                
+                const res = await listPosts()
+                setdata(res.data)
+                setdestaque(res.data.slice(0, 3))
             } catch (error) {
-                
-            } finally{
-                setTimeout(() => {
-                    setloading(false)
-                }, 3000);
+                console.log(error)
+            } finally {
+                setloading(false)
             }
         }
-
         fetchData()
+    }, [isFocused])
 
-    },[isFocused])
-    if(loading){return <SkeletonBody />}
     return (
-        <Main>
+        <Column style={{ paddingTop: 0, backgroundColor: '#fff', }}>
             <Scroll>
-                <Column style={{ marginHorizontal: margin.h, marginVertical: 20, }}>
-                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
-                        <Image source={require('@imgs/logo_h.png')} style={{ width: 200, height: 52, marginLeft: -12, borderRadius: 50, alignSelf: 'center', }} />
-                        <Column style={{ width: 64, height: 64, backgroundColor: '#EFE7E8', justifyContent: 'center', alignItems: 'center', borderRadius: 100, }}>
-                            <Button onPress={() => { navigation.navigate('BlogSearch') }} bg={color.sc} style={{ width: 42, height: 42, justifyContent: 'center', alignItems: 'center', }}>
-                                <Search size={18} color='#fff' />
-                            </Button>
-                        </Column>
-                    </Row>
+                <Column style={{ paddingHorizontal: margin.h, backgroundColor: color.pr, paddingTop: 50, overflow: 'hidden', borderBottomLeftRadius: 32, borderBottomRightRadius: 32,}}>
+                    <MotiImage from={{opacity: 0, scale: 0, rotate: '12deg'}} animate={{opacity: 1, scale: 1, rotate: '0deg'}} source={require('@imgs/logo_blog.png')} style={{ width: 200, height: 52, marginBottom: 12, alignSelf: 'center', }} />
+                    <Destaque data={destaque} />
+                    <Image source={require('@imgs/about3.png')} style={{ width: '120%', zIndex: -2, height: 122, position: 'absolute', bottom: 20, objectFit: 'cover', alignSelf: 'center', }} />
                 </Column>
-
-                <Column style={{ marginVertical: 8, }}>
-                    <Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, }}>Em destaque</Title>
-                    <Button pv={1} ph={1} radius={2} onPress={() => { navigation.navigate('BlogSingle', { id: destaque?.id }) }} >
-                        <>
-                            <Carrousel imgs={destaque?.imgs} />
-                            <Column style={{ marginHorizontal: margin.h, }}>
-                                <Title size={20} style={{ letterSpacing: -.7, }}>{destaque?.title}</Title>
-                                <Label style={{ fontSize: 15, fontFamily: font.light, marginTop: 6, }}>{destaque?.desc}</Label>
-                                <Row style={{ columnGap: 12, marginVertical: 12, }}>
-                                    <Button bg="#F2EDED">
-                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                            <Heart size={16} color={color.sc} />
-                                            <Label size={12} style={{ lineHeight: 14, }}>{destaque?.likes} curtidas </Label>
-                                        </Row>
-                                    </Button>
-                                    <Button bg="#F2EDED">
-                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                            <MessageCircle size={16} color={color.sc} />
-                                            <Label size={12} style={{ lineHeight: 14, }}>{destaque?.comments} comentários </Label>
-                                        </Row>
-                                    </Button>
-                                    <Button bg="#F2EDED">
-                                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
-                                            <Send size={16} color={color.sc} />
-                                            <Label size={12} style={{ lineHeight: 14, }}>Enviar</Label>
-                                        </Row>
-                                    </Button>
-                                </Row>
-                            </Column>
-                        </>
-                    </Button>
-                </Column>
-
-                <Column style={{ flexGrow: 1, height: 1, backgroundColor: '#f1f1f1', }} />
-
-                <Column style={{ marginHorizontal: margin.h, marginVertical: margin.v, }}>
-                    <Title style={{ letterSpacing: -.7, }}>Recentes</Title>
-                    <ListPosts data={recentes} navigation={navigation} />
+                <Column style={{ marginHorizontal: margin.h, marginVertical: 24, }}>
+                    <Title style={{ letterSpacing: -.7, }}>Publicações recentes</Title>
+                    <ListPosts data={data} navigation={navigation} />
                     <Column style={{ height: 120, }}></Column>
                 </Column>
             </Scroll>
-        </Main>
+        </Column>
+
+
+
     )
 }
+
+
+const Destaque = ({ data }) => {
+    const { color, margin } = useTheme();
+    const swipRef = useRef()
+    const handleOpen = (item) => {
+        Linking.openURL(item)
+    }
+    const Card = ({ item }) => {
+        return (
+            <Button pv={1} ph={1} radius={16} onPress={() => { handleOpen(item?.permalink) }} style={{ backgroundColor: '#fff', paddingVertical: 12, }} >
+                <>
+                    <Column style={{ marginHorizontal: 12, }}>
+                        <MotiImage source={{ uri: item?.media_url }} style={{ width: 300, height: 240, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                        <Title size={20} style={{ letterSpacing: -.7, }}>{item?.caption?.length > 32 ? item?.caption?.slice(0, 32) + '...' : item?.caption}</Title>
+                        <ButtonPrimary label='Ver mais' onPress={() => { handleOpen(item?.permalink) }} />
+                    </Column>
+                </>
+            </Button>
+        )
+    }
+    //<Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, color: '#fff', }}>Em destaque</Title>
+    return (
+        <MotiView from={{opacity: 0, translateY: 50,}} animate={{opacity: 1, translateY: 0}} >
+            <Column style={{ height: 340, marginTop: 10, alignItems: 'center', }}>
+                <Swiper
+                    ref={swipRef}
+                    data={data}
+                    renderCard={(item) => <Card item={item} />}
+                />
+
+            </Column>
+            <MaterialIcons name="swipe" size={24} color={color.sc} style={{ alignSelf: 'center', marginBottom: 20, marginTop: 20, zIndex: -1, }} />
+        </MotiView>
+    )
+}
+
 
 export const Carrousel = ({ imgs }) => {
     const { color, margin } = useTheme();
@@ -192,34 +130,26 @@ export const Carrousel = ({ imgs }) => {
 export const ListPosts = ({ data, navigation }) => {
     const { color, font, margin } = useTheme()
     const Post = ({ item }) => {
+        const handleOpen = (item) => {
+            Linking.openURL(item)
+        }
         return (
-            <Button pv={1} ph={1} radius={2} onPress={() => { navigation.navigate('BlogSingle', { id: item.id, }) }} >
+            <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(item?.permalink) }} >
                 <Row>
-                    <Image source={{ uri: item?.img }} style={{ width: 84, height: 84, borderRadius: 12, }} />
+                    <MotiImage source={{ uri: item?.media_url }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
                     <Column style={{ width: '70%', justifyContent: 'center', marginLeft: 12, }}>
-                        <Title size={16} style={{ lineHeight: 16, fontFamily: 'Font_Bold', }}>{item?.title}</Title>
-                        <Row style={{ marginTop: 8, justifyContent: 'space-between', alignItems: 'center', }}>
-                            <Label size={14}>{item?.categories.join(', ')}</Label>
-                            <Label size={14}>{item?.date}</Label>
-                        </Row>
+                        <Title size={18} style={{ lineHeight: 20, fontFamily: 'Font_Medium', }}>{item?.caption?.length > 38 ? item?.caption?.slice(0, 38) + '...' : item?.caption}</Title>
+                        <Label size={14} style={{ lineHeight: 14, marginTop: 4, }}>Publicado em {formatDateTime(item?.timestamp)}</Label>
                     </Column>
                 </Row>
             </Button>
         )
     }
 
-    const [type, settype] = useState();
 
-    const cats = ['Resgate', 'Adoação', 'Saúde Pet', 'Veterinária', 'Reabilitação'];
     return (
         <Column>
-            <Row style={{ flexWrap: 'wrap', columnGap: 10, rowGap: 8, marginTop: 12, }}>
-                {cats.map((item, index) => (
-                    <Button pv={4} ph={12} bg={type == item ? color.sc : "#F2EDED"} onPress={() => { settype(item) }} >
-                        <LabelBT size={14} style={{ fontFamily: font.medium, }} color={type == item ? '#fff' : color.title}>{item}</LabelBT>
-                    </Button>
-                ))}
-            </Row>
+
             <Column style={{ height: 1, backgroundColor: '#f1f1f1', marginVertical: 12, }} />
             <FlatList
                 data={data}
@@ -268,19 +198,35 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
 
 const SkeletonBody = () => {
 
-    return(
-    <Column mh={24} mv={50}>
-        <Row style={{ justifyContent: 'space-between', marginBottom: 20, alignItems: 'center',  }}>
-            <Skeleton width={200} height={72} radius={12} colorMode="light"/>
-            <Skeleton width={72} height={72} radius={120} colorMode="light"/>
-        </Row>
-        <Skeleton width={200} height={52} radius={12} colorMode="light"/>
-        <Column style={{height: 12, }} />
-        <Skeleton width={120} height={120} colorMode="light"/>
-        <Column style={{height: 12, }} />
-        <Skeleton width={120} height={120} colorMode="light"/>
-        <Column style={{height: 12, }} />
-        <Skeleton width={120} height={120} colorMode="light"/>
-    
-    </Column>
-)}
+    return (
+        <Column mh={24} mv={50}>
+            <Row style={{ justifyContent: 'space-between', marginBottom: 20, alignItems: 'center', }}>
+                <Skeleton width={200} height={72} radius={12} colorMode="light" />
+                <Skeleton width={72} height={72} radius={120} colorMode="light" />
+            </Row>
+            <Skeleton width={200} height={52} radius={12} colorMode="light" />
+            <Column style={{ height: 12, }} />
+            <Skeleton width={120} height={120} colorMode="light" />
+            <Column style={{ height: 12, }} />
+            <Skeleton width={120} height={120} colorMode="light" />
+            <Column style={{ height: 12, }} />
+            <Skeleton width={120} height={120} colorMode="light" />
+
+        </Column>
+    )
+}
+
+
+
+
+/* 
+const [type, settype] = useState();
+const cats = ['Resgate', 'Adoação', 'Saúde Pet', 'Veterinária', 'Reabilitação'];
+
+<Row style={{ flexWrap: 'wrap', columnGap: 10, rowGap: 8, marginTop: 12, }}>
+            {cats.map((item, index) => (
+                <Button pv={4} ph={12} bg={type == item ? color.sc : "#F2EDED"} onPress={() => { settype(item) }} >
+                    <LabelBT size={14} style={{ fontFamily: font.medium, }} color={type == item ? '#fff' : color.title}>{item}</LabelBT>
+                </Button>
+            ))}
+        </Row> */

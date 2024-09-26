@@ -3,6 +3,7 @@ import { Main, Title, Label, } from '@theme/global';
 import { MotiImage, MotiView } from 'moti';
 import { StatusBar } from 'expo-status-bar';
 import { getToken } from '@hooks/token';
+import { listUser } from '@api/request/user';
 
 
 export default function AsyncStaticScreen({ navigation, }) {
@@ -10,7 +11,7 @@ export default function AsyncStaticScreen({ navigation, }) {
     useEffect(() => {
         const fetchData =  async () => {
             try {
-                const user = await getToken();
+                const user = await listUser();
                 if(user){
                     navigation.replace('Tabs')
                 }

@@ -43,9 +43,8 @@ async function postData(endpoint, data, token = null) {
     }
 }
 
-
 export async function publishComment(message, id) {
-    return await postData('/usuarios/comentarios',{ message: message, comment_id: id, });
+    return await postData('/usuarios/comentarios', { message: message, comment_id: id, });
 }
 
 export async function listComments(id) {
@@ -55,3 +54,16 @@ export async function listComments(id) {
 export async function excludeComment(comment_id) {
     return await postData('/usuarios/comentarios', { comment_id: comment_id });
 }
+
+export async function listPosts() {
+    const token = process.env.EXPO_PUBLIC_INSTA_API;
+    const fields = "media_url,media_type,caption,permalink,thumbnail_url,timestamp,username";
+    try {
+        const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${token}&fields=${fields}`)
+        return res.data
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
