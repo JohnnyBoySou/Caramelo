@@ -8,7 +8,6 @@ import { ArrowRight, HeartHandshake, History } from 'lucide-react-native';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useIsFocused } from '@react-navigation/native';
-import { Carrousel } from '../blog';
 import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 import { ListPosts } from '../blog';
 import { MotiImage } from 'moti';
