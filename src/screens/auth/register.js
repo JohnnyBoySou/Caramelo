@@ -14,11 +14,11 @@ import { createToken } from '@hooks/token';
 export default function AuthRegisterScreen({ navigation, }) {
     const { color, font, margin, } = useContext(ThemeContext)
 
-    const [name, setname] = useState('João de SOsua');
-    const [cpf, setcpf] = useState('12345678901');
-    const [email, setemail] = useState('joaodesousa101@gmail.com');
-    const [tel, settel] = useState('49991935657');
-    const [password, setpassword] = useState('223761de');
+    const [name, setname] = useState('');
+    const [cpf, setcpf] = useState('');
+    const [email, setemail] = useState('');
+    const [tel, settel] = useState('');
+    const [password, setpassword] = useState('');
 
     const modalTermos = useRef();
     const passStrong = useRef();

@@ -3,7 +3,7 @@ import { ArrowLeft } from 'lucide-react-native';
 
 import SucessAnim from '@anim/sucess';
 
-export default function NotafiscalSuccessScreen({ navigation, route }) {
+export default function AnonimoNotaSuccessScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
     const status = route.params?.status;
     return (
@@ -26,9 +26,7 @@ export default function NotafiscalSuccessScreen({ navigation, route }) {
                 </Column>
 
                 <Column style={{  justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
-                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('NotafiscalSend') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
-                    <Column style={{ height: 20, }} />
-                    <ButtonPrimary type='sc' label='Ver minhas notas' onPress={() => { navigation.navigate('History') }} style={{ paddingHorizontal: 24, borderColor: color.secundary, }} />
+                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('AnonimoNota') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
                 </Column>
             </Scroll>
 

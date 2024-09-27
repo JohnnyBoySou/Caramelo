@@ -99,7 +99,7 @@ export const resetPasswordCode = async (email, code) => {
 export const resetPasswordNew = async (params) => {
   return await postData('/usuarios/esquecisenharedefinir', {
     email: params.email,
-    codigo: params.codigo,
+    codigo: params.code,
     password: params.password,
     password_confirmation: params.password_confirmation,
   });

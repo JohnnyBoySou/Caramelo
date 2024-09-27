@@ -17,15 +17,12 @@ import { ProgressBar } from 'react-native-paper';
 //API
 import { AnimatePresence, MotiView, } from 'moti';
 import * as Haptics from 'expo-haptics';
-import { verifyNota, sendNotafiscal } from '@api/request/nota';
-
-import { verifyEstabelecimento } from '@api/request/user/index';
-import { createOrigin } from '@hooks/origin';
+import { verifyNota, sendNotafiscalAnonima } from '@api/request/nota';
 
 
 
 
-export default function NotafiscalScreen({ navigation }) {
+export default function AnonimoNotaScreen({ navigation }) {
     const { color, font, margin } = useTheme();
     const [hasPermission, setHasPermission] = useState(null);
     const [facing, setFacing] = useState('back');
@@ -83,10 +80,10 @@ export default function NotafiscalScreen({ navigation }) {
 
     const handleFinish = async () => {
         try {
-            const res = await sendNotafiscal(notas)
-            navigation.navigate('NotafiscalSuccess', { status: res })
+            const res = await sendNotafiscalAnonima(notas)
+            navigation.navigate('AnonimoNotaSuccess', { status: res })
         } catch (err) {
-            navigation.navigate('NotafiscalError', { status: err.message })
+            navigation.navigate('AnonimoNotaError', { status: err.message })
         } finally {
         }
     }
@@ -179,12 +176,14 @@ export default function NotafiscalScreen({ navigation }) {
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item, index }) => <ListNotas index={index} item={item} onRemove={handleRemove} />}
                     />
-                    {notas?.length >= 1 && <Row style={{ padding: 12, borderRadius: 12, marginTop: 30, backgroundColor: color.secundary + 20, justifyContent: 'center', alignItems: 'center', }}>
-                        <AntDesign name="questioncircleo" size={24} color={color.secundary} />
+                    {notas?.length >= 1 && <Row style={{ paddingVertical: 12, paddingHorizontal: 12, borderRadius: 12, marginTop: 30, backgroundColor: color.sc + 20, justifyContent: 'center', alignItems: 'center', }}>
+                        <AntDesign name="questioncircleo" size={24} color={color.sc} />
                         <Column style={{ marginLeft: 12, marginRight: 12, width: '80%' }}>
-                            <Label style={{ fontSize: 14, lineHeight: 16, marginTop: 5, color: color.secundary, }}>Envie várias de uma única vez. Escaneie todas as notas fiscais que desejar e clique em enviar logo abaixo.</Label>
+                            <Label style={{ fontSize: 14, lineHeight: 16, marginTop: 5 }}>Envie várias de uma única vez. Escaneie todas as notas fiscais que desejar e clique em enviar logo abaixo.</Label>
                         </Column>
                     </Row>}
+                    <Column style={{ marginTop: 32, }}></Column>
+                    <ButtonPrimary label='Enviar' onPress={handleFinish} />
                 </Column>
             </Modal>
 

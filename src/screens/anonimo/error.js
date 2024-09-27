@@ -1,12 +1,12 @@
 import React, { useContext, } from 'react';
-import { Main, Column, Label, Title, Row, Button,  } from '@theme/global';
+import { Main, Column, Label, Title, Row, Button, ButtonPrimary } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { ArrowLeft, Info } from 'lucide-react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MotiView } from 'moti';
 
-export default function NotafiscalErrorScreen({ navigation, route }) {
+export default function AnonimoNotaErrorScreen({ navigation, route }) {
     const { color, font, margin } = useContext(ThemeContext);
     const status  = route.params?.status
 
@@ -30,7 +30,7 @@ export default function NotafiscalErrorScreen({ navigation, route }) {
                 </MotiView>
                 <Title style={{ fontSize: 32, lineHeight: 34, textAlign: 'center', marginVertical: 24, }}>{status}</Title>
                 <Label style={{ textAlign: 'center', color: color.secundary+99, }}>Verifique sua nota fiscal</Label>
-                <ButtonPrimary type='sc' label='Enviar novamente' onPress={() => { navigation.navigate('NotafiscalSend') }} style={{ paddingHorizontal: 24, borderColor: color.secundary, marginTop: 32, }}/>
+                <ButtonPrimary type='sc' label='Enviar novamente' onPress={() => { navigation.navigate('AnonimoNota') }} style={{ paddingHorizontal: 24, borderColor: color.secundary, marginTop: 32, }}/>
             </Column>
 
         </Main>

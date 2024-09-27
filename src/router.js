@@ -42,6 +42,10 @@ import HistorySingleScreen from '@screens/history/single';
 import NotafiscalScreen from '@screens/notafiscal'
 import NotafiscalSuccessScreen from './screens/notafiscal/success';
 import NotafiscalErrorScreen from './screens/notafiscal/error';
+
+import AnonimoNotaScreen from './screens/anonimo';
+import AnonimoNotaSuccessScreen from './screens/anonimo/success';
+import AnonimoNotaErrorScreen from './screens/anonimo/error';
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
 
@@ -51,7 +55,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='AuthLogin'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -71,6 +75,12 @@ export default function Router() {
           <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         </Stack.Group>
 
+        
+
+        <Stack.Screen name="AnonimoNota" component={AnonimoNotaScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="AnonimoNotaSuccess" component={AnonimoNotaSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="AnonimoNotaError" component={AnonimoNotaErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        
         <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="NotafiscalSuccess" component={NotafiscalSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="NotafiscalError" component={NotafiscalErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />

@@ -86,6 +86,7 @@ const Destaque = ({ data }) => {
         )
     }
     //<Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, color: '#fff', }}>Em destaque</Title>
+    if(!data) return null
     return (
         <MotiView from={{opacity: 0, translateY: 50,}} animate={{opacity: 1, translateY: 0}} >
             <Column style={{ height: 340, marginTop: 10, alignItems: 'center', }}>
@@ -146,7 +147,7 @@ export const ListPosts = ({ data, navigation }) => {
         )
     }
 
-
+    if (!data) return <SkeletonBody />
     return (
         <Column>
 

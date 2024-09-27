@@ -1,19 +1,22 @@
 import React, { useContext, useState, useRef } from 'react';
-import { ThemeContext } from 'styled-components/native';
-import { Main, Scroll, Row, Column, Label, Button, Title, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, Image, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Row, Column, Label, Button, Title, U, HeadTitle, LabelBT, SCREEN_HEIGHT, Loader, Image, ButtonPrimary, useTheme } from '@theme/global';
 import { ArrowRight, UserPlus, X } from 'lucide-react-native';
 
 import Modal from '@components/Modal/index';
 import { HeaderLogo, Header } from '@components/Header';
 import { Input, Success, Error } from '@components/Forms/index';
-import { loginUser, verifyEstabelecimento } from '@api/request/user';
+import { loginUser, verifyEstabelecimento, resetPassword, resetPasswordCode, resetPasswordNew } from '@api/request/user';
 import { createToken } from '@hooks/token';
+import { useNavigation } from '@react-navigation/native';
+
+import { TextInput, ActivityIndicator } from 'react-native';
+import { createOrigin } from '@hooks/origin';
 
 export default function AuthLoginScren({ navigation, }) {
-  const { color, font, margin, } = useContext(ThemeContext)
+  const { color, font, margin, } = useTheme()
 
-  const [email, setemail] = useState('joaodesousa101@gmail.com');
-  const [password, setpassword] = useState('223761de');
+  const [email, setemail] = useState('engd.teste@gmail.com');
+  const [password, setpassword] = useState('12345678Nove');
 
   const modalPassword = useRef();
   const modalAnonim = useRef();
@@ -22,7 +25,6 @@ export default function AuthLoginScren({ navigation, }) {
   const [error, setError] = useState();
   const [loading, setloading,] = useState(false);
 
-  const [tel, settel] = useState();
   const passRef = useRef(null)
 
   const handleLogin = async () => {
@@ -34,7 +36,6 @@ export default function AuthLoginScren({ navigation, }) {
       setloading(true)
       try {
         const res = await loginUser(email, password)
-        console.log(res)
         if (res.token) {
           await createToken(res.token)
           setSuccess('Logado com sucesso!')
@@ -50,9 +51,6 @@ export default function AuthLoginScren({ navigation, }) {
     }
   }
 
-  const handleForget = () => {
-
-  }
   const [loadingAnonimo, setloadingAnonimo] = useState(false);
   const [successAnonimo, setSuccessAnonimo] = useState();
   const [errorAnonimo, setErrorAnonimo] = useState();
@@ -61,7 +59,11 @@ export default function AuthLoginScren({ navigation, }) {
     try {
       const res = await verifyEstabelecimento(email)
       setSuccessAnonimo(res.message)
-      console.log(res)
+      await createOrigin(email)
+      setTimeout(() => {
+        navigation.navigate('AnonimoNota')
+      }, 1500);
+
     } catch (error) {
       setErrorAnonimo(error.message)
       console.log(error)
@@ -135,18 +137,17 @@ export default function AuthLoginScren({ navigation, }) {
 
 
       <Modal ref={modalPassword} snapPoints={[0.1, SCREEN_HEIGHT]}>
-        <Column ph={24}>
-          <Header title="Recuperar senha" />
-          <Column style={{ height: 10, }} />
-          <Label>Enviaremos um e-mail com o código de verificação.</Label>
-          <Column style={{ height: 20, }} />
-          <Input
-            label="E-mail *"
-            value={email}
-            setValue={setemail}
-          />
-          <Column style={{ height: 20, }} />
-          <ButtonPrimary label="Enviar" onPress={handleForget} type='pr' />
+        <Column>
+
+          <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 20, }}>
+            <Column>
+              <Title>Recuperar senha</Title>
+            </Column>
+            <Button onPress={() => { modalPassword.current?.close() }} style={{ width: 48, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
+              <X size={24} color='#fff' />
+            </Button>
+          </Row>
+          <ForgetPassword />
         </Column>
       </Modal>
 
@@ -169,7 +170,7 @@ export default function AuthLoginScren({ navigation, }) {
               value={email}
               setValue={setemail}
             />
-            <Column style={{height: 12, }} />
+            <Column style={{ height: 12, }} />
 
             {successAnonimo ? <Success msg={successAnonimo} /> : errorAnonimo ? <Error msg={errorAnonimo} /> : null}
 
@@ -186,8 +187,9 @@ export default function AuthLoginScren({ navigation, }) {
 
 
 
-const ForgetPassword = (forgetPassword) => {
+const ForgetPassword = () => {
   const { color, margin, font } = useTheme()
+
   const [email, setemail] = useState('');
   const [password, setpassword] = useState();
   const [repeatPassword, setrepeatPasswors] = useState();
@@ -197,17 +199,25 @@ const ForgetPassword = (forgetPassword) => {
   const [step, setstep] = useState(1);
   const navigation = useNavigation();
   const [code, setCode] = useState(new Array(4).fill(''));
+
+
   const repPassword = useRef(null);
   const inputs = useRef([]);
-  const handleChange = (text, index) => { if (isNaN(text)) return; const newCode = [...code]; newCode[index] = text; setCode(newCode); if (text !== '' && index < 3) { inputs.current[index + 1].focus(); } };
+  const handleChange = (text, index) => { if (isNaN(text)) return; const newCode = [...code]; newCode[index] = text; setCode(newCode); if (text !== '' && index < 3) { inputs.current[index + 1].focus(); } else if (index == 4) { handleValidate() } };
   const handleKeyPress = (event, index) => { if (event.nativeEvent.key === 'Backspace' && index > 0 && code[index] === '') { inputs.current[index - 1].focus(); } };
 
 
   const handleVerify = async () => {
+    seterror()
+    setsuccess()
+    if (email === '') {
+      seterror('Preencha o campo de e-mail')
+      return
+    }
     setloading(true);
     try {
-      const res = await forgetpassword(email);
-      setsuccess(res.message)
+      const res = await resetPassword(email);
+      setsuccess('E-mail enviado com sucesso!')
       setTimeout(() => {
         setstep(2)
         setsuccess()
@@ -221,10 +231,12 @@ const ForgetPassword = (forgetPassword) => {
   }
 
   const handleValidate = async () => {
+    setsuccess()
+    seterror()
     setloading(true);
     try {
-      const res = await forgetpasswordvalidate(email, code.join(''));
-      setsuccess(res.message)
+      const res = await resetPasswordCode(email, code.join(''));
+      setsuccess('Código validado com sucesso!')
       setTimeout(() => {
         setstep(3)
         setsuccess()
@@ -238,6 +250,8 @@ const ForgetPassword = (forgetPassword) => {
   }
 
   const handleNewpassword = async () => {
+    seterror()
+    setsuccess()
     setloading(true);
     if (password !== repeatPassword) {
       seterror('As senhas não coincidem')
@@ -245,13 +259,13 @@ const ForgetPassword = (forgetPassword) => {
       return
     }
     try {
-      const res = await resetpassword(email, code.join(''), password);
+      const params = { email: email, code: code.join(''), password: password, password_confirmation: repeatPassword }
+      const res = await resetPasswordNew(params);
       setsuccess(res.message)
-      await createToken(res.token)
       setTimeout(() => {
         setstep(3)
         setsuccess()
-        navigation.replace('Tabs');
+        navigation.replace('AuthLogin');
       }, 1500);
     } catch (error) {
       console.log(error)
@@ -265,9 +279,7 @@ const ForgetPassword = (forgetPassword) => {
   return (
     <Column mh={20} style={{ rowGap: 16, }}>
 
-      {step == 1 && <Column style={{ rowGap: 16, }}>
-        <Title>Recuperar senha</Title>
-        <Label>Preencha seu e-mail </Label>
+      {step == 1 && <Column style={{ rowGap: 16, marginTop: 16, }}>
         <Input
           value={email}
           label="E-mail *"
@@ -275,17 +287,10 @@ const ForgetPassword = (forgetPassword) => {
           onSubmitEditing={handleVerify}
           placeholder='Ex.: jonhdoe@mail.com' setValue={setemail} />
         {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
-        <Button disabled={loading} onPress={handleVerify} bg={color.primary} pv={14} ph={24} style={{ borderRadius: 18 }}>
-          <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-            {loading ? <ActivityIndicator size="small" color={color.title} /> :
-              <Title size={18} color={color.title} >Enviar</Title>
-            }
-          </Row>
-        </Button>
+        <ButtonPrimary disabled={loading} label='Verificar' loading={loading} onPress={handleVerify} bg={color.primary} pv={14} ph={24} />
       </Column>}
 
       {step == 2 && <Column style={{ rowGap: 16, }}>
-        <Title>Confirme seu Código</Title>
         <Label>Insira o código enviado para o seu e-mail</Label>
         <Row style={{ columnGap: 12, }}>
           {code.map((digit, index) => (
@@ -296,8 +301,8 @@ const ForgetPassword = (forgetPassword) => {
               onKeyPress={(e) => handleKeyPress(e, index)}
               style={{
                 height: 84,
-                backgroundColor: digit == index ? '#505050' : '#303030',
-                color: "#fff",
+                backgroundColor: color.sc + 20,
+                color: color.sc,
                 fontFamily: font.medium,
                 borderRadius: 12,
                 flexGrow: 1,
@@ -311,17 +316,10 @@ const ForgetPassword = (forgetPassword) => {
           ))}
         </Row>
         {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
-        <Button disabled={loading} onPress={handleValidate} bg={color.primary} pv={14} ph={24} style={{ borderRadius: 18 }}>
-          <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-            {loading ? <ActivityIndicator size="small" color={color.title} /> :
-              <Title size={18} color={color.title} >Validar</Title>
-            }
-          </Row>
-        </Button>
+        <ButtonPrimary label='Validar' loading={loading} disabled={loading} onPress={handleValidate} bg={color.primary} pv={14} ph={24} style={{ borderRadius: 18 }} />
       </Column>}
 
       {step == 3 && <Column style={{ rowGap: 16, }}>
-        <Title>Nova senha</Title>
         <Label>Preencha sua nova senha</Label>
         <Input
           value={password}
@@ -339,13 +337,7 @@ const ForgetPassword = (forgetPassword) => {
           pass={true}
         />
         {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
-        <Button disabled={loading} onPress={handleNewpassword} bg={color.primary} pv={14} ph={24} style={{ borderRadius: 18 }}>
-          <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-            {loading ? <ActivityIndicator size="small" color={color.title} /> :
-              <Title size={18} color={color.title} >Definir nova senha</Title>
-            }
-          </Row>
-        </Button>
+        <ButtonPrimary loading={loading} label='Definir nova senha' disabled={loading} onPress={handleNewpassword} bg={color.primary} pv={14} ph={24} style={{ borderRadius: 18 }} />
       </Column>}
     </Column>
   )

@@ -1,5 +1,5 @@
 import React, { useContext, } from 'react';
-import { Main, Column, Label, Title, Row, Button,  } from '@theme/global';
+import { Main, Column, Label, Title, Row, Button, ButtonPrimary } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { ArrowLeft, Info } from 'lucide-react-native';
 
