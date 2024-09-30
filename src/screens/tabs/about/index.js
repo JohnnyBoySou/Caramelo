@@ -1,13 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, HeadTitle, LabelBT, ButtonPrimary } from '@theme/global';
-import { Instagram } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { Linking } from 'react-native';
 
 export default function AboutScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
 
     const resgates = ['135 ANIMAIS', '1700 ANIMAIS', 'RINHA DE PITBULLS', 'cracolândia', 'mula queimada', 'pantanal', 'gepeto', 'canil rio g. do sul', 'mulher da casa abandonada',]
+    
+    
+    const handleOpen = (link) => {
+        Linking.openURL(link);
+    }
     return (
         <Main style={{}}>
             <StatusBar style="dark" />
@@ -62,15 +67,15 @@ export default function AboutScreen({ navigation, route }) {
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Column style={{ width: 200, }}>
                             <HeadTitle>Nossas redes</HeadTitle>
-                            <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                            <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
                             <Row style={{ columnGap: 12, marginVertical: 12, }}>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => handleOpen('https://www.instagram.com/instituto.caramelo/')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />
                                 </Button>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => handleOpen('https://www.facebook.com/InstitutoCaramelo/')}  bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="facebook" size={22} color={color.sc} />
                                 </Button>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => handleOpen('https://www.tiktok.com/@institutocaramelo')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="tiktok" size={22} color={color.sc} />
                                 </Button>
                             </Row>

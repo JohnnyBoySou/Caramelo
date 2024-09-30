@@ -46,6 +46,9 @@ export default function HomeScreen({ navigation, }) {
         navigation.navigate('BlogSingle', { item: item })
     }
 
+    const handleLink = (link) => {
+        Linking.openURL(link);
+    }
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
@@ -190,13 +193,13 @@ export default function HomeScreen({ navigation, }) {
                             <HeadTitle>Nossas redes</HeadTitle>
                             <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
                             <Row style={{ columnGap: 12, marginVertical: 12, }}>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => { handleLink('https://www.instagram.com/instituto.caramelo/') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />
                                 </Button>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => { handleLink('https://www.facebook.com/InstitutoCaramelo/') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="facebook" size={22} color={color.sc} />
                                 </Button>
-                                <Button bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => { handleLink('https://www.tiktok.com/@institutocaramelo') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="tiktok" size={22} color={color.sc} />
                                 </Button>
                             </Row>
@@ -208,25 +211,23 @@ export default function HomeScreen({ navigation, }) {
 
                 <Column mv={20}>
                     <HeadTitle style={{ lineHeight: 28, marginHorizontal: margin.h, }}>Como posso ajudar?</HeadTitle>
-                    <Scroll horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: margin.h, }} contentContainerStyle={{columnGap: 12, paddingRight: 50, paddingTop: 12,}}>
-                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
-                            <Column pv={12} ph={6}>
-                                <Column style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
-                                    <Title color='#fff'>1</Title>
+                    <Scroll horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: margin.h, }} contentContainerStyle={{ columnGap: 12, paddingRight: 50, paddingTop: 12, }}>
+                        <Button onPress={() => {navigation.navigate('DonateValue')}}  bg={color.tr + 20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 2, borderColor: color.tr, }}>
+                            <Column ph={6}>
+                                <Column style={{ width: 76, height: 76, borderRadius: 100, backgroundColor: color.tr, justifyContent: 'center', alignItems: 'center', marginBottom: 12, }}>
+                                    <HeartHandshake size={34} color='#fff' />
                                 </Column>
-                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                                <Title color={color.tr} style={{ lineHeight: 24, fontSize: 22, }}>Fazer uma doação</Title>
+                                <Label color='#2E5F57' style={{ fontSize: 16, lineHeight: 18, marginTop: 8, }}>Toda contribuição, seja ela grande ou pequena, nos ajuda a continuar salvando vidas e proporcionando lares amorosos para nossos animais resgatados.</Label>
                             </Column>
                         </Button>
-                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
+                        <Button onPress={() => {navigation.navigate('Notafiscal')}}  bg={color.sc+20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 2, borderColor: color.sc, }}>
                             <Column pv={12} ph={6}>
-                                <FontAwesome6 name="instagram" size={22} color={color.sc} />
-                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
-                            </Column>
-                        </Button>
-                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
-                            <Column pv={12} ph={6}>
-                                <FontAwesome6 name="instagram" size={22} color={color.sc} />
-                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                                <Column style={{ width: 76, height: 76, borderRadius: 100, backgroundColor:color.sc, justifyContent: 'center', alignItems: 'center', marginBottom: 12, }}>
+                                    <MaterialCommunityIcons name="qrcode-scan" size={34} color='#fff' />
+                                </Column>
+                                <Title style={{ lineHeight: 24, fontSize: 22, }}>Enviar nota fiscal</Title>
+                                <Label style={{ fontSize: 16, lineHeight: 18, marginTop: 8, }}>Sempre que você fizer uma compra, basta cadastrar ou enviar a nota fiscal para nós. Não custa nada para você, mas ajuda muito para continuarmos com nossas atividades.</Label>
                             </Column>
                         </Button>
                     </Scroll>

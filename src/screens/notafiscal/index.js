@@ -106,7 +106,7 @@ export default function NotafiscalScreen({ navigation }) {
             <Column style={{ position: 'absolute', top: 50, zIndex: 99, width: '100%', paddingHorizontal: margin.h, }}>
                 <Header title='Escanear Nota' />
             </Column>
-            <Column style={{ height: SCREEN_HEIGHT * .74, width: '100%', alignSelf: 'center', borderRadius: 24, overflow: 'hidden', }}>
+            <Column style={{ height: SCREEN_HEIGHT * .74, width: '100%', alignSelf: 'center', borderBottomLeftRadius: 24, borderBottomRightRadius: 24, overflow: 'hidden', }}>
                 <CameraView
                     style={{ flex: 1 }}
                     facing={facing}
