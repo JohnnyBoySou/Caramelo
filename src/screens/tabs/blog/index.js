@@ -6,7 +6,7 @@ import PagerView from 'react-native-pager-view';
 import Animated, { useAnimatedStyle, withTiming, interpolateColor } from 'react-native-reanimated';
 
 import { FlatList, Linking } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Skeleton } from 'moti/skeleton';
 
 import { listPosts } from '@api/request/blog';
@@ -34,7 +34,7 @@ export default function BlogScreen({ navigation, route }) {
             try {
                 const res = await listPosts()
                 setdata(res.data)
-                setdestaque(res.data.slice(0, 3))
+                setdestaque(res.data.reverse().slice(0, 3))
             } catch (error) {
                 console.log(error)
             } finally {
@@ -47,8 +47,8 @@ export default function BlogScreen({ navigation, route }) {
     return (
         <Column style={{ paddingTop: 0, backgroundColor: '#fff', }}>
             <Scroll>
-                <Column style={{ paddingHorizontal: margin.h, backgroundColor: color.pr, paddingTop: 50, overflow: 'hidden', borderBottomLeftRadius: 32, borderBottomRightRadius: 32,}}>
-                    <MotiImage from={{opacity: 0, scale: 0, rotate: '12deg'}} animate={{opacity: 1, scale: 1, rotate: '0deg'}} source={require('@imgs/logo_blog.png')} style={{ width: 200, height: 52, marginBottom: 12, alignSelf: 'center', }} />
+                <Column style={{ paddingHorizontal: margin.h, backgroundColor: color.pr, paddingTop: 50, overflow: 'hidden', borderBottomLeftRadius: 32, borderBottomRightRadius: 32, }}>
+                    <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} delay={300} source={require('@imgs/logo_blog.png')} style={{ width: 200, height: 52, marginBottom: 12, alignSelf: 'center', }} />
                     <Destaque data={destaque} />
                     <Image source={require('@imgs/about3.png')} style={{ width: '120%', zIndex: -2, height: 122, position: 'absolute', bottom: 20, objectFit: 'cover', alignSelf: 'center', }} />
                 </Column>
@@ -69,27 +69,38 @@ export default function BlogScreen({ navigation, route }) {
 const Destaque = ({ data }) => {
     const { color, margin } = useTheme();
     const swipRef = useRef()
+    const navigation = useNavigation()
     const handleOpen = (item) => {
-        Linking.openURL(item)
+        navigation.navigate('BlogSingle', { item: item })
+        //Linking.openURL(item)
     }
     const Card = ({ item }) => {
         return (
-            <Button pv={1} ph={1} radius={16} onPress={() => { handleOpen(item?.permalink) }} style={{ backgroundColor: '#fff', paddingVertical: 12, }} >
+            <Button pv={1} ph={1} radius={16} onPress={() => handleOpen(item)} style={{ backgroundColor: '#fff', paddingVertical: 12, }} >
                 <>
                     <Column style={{ marginHorizontal: 12, }}>
                         <MotiImage source={{ uri: item?.media_url }} style={{ width: 300, height: 240, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
-                        <Title size={20} style={{ letterSpacing: -.7, }}>{item?.caption?.length > 32 ? item?.caption?.slice(0, 32) + '...' : item?.caption}</Title>
-                        <ButtonPrimary label='Ver mais' onPress={() => { handleOpen(item?.permalink) }} />
+                        <Title size={20} style={{ letterSpacing: -.7, marginBottom: 12, }}>{item?.caption?.length > 32 ? item?.caption?.slice(0, 32) + '...' : item?.caption}</Title>
+                        <ButtonPrimary label='Ver mais' onPress={() => handleOpen(item)} />
                     </Column>
                 </>
             </Button>
         )
     }
-    //<Title style={{ marginHorizontal: margin.h, letterSpacing: -.7, color: '#fff', }}>Em destaque</Title>
-    if(!data) return null
+    if (!data) {
+        return (<Column style={{ marginBottom: 24, alignSelf: 'center', }}>
+            <Skeleton width={300} height={200} radius={12} colorMode="light" />
+            <Column style={{ height: 12, }} />
+            <Skeleton width={300} height={32} radius={6} colorMode="light" />
+            <Column style={{ height: 6, }} />
+            <Skeleton width={220} height={32} radius={6} colorMode="light" />
+            <Column style={{ height: 12, }} />
+            <Skeleton width={300} height={52} radius={12} colorMode="light" />
+        </Column>)
+    }
     return (
-        <MotiView from={{opacity: 0, translateY: 50,}} animate={{opacity: 1, translateY: 0}} >
-            <Column style={{ height: 340, marginTop: 10, alignItems: 'center', }}>
+        <MotiView from={{ opacity: 0, translateY: 50, }} animate={{ opacity: 1, translateY: 0 }} >
+            <Column style={{ height: 340, marginTop: 10, marginBottom: 10, alignItems: 'center', }}>
                 <Swiper
                     ref={swipRef}
                     data={data}
@@ -132,10 +143,10 @@ export const ListPosts = ({ data, navigation }) => {
     const { color, font, margin } = useTheme()
     const Post = ({ item }) => {
         const handleOpen = (item) => {
-            Linking.openURL(item)
+            navigation.navigate('BlogSingle', { item: item })
         }
         return (
-            <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(item?.permalink) }} >
+            <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(item) }} >
                 <Row>
                     <MotiImage source={{ uri: item?.media_url }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
                     <Column style={{ width: '70%', justifyContent: 'center', marginLeft: 12, }}>
@@ -198,20 +209,39 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
 
 
 const SkeletonBody = () => {
-
     return (
-        <Column mh={24} mv={50}>
-            <Row style={{ justifyContent: 'space-between', marginBottom: 20, alignItems: 'center', }}>
-                <Skeleton width={200} height={72} radius={12} colorMode="light" />
-                <Skeleton width={72} height={72} radius={120} colorMode="light" />
+        <Column mv={20}>
+            <Row style={{ marginBottom: 20, alignItems: 'center', columnGap: 20, }}>
+                <Skeleton width={84} height={84} radius={12} colorMode="light" />
+                <Column style={{ rowGap: 10, }}>
+                    <Skeleton width={200} height={38} radius={8} colorMode="light" />
+                    <Skeleton width={140} height={24} radius={8} colorMode="light" />
+                </Column>
             </Row>
-            <Skeleton width={200} height={52} radius={12} colorMode="light" />
-            <Column style={{ height: 12, }} />
-            <Skeleton width={120} height={120} colorMode="light" />
-            <Column style={{ height: 12, }} />
-            <Skeleton width={120} height={120} colorMode="light" />
-            <Column style={{ height: 12, }} />
-            <Skeleton width={120} height={120} colorMode="light" />
+            <Column style={{ height: 6, }} />
+            <Row style={{ marginBottom: 20, alignItems: 'center', columnGap: 20, }}>
+                <Skeleton width={84} height={84} radius={12} colorMode="light" />
+                <Column style={{ rowGap: 10, }}>
+                    <Skeleton width={200} height={38} radius={8} colorMode="light" />
+                    <Skeleton width={140} height={24} radius={8} colorMode="light" />
+                </Column>
+            </Row>
+            <Column style={{ height: 6, }} />
+            <Row style={{ marginBottom: 20, alignItems: 'center', columnGap: 20, }}>
+                <Skeleton width={84} height={84} radius={12} colorMode="light" />
+                <Column style={{ rowGap: 10, }}>
+                    <Skeleton width={200} height={38} radius={8} colorMode="light" />
+                    <Skeleton width={140} height={24} radius={8} colorMode="light" />
+                </Column>
+            </Row>
+            <Column style={{ height: 6, }} />
+            <Row style={{ marginBottom: 20, alignItems: 'center', columnGap: 20, }}>
+                <Skeleton width={84} height={84} radius={12} colorMode="light" />
+                <Column style={{ rowGap: 10, }}>
+                    <Skeleton width={200} height={38} radius={8} colorMode="light" />
+                    <Skeleton width={140} height={24} radius={8} colorMode="light" />
+                </Column>
+            </Row>
 
         </Column>
     )

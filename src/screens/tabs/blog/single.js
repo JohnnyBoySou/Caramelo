@@ -2,38 +2,36 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, Image, U, SCREEN_HEIGHT, ButtonPrimary, Loader } from '@theme/global';
 
 //COMPONENTS
-import { Carrousel } from '.';
 import Modal from '@components/Modal';
+import { KeyboardAvoidingView, Share, Platform } from 'react-native';
 
+//API
+import { publishComment, toggleLike } from '@api/request/blog';
 //ICONS
 import { ArrowLeft, Heart, HelpCircle, MessageCircle, Send } from 'lucide-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { FlatList } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { Input } from '@components/Forms';
+import { formatDateTime } from '@hooks/utils';
 
 
 export default function BlogSingleScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
     const id = route.params?.id;
+    const item = route.params?.item;
 
-    const item = {
-        title: 'Lorem ipsum dolor sit amet',
-        imgs: ['https://i.pinimg.com/564x/fa/cb/92/facb926a743728c982d054c5ac5386eb.jpg', 'https://i.pinimg.com/736x/e9/ed/ba/e9edba03f93128ee2fe855fc8e8a72b2.jpg', 'https://i.pinimg.com/564x/8b/e0/91/8be091c5c5091f9a43d14f25eba84412.jpg'],
-        img1: { url: 'https://i.pinimg.com/564x/75/04/41/750441805adf676479f6769813cedfc2.jpg', alt: 'Descrição da imagem' },
-        desc: `É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica. \n\nÉ um facto estabelecido de que um leitor é distraído pelo conteúdo legível`,
-        desc2: `É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica. \n\nÉ um facto estabelecido de que um leitor é distraído pelo conteúdo legível. \n\nÉ um facto estabelecido de que um leitor é distraído pelo conteúdo legível`,
-        date: '30 de setembro de 2024',
+    const [data, setdata] = useState({
         likes: 32,
         comments: 12,
-    }
+    });
 
     const comments = [
         {
             id: 1,
             name: 'João de Sousa',
             avatar: 'https://avatar.iran.liara.run/public/24',
-            message: 'Uau! Que fantástico, adorei a publicação ⭐⭐⭐⭐⭐ ',
+            message: 'Uau! Que fantástico, top a publicação ⭐⭐⭐⭐⭐ ',
         },
         {
             id: 2,
@@ -45,15 +43,29 @@ export default function BlogSingleScreen({ navigation, route }) {
     const commentsRef = useRef(null);
 
     const [liked, setliked] = useState(false);
-
-    const handleLike = () => {
-        if (liked) {
-            setliked(false)
-        } else {
-            setliked(true)
+    const [loadingLike, setloadingLike] = useState();
+    const handleLike = async () => {
+        setloadingLike(true);
+        try {
+            const res = await toggleLike(id);
+            setliked(res);
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloadingLike(false);
         }
     }
 
+    const handleShare = async () => {
+        try {
+            const res = await Share.share({
+                message: 'Olha esse post!' + '\n' + item?.permalink,
+            })
+            console.log(res)
+        } catch (error) {
+
+        }
+    }
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
 
@@ -64,38 +76,33 @@ export default function BlogSingleScreen({ navigation, route }) {
                 </Button>
                 <Column mh={24}>
                     <Title color="#fff">Detalhes</Title>
-                    <Label color="#fff">{item?.title.slice(0, 20) + '...'}</Label>
+                    <Label color="#fff">{item?.caption?.slice(0, 32) + '...'}</Label>
                 </Column>
             </Row>
             <Scroll>
 
 
-                <Carrousel imgs={item?.imgs} />
                 <Column mh={margin.h}>
-                    <Title style={{ letterSpacing: -.7, }} size={22}>{item?.title}</Title>
-                    <Label style={{ fontFamily: font.light, marginVertical: 12, }}>{item?.desc}</Label>
 
-                    <Image source={{ uri: item?.img1?.url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 12, height: 200, backgroundColor: '#d1d1d1', }} />
-                    <Label align='center' style={{ marginVertical: 12, }}>{item?.img1?.alt}</Label>
-
-                    <Label style={{ fontFamily: font.light, marginVertical: 12, }}>{item?.desc2}</Label>
-
-                    <Label >Publicado em {item?.date} por <U>Instituto Caramelo.</U></Label>
+                    <Image source={{ uri: item?.media_url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 24, height: 300, backgroundColor: '#d1d1d1', zIndex: 99, }} />
+                    <Column  style={{ flexGrow: 1, borderRadius: 28, marginTop: 24, height: 300, backgroundColor: color.pr, marginTop: -290, marginRight: -10, marginLeft: 12,  }} />
+                    <Label style={{ fontFamily: font.light, marginVertical: 12, }}>{item?.caption}</Label>
+                    <Label >Publicado em {formatDateTime(item?.timestamp)}</Label>
 
                     <Row style={{ columnGap: 12, marginVertical: 24, }}>
                         <Button bg="#DFCFD290">
                             <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
                                 <Heart size={16} color={color.sc} />
-                                <Label size={12} style={{ lineHeight: 14, }}>{item?.likes} curtidas </Label>
+                                <Label size={12} style={{ lineHeight: 14, }}>{data?.likes} curtidas </Label>
                             </Row>
                         </Button>
                         <Button bg="#DFCFD290">
                             <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
                                 <MessageCircle size={16} color={color.sc} />
-                                <Label size={12} style={{ lineHeight: 14, }}>{item?.comments} comentários </Label>
+                                <Label size={12} style={{ lineHeight: 14, }}>{data?.comments} comentários </Label>
                             </Row>
                         </Button>
-                        <Button bg="#DFCFD290">
+                        <Button bg="#DFCFD290" onPress={handleShare}>
                             <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
                                 <Send size={16} color={color.sc} />
                                 <Label size={12} style={{ lineHeight: 14, }}>Enviar</Label>
@@ -115,14 +122,14 @@ export default function BlogSingleScreen({ navigation, route }) {
                 <Button onPress={() => { commentsRef.current?.expand() }} style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
                     <MessageCircle size={24} color="#fff" />
                 </Button>
-                <Button style={{ width: 56, height: 56, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
+                <Button style={{ width: 56, height: 56, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }} onPress={handleShare}>
                     <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
                         <Send size={24} color={color.sc} />
                     </Row>
                 </Button>
             </Row>
-            <Modal ref={commentsRef} snapPoints={[0.1, 0.94 * SCREEN_HEIGHT]}>
-                <Column mh={margin.h} style={{ flex: 1, backgroundColor: 'red', }}>
+            <Modal ref={commentsRef} snapPoints={[0.1, 1 * SCREEN_HEIGHT]}>
+                <Column mh={margin.h} style={{}}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Button onPress={() => { commentsRef.current?.close() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc}>
                             <ArrowLeft size={24} color="#fff" />
@@ -170,11 +177,10 @@ const ListComments = ({ data, id, }) => {
         }
     }
     return (
-        <Column style={{ flex: 1, }}>
-
+        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1, }} keyboardVerticalOffset={20}>
             <FlatList
                 data={data}
-                style={{ paddingVertical: 12, }}
+                style={{ paddingVertical: 12, height: 0.9 * SCREEN_HEIGHT, }}
                 renderItem={({ item }) => <CommentItem item={item} />}
                 ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#D1D1D1', }} />}
                 keyExtractor={item => item.id}
@@ -185,16 +191,17 @@ const ListComments = ({ data, id, }) => {
                     <ButtonPrimary label="Comentar!" type="sc" pv={14} ph={36} />
                 </Column>}
             />
-            <Row style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: -20, }}>
+            <Row style={{ justifyContent: 'center', alignItems: 'center', position: 'absolute', bottom: 20, }}>
                 <Column style={{ flexGrow: 1, }}>
-                    <Input label="Comentário" />
+                    <Input label="Comentário" setValue={setcomment} value={comment} />
                 </Column>
-                <Button bg={color.sc} style={{ width: 64, justifyContent: 'center', alignItems: 'center', height: 64, }} radius={12}>
+                <Column style={{ width: 12 }} />
+                <Button onPress={handleComment} bg={color.sc} style={{ width: 64, justifyContent: 'center', alignItems: 'center', height: 64, }} radius={12}>
                     <Row>
-                        {loading ? <Loader size={24} /> : <Send size={24} color="#fff" />}
+                        {loading ? <Loader size={24} color='#fff' /> : <Send size={24} color="#fff" />}
                     </Row>
                 </Button>
             </Row>
-        </Column>
+        </KeyboardAvoidingView>
     )
 }

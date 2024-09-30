@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation, }) {
     }
 
     const handleOpen = (item) => {
-        Linking.openURL(item)
+        navigation.navigate('BlogSingle', { item: item })
     }
 
     return (
@@ -96,7 +96,7 @@ export default function HomeScreen({ navigation, }) {
                     <Column style={{ width: 12 }} />
                 </ScrollView>
 
-                <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(destaque?.permalink) }} >
+                <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(destaque) }} >
 
                     <>
                         <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 30, right: 40, zIndex: 99, borderRadius: 12, }}>
@@ -205,30 +205,31 @@ export default function HomeScreen({ navigation, }) {
                     </Row>
                 </Column>
                 <Column style={{ height: 20, }} />
-                <Column mh={margin.h} mv={20}>
-                    <Column style={{  }}>
-                        <HeadTitle style={{ lineHeight: 28, textAlign: 'center',}}>Como posso ajudar?</HeadTitle>
-                        <Column style={{ columnGap: 12, marginVertical: 12, rowGap: 14, }}>
-                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                <Column>
-                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
-                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+
+                <Column mv={20}>
+                    <HeadTitle style={{ lineHeight: 28, marginHorizontal: margin.h, }}>Como posso ajudar?</HeadTitle>
+                    <Scroll horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: margin.h, }} contentContainerStyle={{columnGap: 12, paddingRight: 50, paddingTop: 12,}}>
+                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
+                            <Column pv={12} ph={6}>
+                                <Column style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
+                                    <Title color='#fff'>1</Title>
                                 </Column>
-                            </Button>
-                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                <Column>
-                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
-                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
-                                </Column>
-                            </Button>
-                            <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', }}>
-                                <Column>
-                                    <FontAwesome6 name="instagram" size={22} color={color.sc} />
-                                    <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
-                                </Column>
-                            </Button>
-                        </Column>
-                    </Column>
+                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                            </Column>
+                        </Button>
+                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
+                            <Column pv={12} ph={6}>
+                                <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                            </Column>
+                        </Button>
+                        <Button bg="#f1f1f1" radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, }}>
+                            <Column pv={12} ph={6}>
+                                <FontAwesome6 name="instagram" size={22} color={color.sc} />
+                                <Label>É um facto estabelecido de que um leitor é distraído pelo conteúdo.</Label>
+                            </Column>
+                        </Button>
+                    </Scroll>
                 </Column>
                 <Column style={{ height: 120, }} />
             </Scroll>
