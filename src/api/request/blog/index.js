@@ -23,13 +23,13 @@ async function getData(endpoint,) {
     }
 }
 
-async function postData(endpoint, data, token = null) {
+async function postData(endpoint, data,) {
     const BASE_URL = await getBaseURL();
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
+    const token = await getToken();
+    const headers = { Authorization: `Bearer ${token}` }
     try {
         const response = await axios.post(`${BASE_URL}${endpoint}`, data, { headers });
-        return response.data.message;
+        return response.data
     } catch (error) {
         console.error(error);
         let errMsg;
@@ -44,16 +44,22 @@ async function postData(endpoint, data, token = null) {
 }
 
 export async function publishComment(message, id) {
-    return await postData('/usuarios/comentarios', { message: message, comment_id: id, });
+    return await postData('/usuarios/postarcomentario', { texto: message, idpost: id, });
 }
 
 export async function listComments(id) {
-    return await getData(`/usuarios/comentarios/${id}`);
+    return await postData(`/usuarios/comentarios/getall`, { idpost: id, });
 }
 
-export async function excludeComment(comment_id) {
-    return await postData('/usuarios/comentarios', { comment_id: comment_id });
+export async function excludeComment(comment_id, post_id) {
+    return await postData('/usuarios/deletarcomentario', { idcomentario: comment_id, idpost: post_id, });
 }
+
+export async function editComment(comment_id, post_id, message) {
+    return await postData('/usuarios/editarcomentario', { idcomentario: comment_id, idpost: post_id, texto: message, });
+}
+
+
 
 export async function listPosts() {
     const token = process.env.EXPO_PUBLIC_INSTA_API;

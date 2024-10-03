@@ -55,7 +55,7 @@ import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Tabs'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -104,9 +104,9 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
   const route = useRoute();
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Blog';
   return (
-    <Tab.Navigator initialRouteName="Home"
+    <Tab.Navigator initialRouteName="Blog"
       screenOptions={{
         headerShown: false,
         backBehavior: 'none',
