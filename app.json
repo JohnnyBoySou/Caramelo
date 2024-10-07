@@ -21,7 +21,6 @@
         "NSLocationWhenInUseUsageDescription": "This app uses location services to find events near you.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location services to find events near you."
       }
-
     },
     "android": {
       "adaptiveIcon": {
@@ -50,6 +49,11 @@
           "recordAudioAndroid": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3e551c5c-7e5a-4239-ba02-6b9a5a1c0ba0"
+      }
+    }
   }
 }
