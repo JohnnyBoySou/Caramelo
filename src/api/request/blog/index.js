@@ -74,6 +74,10 @@ export async function listPosts() {
 
 
 export async function toggleLike(id) {
-    return await postData('/usuarios/likes', { id: id });
+    return await postData('/usuarios/curtirdescurtir', { idpost: id });
 }
 
+
+export async function isLike(id) {
+    return await postData('/usuarios/iscurtir', { idpost: id });
+}

@@ -2,7 +2,7 @@ import LottieView from 'lottie-react-native';
 import { MotiView } from 'moti';
 import { useEffect, useRef } from 'react';
 
-export default function HeartAnim({w = 300, h = 300, play}){
+export default function HeartAnim({w = 200, h = 200, play}){
     const pl = useRef()
     
     useEffect(() => {

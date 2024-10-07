@@ -147,9 +147,9 @@ export const logoutUser = async () => {
 }
 
 // Exclusão de usuário
-export const excludeUser = async (password, message) => {
+export const excludeUser = async (password) => {
   const token = await getToken();
-  return await postData('/usuarios/exclusao', { password, message }, token);
+  return await postData('/usuarios/exclusao', { password }, token);
 };
 
 

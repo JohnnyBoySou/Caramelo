@@ -15,24 +15,27 @@ import { StatusBar } from 'expo-status-bar';
 import { Input } from '@components/Forms';
 import { formatDateTime } from '@hooks/utils';
 import { listUser, } from '@api/request/user';
+import { isLike } from '../../../api/request/blog';
+import { MotiImage } from 'moti';
+import HeartAnim from '../../../assets/anim/heart';
 
 
 export default function BlogSingleScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
     const item = route.params?.item;
-
-    const [data, setdata] = useState({
-        likes: 32,
-        comments: 12,
-    });
+    const modalLike = useRef(null);
+    const commentsRef = useRef(null);
 
     const [comments, setcomments] = useState();
-    const [totalComments, settotalComments] = useState();
-    const commentsRef = useRef(null);
+    const [totalComments, settotalComments] = useState('0');
+
     const handleList = async () => {
         try {
             const res = await listComments(item?.id);
-            settotalComments(res.totalcometarios)
+            const reslike = await isLike(item?.id);
+            setliked(reslike.iscurtir);
+            settotalCurtidas(reslike.totalcurtidas);
+            settotalComments(res.totalcometarios);
             setcomments(res.comentarios.data);
         } catch (error) {
             console.log(error)
@@ -40,12 +43,21 @@ export default function BlogSingleScreen({ navigation, route }) {
     }
 
     const [liked, setliked] = useState(false);
+    const [totalCurtidas, settotalCurtidas] = useState('0');
+    const [loadlike, setloadlike] = useState(false);
     const handleLike = async () => {
+        setloadlike(true);
         try {
             const res = await toggleLike(item?.id);
-            setliked(res);
+            setliked(res.iscurtir);
+            settotalCurtidas(res.totalcurtidas);
+            if (res.iscurtir) {
+                modalLike.current?.expand();
+            }
         } catch (error) {
             console.log(error)
+        } finally {
+            setloadlike(false);
         }
     }
 
@@ -79,7 +91,7 @@ export default function BlogSingleScreen({ navigation, route }) {
             <Scroll>
                 <Column mh={margin.h}>
 
-                    <Image source={{ uri: item?.media_url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 24, height: 300, backgroundColor: '#d1d1d1', zIndex: 99, }} />
+                    <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} transition={{ delay: 300, damping: 20, }} source={{ uri: item?.media_url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 24, height: 300, backgroundColor: '#d1d1d1', zIndex: 99, }} />
                     <Column style={{ flexGrow: 1, borderRadius: 28, marginTop: 24, height: 300, backgroundColor: color.pr, marginTop: -290, marginRight: -10, marginLeft: 12, }} />
                     <Label style={{ fontFamily: font.light, marginVertical: 12, }}>{item?.caption}</Label>
                     <Label>Publicado em {formatDateTime(item?.timestamp)}</Label>
@@ -88,7 +100,7 @@ export default function BlogSingleScreen({ navigation, route }) {
                         <Button bg="#DFCFD290">
                             <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
                                 <Heart size={16} color={color.sc} />
-                                <Label size={12} style={{ lineHeight: 14, }}>{data?.likes} curtidas </Label>
+                                <Label size={12} style={{ lineHeight: 14, }}>{totalCurtidas} curtidas </Label>
                             </Row>
                         </Button>
                         <Button bg="#DFCFD290" onPress={() => commentsRef.current?.expand()}>
@@ -112,7 +124,9 @@ export default function BlogSingleScreen({ navigation, route }) {
             <Row style={{ backgroundColor: '#f1f1f1', paddingVertical: 4, columnGap: 6, paddingHorizontal: 4, borderRadius: 100, alignSelf: 'center', position: 'absolute', bottom: 30, }}>
                 <Button onPress={handleLike} style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: liked ? color.sc : '#f1f1f1', justifyContent: 'center', alignItems: 'center', }}>
                     <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-                        {!liked ? <AntDesign name="hearto" size={24} color={color.sc} /> : <AntDesign name="heart" size={24} color={color.red} />}
+                        {loadlike ? <Loader size={18} color={color.pr} /> : <>
+                            {!liked ? <AntDesign name="hearto" size={24} color={color.sc} /> : <AntDesign name="heart" size={24} color={color.red} />}
+                        </>}
                     </Row>
                 </Button>
                 <Button onPress={() => { commentsRef.current?.expand() }} style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
@@ -139,6 +153,20 @@ export default function BlogSingleScreen({ navigation, route }) {
 
 
                     <ListComments data={comments} id={item?.id} fetchList={handleList} />
+                </Column>
+            </Modal>
+            <Modal ref={modalLike} snapPoints={[0.1, 330]}>
+                <Column style={{ justifyContent: 'center', alignItems: 'center', }}>
+                    <Column style={{ marginTop: -40, }}>
+                        <HeartAnim play={liked} width={100} height={100} />
+                    </Column>
+                    <Title style={{ marginTop: -30, textAlign: 'center', marginHorizontal: 20, lineHeight: 24, marginBottom: 15, }}>Uau! Que tal compartilhar com alguém?</Title>
+                    <Button bg="#DFCFD290" onPress={handleShare} pv={16} ph={20}>
+                        <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 6, }}>
+                            <Send size={18} color={color.sc} />
+                            <Label size={16} style={{ lineHeight: 18, marginLeft: 5, }}>Compartilhar</Label>
+                        </Row>
+                    </Button>
                 </Column>
             </Modal>
         </Column>

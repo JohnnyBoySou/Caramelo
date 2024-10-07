@@ -7,12 +7,77 @@ import { Linking } from 'react-native';
 export default function AboutScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
 
-    const resgates = ['135 ANIMAIS', '1700 ANIMAIS', 'RINHA DE PITBULLS', 'cracolândia', 'mula queimada', 'pantanal', 'gepeto', 'canil rio g. do sul', 'mulher da casa abandonada',]
-    
-    
+    const resgates = [
+        {
+            name: '135 ANIMAIS',
+            link: 'https://institutocaramelo.org/resgates#rec604545214',
+        },
+        {
+            name: '1700 ANIMAIS',
+            link: 'https://institutocaramelo.org/resgates#rec604545220',
+        },
+        {
+            name: 'RINHA DE PITBULLS',
+            link: 'https://institutocaramelo.org/resgates#rec604545225',
+        },
+        {
+            name: 'Cracolândia',
+            link: 'https://institutocaramelo.org/resgates#rec604545231',
+        },
+        {
+            name: 'Mula queimada',
+            link: 'https://institutocaramelo.org/resgates#rec604545236',
+        },
+        {
+            name: 'Pantanal',
+            link: 'https://institutocaramelo.org/resgates#rec604545240',
+        },
+        {
+            name: 'Gepeto',
+            link: 'https://institutocaramelo.org/resgates#rec610542907',
+        },
+        {
+            name: 'Canil Rio G. do Sul',
+            link: 'https://institutocaramelo.org/resgates#rec610605857',
+        },
+        {
+            name: 'Mulher da casa abandonada',
+            link: 'https://institutocaramelo.org/resgates#rec610607464',
+        },
+    ]
     const handleOpen = (link) => {
         Linking.openURL(link);
     }
+    const links = [
+        {
+            name: 'Site',
+            link: 'https://institutocaramelo.org/home',
+        },
+        {
+            name: 'Adote',
+            link: 'https://institutocaramelo.org/adote',
+        },
+        {
+            name: 'Contato para Resgates',
+            link: 'https://doare.typeform.com/to/XZOnoYPY',
+        },
+        {
+            name: 'Apadrinhe',
+            link: 'https://institutocaramelo.org/apadrinhe',
+        },
+        {
+            name: 'Doe',
+            link: 'https://institutocaramelo.org/doe',
+        },
+        {
+            name: 'Castração',
+            link: 'https://institutocaramelo.org/castracao',
+        },
+        {
+            name: 'Transparência',
+            link: 'https://institutocaramelo.org/transparencia',
+        },
+    ]
     return (
         <Main style={{}}>
             <StatusBar style="dark" />
@@ -29,18 +94,18 @@ export default function AboutScreen({ navigation, route }) {
                         <Column style={{ alignItems: 'flex-start', }}>
                             <HeadTitle>Galeria</HeadTitle>
                             <Label size={14} style={{ fontFamily: font.light, lineHeight: 18, marginBottom: 12, width: 200, }}>Veja mais imagens da nossa galeria.</Label>
-                            <Button bg={color.sc} radius={12} ph={18} onPress={() => {navigation.navigate('AboutGallery')}} >
+                            <Button bg={color.sc} radius={12} ph={18} onPress={() => { navigation.navigate('AboutGallery') }} >
                                 <LabelBT color='#fff'>Abrir galeria</LabelBT>
                             </Button>
                         </Column>
                         <Column style={{ rowGap: 8, }}>
                             <Row style={{ columnGap: 8, }}>
-                                <Image style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
-                                <Image style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
+                                <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/1.jpg' }} style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
+                                <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/2.jpg' }} style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
                             </Row>
                             <Row style={{ columnGap: 8, }}>
-                                <Image style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
-                                <Image style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
+                                <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/3.jpg' }} style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
+                                <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/4.jpg' }} style={{ width: 54, height: 54, objectFit: 'contain', backgroundColor: '#f1f1f1', borderRadius: 8, }} />
                             </Row>
                         </Column>
                     </Row>
@@ -56,8 +121,8 @@ export default function AboutScreen({ navigation, route }) {
                     <Label style={{ fontSize: 14, fontFamily: font.light, lineHeight: 18, }}>O Instituto Caramelo levou o nome de Instituto Luisa Mell de fevereiro 2015 até abril 2022. Abaixo os resgates mais emblemáticos da nossa história!</Label>
                     <Row style={{ flexWrap: 'wrap', columnGap: 12, rowGap: 12, marginVertical: 20, }}>
                         {resgates.map((item, index) => (
-                            <Button bg="#fff" radius={14} pv={4}>
-                                <LabelBT style={{ textTransform: 'uppercase', }}>{item}</LabelBT>
+                            <Button bg="#fff" radius={14} pv={4} onPress={() => { navigation.navigate('WebView', { name: item?.name, link: item?.link }) }}>
+                                <LabelBT style={{ textTransform: 'uppercase', }}>{item?.name}</LabelBT>
                             </Button>
                         ))}
                     </Row>
@@ -72,7 +137,7 @@ export default function AboutScreen({ navigation, route }) {
                                 <Button onPress={() => handleOpen('https://www.instagram.com/instituto.caramelo/')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />
                                 </Button>
-                                <Button onPress={() => handleOpen('https://www.facebook.com/InstitutoCaramelo/')}  bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
+                                <Button onPress={() => handleOpen('https://www.facebook.com/InstitutoCaramelo/')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="facebook" size={22} color={color.sc} />
                                 </Button>
                                 <Button onPress={() => handleOpen('https://www.tiktok.com/@institutocaramelo')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
@@ -83,7 +148,19 @@ export default function AboutScreen({ navigation, route }) {
                         <Image source={require('@imgs/about4.png')} />
                     </Row>
                 </Column>
+
+                <Column bg={color.sc} pv={20} ph={20}>
+                    <Title color={color.pr}>Links úteis</Title>
+                    <Row style={{ flexWrap: 'wrap', columnGap: 12, rowGap: 12, marginTop: 20, }}>
+                    {links.map((item, index) => (
+                        <Button radius={18} bg={color.pr} onPress={() => { navigation.navigate('WebView', { name: item?.name, link: item?.link }) }} >
+                            <LabelBT color={color.sc}>{item?.name}</LabelBT>
+                        </Button>
+                    ))}
+                    </Row>
                 <Column style={{ height: 120, }} />
+                </Column>
+
             </Scroll>
         </Main>
     )

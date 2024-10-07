@@ -42,7 +42,7 @@ export default function BlogScreen({ navigation, route }) {
             }
         }
         fetchData()
-    }, [isFocused])
+    }, [])
 
     return (
         <Column style={{ paddingTop: 0, backgroundColor: '#fff', }}>
@@ -123,17 +123,18 @@ export const Carrousel = ({ imgs }) => {
     }
     const [currentIndex, setCurrentIndex] = useState(0);
     return (
-        <Column style={{ height: 242, marginVertical: 14, }}>
+        <Column style={{ height: 202, marginVertical: 14, }}>
             <PagerView style={{ flex: 1, }} initialPage={0} ref={pagerRef} onPageSelected={(event) => { handleScreen(event.nativeEvent.position) }}>
                 {imgs?.map((item, index) => (
-                    <Image key={index} source={{ uri: item }} style={{ flexGrow: 1, objectFit: 'cover', marginHorizontal: margin.h, borderRadius: 18, height: 242, }} />))}
+                    <Image key={index} source={{ uri: item }} style={{ flexGrow: 1, objectFit: 'cover', marginHorizontal: margin.h, borderRadius: 18, height: 202, }} />))}
             </PagerView>
-            <Column style={{ position: 'absolute', bottom: 15, right: 40, }}>
+            <Column style={{ position: 'absolute', bottom: 15, zIndex: 99, alignSelf: 'center', }}>
                 <PaginationDots
                     index={currentIndex}
                     numberOfDots={imgs?.length}
+
                     activityColor={color.sc}
-                    disableColor="#ddd" />
+                    disableColor={color.sc+60} />
             </Column>
         </Column>
     )
@@ -175,6 +176,7 @@ export const ListPosts = ({ data, navigation }) => {
 }
 
 const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) => {
+    const { color} = useTheme();
     const dotStyle = (dotIndex) => {
         return useAnimatedStyle(() => {
             const width = withTiming(index === dotIndex ? 35 : 14, { duration: 300 });
@@ -192,7 +194,7 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
     };
 
     return (
-        <Row style={{ backgroundColor: '#F1F1F130', paddingVertical: 4, paddingHorizontal: 2, borderRadius: 100 }}>
+        <Row style={{ backgroundColor: color.pr, paddingVertical: 4, paddingHorizontal: 2, borderRadius: 100, zIndex: 99, }}>
             {Array.from({ length: numberOfDots }).map((_, dotIndex) => (
                 <Animated.View
                     key={dotIndex}

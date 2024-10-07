@@ -16,7 +16,7 @@ export function Back() {
 
 export function ButtonPrimary({ login = false, loading, type = 'pr', label, pv = 12, ph = 20, fontStyle, size = 18, onPress, ...props }) {
   const { color, } = useTheme();
-  const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : type == 'lg' ? '#FFF' : type == 'tr' ? color.tr : '#fff';
+  const bg = type === 'pr' ? color.pr : type === 'sc' ? color.sc : type == 'lg' ? '#FFF' : type == 'tr' ? color.tr : '#000';
   const text = type === 'pr' ? color.sc : type === 'sc' ? '#fff' : type == 'lg' ? color.sc : type == 'tr' ? '#fff' : '#fff';
   return (
     <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} radius={16}>
@@ -55,7 +55,7 @@ export const Image = styled(RNImage).attrs(() => ({
 background-color: ${props => props.bg || 'transparent'}
 `
 
-export const Main = styled.SafeAreaView`
+export const Main = styled.View`
   flex: 1;
   padding-top: 36;
   background-color: ${props => props.bg || props.theme.background};

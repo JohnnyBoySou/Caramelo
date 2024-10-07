@@ -212,7 +212,7 @@ export default function HomeScreen({ navigation, }) {
                 <Column mv={20}>
                     <HeadTitle style={{ lineHeight: 28, marginHorizontal: margin.h, }}>Como posso ajudar?</HeadTitle>
                     <Scroll horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: margin.h, }} contentContainerStyle={{ columnGap: 12, paddingRight: 50, paddingTop: 12, }}>
-                        <Button onPress={() => {navigation.navigate('DonateValue')}}  bg={color.tr + 20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 2, borderColor: color.tr, }}>
+                        <Button onPress={() => { navigation.navigate('DonateValue') }} bg={color.tr + 20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 1, borderColor: color.tr + 60, }}>
                             <Column ph={6}>
                                 <Column style={{ width: 76, height: 76, borderRadius: 100, backgroundColor: color.tr, justifyContent: 'center', alignItems: 'center', marginBottom: 12, }}>
                                     <HeartHandshake size={34} color='#fff' />
@@ -221,9 +221,9 @@ export default function HomeScreen({ navigation, }) {
                                 <Label color='#2E5F57' style={{ fontSize: 16, lineHeight: 18, marginTop: 8, }}>Toda contribuição, seja ela grande ou pequena, nos ajuda a continuar salvando vidas e proporcionando lares amorosos para nossos animais resgatados.</Label>
                             </Column>
                         </Button>
-                        <Button onPress={() => {navigation.navigate('Notafiscal')}}  bg={color.sc+20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 2, borderColor: color.sc, }}>
+                        <Button onPress={() => { navigation.navigate('Notafiscal') }} bg={color.sc + 20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 1, borderColor: color.sc + 60, }}>
                             <Column pv={12} ph={6}>
-                                <Column style={{ width: 76, height: 76, borderRadius: 100, backgroundColor:color.sc, justifyContent: 'center', alignItems: 'center', marginBottom: 12, }}>
+                                <Column style={{ width: 76, height: 76, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', marginBottom: 12, }}>
                                     <MaterialCommunityIcons name="qrcode-scan" size={34} color='#fff' />
                                 </Column>
                                 <Title style={{ lineHeight: 24, fontSize: 22, }}>Enviar nota fiscal</Title>

@@ -11,7 +11,7 @@ const Header = ({ title, help }) => {
             <Button onPress={() => { navigation.goBack() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc}>
                 <ArrowLeft size={24} color="#fff" />
             </Button>
-            <Title>{title}</Title>
+            <Title>{title?.length > 18 ? title?.slice(0, 18) + '...' : title}</Title>
             <Button onPress={() => { navigation.navigate('FAQ') }} pv={0} ph={0} radius={16} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc.sc3}>
                 <HelpCircle size={24} color={color.sc} />
             </Button>

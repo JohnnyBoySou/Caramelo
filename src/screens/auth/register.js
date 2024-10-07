@@ -20,7 +20,6 @@ export default function AuthRegisterScreen({ navigation, }) {
     const [tel, settel] = useState('');
     const [password, setpassword] = useState('');
 
-    const modalTermos = useRef();
     const passStrong = useRef();
     const modalConfirm = useRef();
 
@@ -155,7 +154,7 @@ export default function AuthRegisterScreen({ navigation, }) {
                     </Button>
                     <Column style={{ height: 20, }} />
                     <Column>
-                        <Button style={{ justifyContent: 'center', alignItems: 'center', }} onPress={() => { modalTermos.current?.expand() }} >
+                        <Button style={{ justifyContent: 'center', alignItems: 'center', }} onPress={() => { navigation.navigate('Privacidade')}} >
                             <Label align="center">
                                 Ao criar uma conta você aceita os <U>Termos de Uso e Política de Privacidade</U>.
                             </Label>
@@ -180,9 +179,6 @@ export default function AuthRegisterScreen({ navigation, }) {
 
                     <ConfirmEmail email={email} navigation={navigation} />
                 </Column>
-            </Modal>
-
-            <Modal ref={modalTermos} snapPoints={[0.1, SCREEN_HEIGHT]}>
             </Modal>
 
             <Modal ref={passStrong} snapPoints={[0.1, 200]}>

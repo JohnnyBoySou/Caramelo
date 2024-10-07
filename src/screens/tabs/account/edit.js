@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, Loader } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
-import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil, Upload } from 'lucide-react-native';
 
 import { Input, Success, Error } from '@components/Forms/index';
 import { Header } from '@components/Header';
-import { listUser, logoutUser } from '@api/request/user';
+import { listUser, logoutUser, excludeUser, updateUser } from '@api/request/user';
 import { useIsFocused } from '@react-navigation/native';
-import { updateUser } from '@api/request/user';
+import Modal from '@components/Modal';
+
+import { excludeToken } from '@hooks/token';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function AccountEditScreen({ navigation, }) {
@@ -16,7 +17,7 @@ export default function AccountEditScreen({ navigation, }) {
     const [loading, setloading] = useState(true);
     const [loadingUpdate, setloadingUpdate] = useState(false);
     const [user, setuser] = useState();
-
+    const excludeModal = useRef();
 
     const isFocused = useIsFocused();
     useEffect(() => {
@@ -49,6 +50,7 @@ export default function AccountEditScreen({ navigation, }) {
     const [old_avatar, setold_avatar] = useState();
     const [success, setsuccess] = useState();
     const [error, seterror] = useState();
+    const [password, setpassword] = useState();
 
     const handleLogout = async () => {
         try {
@@ -91,6 +93,21 @@ export default function AccountEditScreen({ navigation, }) {
             setloadingUpdate(false)
         }
     }
+
+    const handleExit = async () => {
+        try {
+            const res = await excludeUser(password)
+            setsuccess(res.message)
+            await excludeToken()
+            setTimeout(() => {
+                navigation.navigate('AuthLogin')
+            }, 2000);
+        } catch (error) {
+            console.log(error)
+            seterror(error.message)
+        }
+    }
+
 
     if (loading) return <Loader />
 
@@ -141,12 +158,27 @@ export default function AccountEditScreen({ navigation, }) {
                     {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
 
                     <ButtonPrimary loading={loadingUpdate} onPress={handleUpdate} label="Salvar alterações" type="sc" />
-
-
                     <Column style={{ height: 12, }} />
                     <ButtonPrimary label="Sair" type="pr" onPress={handleLogout} />
+                    <Column style={{ height: 12, }} />
+                    <ButtonPrimary label="Excluir Conta" type="q1" onPress={() => excludeModal.current?.expand()} />
 
                     <Column style={{ height: 120, }} />
+
+                    <Modal ref={excludeModal} snapPoints={[0.1, 400]}>
+                        <Column style={{ rowGap: 12, }}>
+                            <Title>Para prosseguir com a exclusão digite sua senha:</Title>
+                            <Input
+                                value={password}
+                                setValue={setpassword}
+                                placeholder="Senha"
+                                label="Senha"
+                                secure
+                            />
+                            {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
+                            <ButtonPrimary label='Confirmar' onPress={handleExit} bg={color.red + 10} pv={10} ph={1} />
+                        </Column>
+                    </Modal>
                 </Column>
             </Scroll>
         </Main>

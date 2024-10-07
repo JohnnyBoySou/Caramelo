@@ -11,42 +11,35 @@ export default function AboutGalleryScreen({ navigation, route }) {
     return (
         <Main style={{}}>
             <StatusBar style="dark" />
-
             <Scroll>
                 <Column style={{ marginHorizontal: margin.h, marginVertical: 20, flex: 1, }}>
-
                     <Header title="Galeria" />
                 </Column>
-                <Carrousel imgs={['https://i.pinimg.com/564x/44/f5/3e/44f53e5f7a6f35bb0f4c86852e9980a9.jpg', 'https://i.pinimg.com/564x/df/01/ab/df01ab9bf54775d08bb7648200b8020b.jpg', 'https://i.pinimg.com/564x/53/e9/c7/53e9c76542fe6accf94a22d1ff1cbc24.jpg']} />
-
-                <Image style={{ width: '120%', height: 150, zIndex: 99, marginLeft: -50, objectFit: 'contain', marginBottom: -50, }} source={require('@imgs/gallery_1.png')} />
-
+                <Carrousel imgs={['https://caramelo.engenhariadigital.net/app/banners_maior/1.jpg', 'https://caramelo.engenhariadigital.net/app/banners_maior/4.jpg', 'https://caramelo.engenhariadigital.net/app/banners_maior/3.jpg']} />
+                <Image style={{ width: '120%', height: 150, zIndex: 99, marginLeft: -50, objectFit: 'contain', marginBottom: -50, marginTop: -50, }} source={require('@imgs/gallery_1.png')} />
                 <Row style={{ marginHorizontal: margin.h, justifyContent: 'space-between', alignItems: 'center', }}>
-                    <Label style={{ width: 190, }}>É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica.</Label>
-                    <Image style={{ width: 124, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
+                    <Label style={{ width: 190, }}>Nem todas as batalhas e cicatrizes são visíveis, e a verdade é que os animais resgatados pelo Instituto têm um longo caminho a percorrer até o tão esperado momento da adoção.</Label>
+                    <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/1.jpg' }} style={{ width: 124, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
                 </Row>
-                <Label align="center" style={{ marginHorizontal: margin.h, marginVertical: 30, }}>É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica.</Label>
-
-
+                <Label align="center" style={{ marginHorizontal: margin.h, marginVertical: 30, }}>O Instituto Caramelo é auditado anualmente pelo Grupo AUDISA que presta serviços de auditoria e consultoria para o Terceiro Setor e atesta o comprometimento, dedicação e transparência pelo trabalho realizado pelo Instituto.</Label>
                 <Column mh={margin.h} style={{ rowGap: 20, }}>
-                    <Image style={{ width: '100%', height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
-                    <Row style={{ justifyContent: 'space-between', alignItems: 'center',columnGap: 20,}}>
-                        <Image style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
-                        <Image style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
+                    <Image source={{uri: 'https://caramelo.engenhariadigital.net/app/banners_maior/2.jpg'}} style={{ width: '100%', height: 154, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', columnGap: 20, }}>
+                        <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/1.jpg' }} style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
+                        <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/2.jpg' }} style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
                     </Row>
                 </Column>
-                <Image style={{ width: '120%', height: 150, zIndex: 99, objectFit: 'contain',  }} source={require('@imgs/gallery_2.png')} />
-                <Row mh={margin.h} style={{ columnGap: 20, }}>
-                    <Image style={{ flexGrow: 1, height: 312, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
-                    <Column style={{ justifyContent: 'space-between', alignItems: 'center', rowGap: 20,}}>
-                        <Image style={{ width: 144, height: 144, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
-                        <Image style={{ width: 144, height: 144, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'contain', }} />
-                    </Column>
-                </Row>
+                <Image style={{ width: '120%', height: 150, zIndex: 99, objectFit: 'contain', }} source={require('@imgs/gallery_2.png')} />
+                <Column mh={margin.h} style={{ rowGap: 20, }}>
+                    <Image source={{uri: 'https://caramelo.engenhariadigital.net/app/banners_maior/5.jpg'}} style={{ width: '100%', height: 154, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', columnGap: 20, }}>
+                        <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/3.jpg' }} style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
+                        <Image source={{ uri: 'https://caramelo.engenhariadigital.net/app/banners/5.jpg' }} style={{ flexGrow: 1, height: 124, borderRadius: 12, zIndex: 99, backgroundColor: '#f1f1f1', objectFit: 'cover', }} />
+                    </Row>
+                </Column>
 
-                <Image style={{ flexGrow: 1, marginTop: 32, alignSelf: 'center', height: 150, zIndex: 99, objectFit: 'contain',  }} source={require('@imgs/gallery_4.png')} />
+                <Image style={{ flexGrow: 1, marginTop: 32, alignSelf: 'center', height: 150, zIndex: 99, objectFit: 'contain', }} source={require('@imgs/gallery_4.png')} />
                 <Column style={{ height: 60, }} />
-               
 
             </Scroll>
         </Main>

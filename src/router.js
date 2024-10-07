@@ -48,14 +48,15 @@ import AnonimoNotaSuccessScreen from './screens/anonimo/success';
 import AnonimoNotaErrorScreen from './screens/anonimo/error';
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
-
+import PrivacidadeScreen from '@screens/auth/privacidade';
+import WebViewScreen from '@screens/auth/webview';
 //ICONS
 import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Tabs'>
+      <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='Async'>
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
@@ -66,6 +67,8 @@ export default function Router() {
         <Stack.Screen name="Tabs" component={Tabs} options={{ ...TransitionPresets.SlideFromRightIOS, backBehavior: 'none', }} />
 
         <Stack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true, }}>
+          <Stack.Screen name="Privacidade" component={PrivacidadeScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+          <Stack.Screen name="WebView" component={WebViewScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
           <Stack.Screen name="AccountEdit" component={AccountEditScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         </Stack.Group>
         <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
@@ -75,12 +78,10 @@ export default function Router() {
           <Stack.Screen name="HistorySingle" component={HistorySingleScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         </Stack.Group>
 
-        
-
         <Stack.Screen name="AnonimoNota" component={AnonimoNotaScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AnonimoNotaSuccess" component={AnonimoNotaSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="AnonimoNotaError" component={AnonimoNotaErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
-        
+
         <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="NotafiscalSuccess" component={NotafiscalSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="NotafiscalError" component={NotafiscalErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
@@ -104,9 +105,9 @@ const Tab = createBottomTabNavigator();
 
 function Tabs() {
   const route = useRoute();
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Blog';
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
   return (
-    <Tab.Navigator initialRouteName="Blog"
+    <Tab.Navigator initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         backBehavior: 'none',
@@ -120,6 +121,8 @@ function Tabs() {
           borderRadius: 100,
           height: 84,
           paddingBottom: 0,
+          borderTopWidth: 0,
+          borderTopColor: '#5F101C',
           elevation: 0,
         },
       }}
