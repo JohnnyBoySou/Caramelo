@@ -124,8 +124,7 @@ export const updateUser = async (params) => {
 
 // Listar informações do usuário
 export const listUser = async () => {
-  const token = await getToken();
-  return await getData('/usuarios/user', token);
+  return await getData('/usuarios/user');
 };
 
 // Verificar email com código

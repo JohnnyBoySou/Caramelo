@@ -15,8 +15,8 @@ import { createOrigin } from '@hooks/origin';
 export default function AuthLoginScren({ navigation, }) {
   const { color, font, margin, } = useTheme()
 
-  const [email, setemail] = useState('engd.teste@gmail.com');
-  const [password, setpassword] = useState('12345678Nove');
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
 
   const modalPassword = useRef();
   const modalAnonim = useRef();
@@ -40,7 +40,7 @@ export default function AuthLoginScren({ navigation, }) {
           await createToken(res.token)
           setSuccess('Logado com sucesso!')
           setTimeout(() => {
-            navigation.navigate('Tabs')
+            navigation.replace('Tabs')
           }, 2000);
         }
       } catch (error) {

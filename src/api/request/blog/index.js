@@ -59,10 +59,8 @@ export async function editComment(comment_id, post_id, message) {
     return await postData('/usuarios/editarcomentario', { idcomentario: comment_id, idpost: post_id, texto: message, });
 }
 
-
-
 export async function listPosts() {
-    const token = process.env.EXPO_PUBLIC_INSTA_API;
+    const token = '';
     const fields = "media_url,media_type,caption,permalink,thumbnail_url,timestamp,username";
     try {
         const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${token}&fields=${fields}`)
@@ -72,11 +70,9 @@ export async function listPosts() {
     }
 }
 
-
 export async function toggleLike(id) {
     return await postData('/usuarios/curtirdescurtir', { idpost: id });
 }
-
 
 export async function isLike(id) {
     return await postData('/usuarios/iscurtir', { idpost: id });

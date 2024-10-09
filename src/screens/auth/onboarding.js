@@ -15,7 +15,7 @@ export default function OnboardingPage({ navigation, route, }) {
         setCurrentIndex(position);
     }
     const [currentIndex, setCurrentIndex] = useState(0);
-    const numberOfDots = 5;
+    const numberOfDots = 4;
 
     const goToNext = () => {
         let next = (currentIndex + 1) % numberOfDots;
@@ -36,11 +36,7 @@ export default function OnboardingPage({ navigation, route, }) {
             title: 'Bem-vindo ao Instituto Caramelo!',
             desc: 'Estamos felizes em ter você aqui! Junte-se a nós na missão de proteger e cuidar dos animais. Explore o app e descubra como sua participação pode fazer a diferença!',
         },
-        {
-            img: require('@imgs/onb2.png'),
-            title: 'Faça a sua doação direto pelo App!',
-            desc: 'Contribua para o bem-estar dos animais com apenas alguns cliques. Sua doação ajuda a transformar vidas e garantir cuidados essenciais para os nossos peludos. Juntos, podemos fazer a diferença!',
-        },
+
         {
             img: require('@imgs/onb3.png'),
             title: 'Acompanhe o que estamos fazendo!',
@@ -57,7 +53,13 @@ export default function OnboardingPage({ navigation, route, }) {
             desc: 'Veja todas as suas contribuições em um só lugar. Acompanhe o impacto das suas doações e mantenha-se informado sobre o envio das suas notas fiscais. Sua generosidade faz a diferença!',
         },
     ]
-
+    /*
+        {
+            img: require('@imgs/onb2.png'),
+            title: 'Faça a sua doação direto pelo App!',
+            desc: 'Contribua para o bem-estar dos animais com apenas alguns cliques. Sua doação ajuda a transformar vidas e garantir cuidados essenciais para os nossos peludos. Juntos, podemos fazer a diferença!',
+        },
+      */
     return (
         <Main style={{}}>
             <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginVertical: 12, }}>
@@ -85,14 +87,14 @@ export default function OnboardingPage({ navigation, route, }) {
                     </MotiView>
                 </AnimatePresence>
                 <AnimatePresence>
-                    {currentIndex != 4 &&
+                    {currentIndex != numberOfDots -1 &&
                         <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
                             <Button onPress={goToNext} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
                                 <LabelBT color="#fff">Próximo</LabelBT>
                             </Button>
                         </MotiView>
                     }
-                    {currentIndex == 4 &&
+                    {currentIndex == numberOfDots -1 &&
                         <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
                             <Button onPress={() => navigation.navigate('AuthLogin')} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
                                 <LabelBT color="#fff">Continuar</LabelBT>
@@ -108,7 +110,7 @@ export default function OnboardingPage({ navigation, route, }) {
 const Card = ({ item }) => {
     return (
         <Column style={{ paddingVertical: 12, paddingHorizontal: 24, }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={item?.img} style={{ width: '100%', height: 380, objectFit: 'contain', }} />
+            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={item?.img} style={{ width: '100%', height: 380, objectFit: 'cover', borderRadius: 24, }} />
             <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, marginTop: 12, marginBottom: 10, }}>{item?.title}</Title>
             <Label style={{ fontFamily: 'Font_Light' }}>{item?.desc}</Label>
         </Column>

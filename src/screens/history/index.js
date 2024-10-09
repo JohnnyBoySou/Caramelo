@@ -45,16 +45,16 @@ export default function HistoryScreen({ navigation, }) {
             <StatusBar style="light" backgroundColor={color.sc} />
             <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderRadius: 24, }}>
                 <HeaderHistory title='Histórico' />
-                <Row mv={20} style={{ columnGap: 12, }}>
-                    <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
+                <Row mv={20} style={{ columnGap: 12,   }}>
+                    <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30',  justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
                         <LabelBT style={{ color: type == 'Notas' ? color.sc : '#fff', }}>Notas fiscais</LabelBT>
                     </Button>
-                    <Button style={{ backgroundColor: type == 'Doacoes' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Doacoes') }} >
+                    {a && <><Button style={{ backgroundColor: type == 'Doacoes' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Doacoes') }} >
                         <LabelBT style={{ color: type == 'Doacoes' ? color.sc : '#fff', }}>Doações</LabelBT>
                     </Button>
-                    <Button style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', width: 46, height: 46, }}>
-                        <Search size={22} color={color.sc} />
-                    </Button>
+                        <Button style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', width: 46, height: 46, }}>
+                            <Search size={22} color={color.sc} />
+                        </Button></>}
                 </Row>
             </Column>
 
@@ -90,7 +90,7 @@ export default function HistoryScreen({ navigation, }) {
                             renderItem={({ item }) => <CardDoacao item={item} navigation={navigation} />}
                             keyExtractor={item => item.id}
                             showsVerticalScrollIndicator={false}
-                            style={{height: 0.8 * SCREEN_HEIGHT, }}
+                            style={{ height: 0.8 * SCREEN_HEIGHT, }}
                             ListEmptyComponent={<EmptyDonate />}
                             ListHeaderComponent={<Column style={{ height: 20, }}></Column>}
                             ListFooterComponent={<Column style={{ height: 50, }}></Column>}

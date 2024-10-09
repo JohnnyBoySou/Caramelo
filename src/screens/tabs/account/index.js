@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-react-native';
 import { listUser } from '@api/request/user';
 import { useIsFocused } from '@react-navigation/native';
+import { Pressable } from 'react-native';
 
 export default function AccountScreen({ navigation, }) {
     const { color, font, margin } = useContext(ThemeContext);
@@ -55,16 +56,12 @@ export default function AccountScreen({ navigation, }) {
 
                     <Column style={{ rowGap: 24, marginTop: 12, }}>
                         <Row style={{ columnGap: 24, }}>
-                            <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
+                            <Pressable onPress={() => { navigation.navigate('History') }} style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
                                 <Newspaper size={32} color={color.tr} />
                                 <Title color={color.tr} size={17} style={{ fontFamily: font.medium, marginVertical: 6, }}>Notas doadas</Title>
                                 <HeadTitle color={color.tr} size={42}>{user?.notas}</HeadTitle>
-                            </Column>
-                            <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
-                                <HeartHandshake size={32} color="#3072C8" />
-                                <Title color="#3072C8" size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Doações feitas</Title>
-                                <HeadTitle color="#3072C8" size={42}>{user?.doacoes}</HeadTitle>
-                            </Column>
+                            </Pressable>
+                          
                         </Row>
                         <Row style={{ columnGap: 24, }}>
                             <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
@@ -85,3 +82,10 @@ export default function AccountScreen({ navigation, }) {
         </Main>
     )
 }
+
+/*
+  <Pressable onPress={() => { navigation.navigate('History') }} style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
+                                <HeartHandshake size={32} color="#3072C8" />
+                                <Title color="#3072C8" size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Doações feitas</Title>
+                                <HeadTitle color="#3072C8" size={42}>{user?.doacoes}</HeadTitle>
+                            </Pressable> */
