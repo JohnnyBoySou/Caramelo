@@ -2,7 +2,7 @@
   "expo": {
     "name": "Caramelo",
     "slug": "Caramelo",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "scheme": "caramelo",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.engd.caramelo",
-      "buildNumber": "2.0.0",
+      "buildNumber": "3.0.0",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan barcodes on event tickets.",
         "NSLocationWhenInUseUsageDescription": "This app uses location services to find events near you.",
@@ -28,7 +28,7 @@
         "backgroundColor": "#EBB000"
       },
       "package": "com.engd.caramelo",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
