@@ -60,7 +60,7 @@ export async function editComment(comment_id, post_id, message) {
 }
 
 export async function listPosts() {
-    const token = 'IGQWRQMUZARRXdZAZAnBLU2RpQnIwYnh3WlBtYWFJT25yeF9JMnR5dVJRLXZARMmxRTmJjMXFtVm5HRlNHZAzgyQm9oT0lSSllBUkxIOEVObS15LTZA6VkFvT2tWS1BvZAE1rM05oc3haVGwyUkFDZAThRcXZArSk5kZA181alEZD';
+    const token = 'IGQWRQN1p5b2t0S2FaVmM4Vm92SVZAEOWlrc1ZA6aVIxQjM2Q2hYMlhlcDczYzlFWi1BUjNxUzMwOE8xd1gtNlVBRlotTDVVSGlZAMjh1eC1VWE1JcUF2bzEyZA2Y5V1FrenNTMmY0VGlrdXkyQ2djS1VWVnQ1Sm5iU0kZD';
     const fields = "media_url,media_type,caption,permalink,thumbnail_url,timestamp,username";
     try {
         const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${token}&fields=${fields}`)
