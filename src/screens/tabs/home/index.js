@@ -44,9 +44,9 @@ export default function HomeScreen({ navigation, }) {
     }
 
     const handleOpen = (item) => {
-        if(item){
+        if (item) {
             navigation.navigate('BlogSingle', { item: item })
-        }else{return}
+        } else { return }
     }
 
     const handleLink = (link) => {
@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, }) {
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
             <Scroll>
-                <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
+                <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
                         <Pressable onPress={() => { navigation.navigate('Tabs', { screen: 'Account' }) }} >
@@ -105,18 +105,17 @@ export default function HomeScreen({ navigation, }) {
                     <Column style={{ width: 12 }} />
                 </ScrollView>
 
-                <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(destaque) }} >
-
+                <Button pv={1} ph={1} mleft={20} mright={20} radius={12} onPress={() => { handleOpen(destaque) }} style={{ borderWidth: 1, borderColor: '#F1F1F1', marginBottom: 10, }}>
                     <>
                         <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 30, right: 40, zIndex: 99, borderRadius: 12, }}>
                             <Title style={{ letterSpacing: -.7, fontSize: 12, }}>EM DESTAQUE</Title>
                         </Column>
-                        <MotiImage source={{ uri: destaque?.media_url }} style={{ flexGrow: 1, marginHorizontal: 24, backgroundColor: '#D7D7D7', height: 300, borderRadius: 12, marginVertical: 12, }} />
-                        <Row style={{ marginHorizontal: margin.h, justifyContent: 'space-between', alignItems: 'center', }}>
+                        <MotiImage source={{ uri: destaque?.media_type == 'VIDEO' ? destaque.thumbnail_url : destaque?.media_url }} style={{ flexGrow: 1, backgroundColor: '#D7D7D7', height: 300, borderRadius: 12, }} />
+                        <Row style={{ marginHorizontal: 12, justifyContent: 'space-between', alignItems: 'center', }}>
 
                             {destaque?.caption ?
-                                <Title size={20} style={{ letterSpacing: -.7, width: '80%', }}>{destaque?.caption?.length > 32 ? destaque?.caption?.slice(0, 32) + '...' : destaque?.caption}</Title>
-                                : <Skeleton width={250} height={46}  radius={12} colorMode="light" />}
+                                <Title size={18} style={{ letterSpacing: -.7, width: '80%', marginTop: 10, marginBottom: 10, }}>{destaque?.caption?.length > 45 ? destaque?.caption?.slice(0, 45) + '...' : destaque?.caption}</Title>
+                                : <Column style={{ marginTop: 10, marginLeft: -10, }}><Skeleton width={250} height={46} radius={12} colorMode="light" /></Column>}
 
                             <Button bg={color.pr} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                 <ArrowUpRight size={24} color={color.sc} />
@@ -197,8 +196,8 @@ export default function HomeScreen({ navigation, }) {
                     {data?.length > 0 && <ButtonPrimary label="Ver mais" type="sc" onPress={() => { navigation.navigate('Blog') }} />}
                 </Column>
 
-                <Column mh={margin.h} mv={20}>
-                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
+                <Column mh={margin.h} >
+                    <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginTop: 20, }}>
                         <Column style={{ width: 200, }}>
                             <HeadTitle>Nossas redes</HeadTitle>
                             <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
@@ -207,7 +206,7 @@ export default function HomeScreen({ navigation, }) {
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />
                                 </Button>
                                 <Button onPress={() => { handleLink('https://www.facebook.com/InstitutoCaramelo/') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
-                                    <FontAwesome6 name="facebook" size={22} color={color.sc} />
+                                    <FontAwesome6 name="facebook" size={20} color={color.sc} />
                                 </Button>
                                 <Button onPress={() => { handleLink('https://www.tiktok.com/@institutocaramelo') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="tiktok" size={22} color={color.sc} />
@@ -219,7 +218,7 @@ export default function HomeScreen({ navigation, }) {
                 </Column>
                 <Column style={{ height: 20, }} />
 
-                <Column mv={20}>
+                {a && <Column mv={20}>
                     <HeadTitle style={{ lineHeight: 28, marginHorizontal: margin.h, }}>Como posso ajudar?</HeadTitle>
                     <Scroll horizontal showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: margin.h, }} contentContainerStyle={{ columnGap: 12, paddingRight: 50, paddingTop: 12, }}>
                         <Button onPress={() => { navigation.navigate('DonateValue') }} bg={color.tr + 20} radius={12} style={{ justifyContent: 'center', alignItems: 'center', width: 220, borderWidth: 1, borderColor: color.tr + 60, }}>
@@ -242,6 +241,7 @@ export default function HomeScreen({ navigation, }) {
                         </Button>
                     </Scroll>
                 </Column>
+                }
                 <Column style={{ height: 120, }} />
             </Scroll>
         </Column>

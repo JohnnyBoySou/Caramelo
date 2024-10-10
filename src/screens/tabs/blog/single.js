@@ -91,7 +91,7 @@ export default function BlogSingleScreen({ navigation, route }) {
             <Scroll>
                 <Column mh={margin.h}>
 
-                    <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} transition={{ delay: 300, damping: 20, }} source={{ uri: item?.media_url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 24, height: 300, backgroundColor: '#d1d1d1', zIndex: 99, }} />
+                    <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} transition={{ delay: 300, damping: 20, }} source={{ uri: item.media_type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ flexGrow: 1, borderRadius: 24, marginTop: 24, height: 300, backgroundColor: '#d1d1d1', zIndex: 99, }} />
                     <Column style={{ flexGrow: 1, borderRadius: 28, marginTop: 24, height: 300, backgroundColor: color.pr, marginTop: -290, marginRight: -10, marginLeft: 12, }} />
                     <Label style={{ fontFamily: font.light, marginVertical: 12, }}>{item?.caption}</Label>
                     <Label>Publicado em {formatDateTime(item?.timestamp)}</Label>

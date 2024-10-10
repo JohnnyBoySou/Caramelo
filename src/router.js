@@ -13,6 +13,7 @@ import AsyncStaticScreen from '@screens/auth/async';
 //AUTH
 import AuthLoginScreen from '@screens/auth/login';
 import AuthRegisterScreen from '@screens/auth/register';
+import ConfirmEmail from '@screens/auth/confirmation';
 
 //TABS SCREEN
 import AboutScreen from '@screens/tabs/about';
@@ -60,6 +61,7 @@ export default function Router() {
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="ConfirmEmail" component={ConfirmEmail} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="Async" component={AsyncStaticScreen} options={{ ...TransitionPresets.RevealFromBottomAndroid, }} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />

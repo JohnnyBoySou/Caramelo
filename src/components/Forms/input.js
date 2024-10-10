@@ -77,7 +77,7 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
           secureTextEntry={secure}
         />
 
-        {pass && <Pressable onPress={() => { setsecure(!secure) }} style={{ position: 'absolute', right: 16, top: 18 }}>
+        {pass && <Pressable onPress={() => { setsecure(!secure) }} style={{ position: 'absolute', right: 0, top: 0,  width: 56, height: 56, justifyContent: 'center', alignItems: 'center',  }}>
           {secure ? <Eye
             size={24}
             color={color.title}

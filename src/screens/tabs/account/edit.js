@@ -1,31 +1,27 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, Loader } from '@theme/global';
-import { ThemeContext } from 'styled-components/native';
+import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, useTheme } from '@theme/global';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil, Upload } from 'lucide-react-native';
 
 import { Input, Success, Error } from '@components/Forms/index';
 import { Header } from '@components/Header';
 import { listUser, logoutUser, excludeUser, updateUser } from '@api/request/user';
-import { useIsFocused } from '@react-navigation/native';
 import Modal from '@components/Modal';
 
 import { excludeToken } from '@hooks/token';
 import * as ImagePicker from 'expo-image-picker';
+import { Skeleton } from 'moti/skeleton';
 
 export default function AccountEditScreen({ navigation, }) {
-    const { color, font, margin } = useContext(ThemeContext);
+    const { color, font, margin } = useTheme();
     const [loading, setloading] = useState(true);
     const [loadingUpdate, setloadingUpdate] = useState(false);
-    const [user, setuser] = useState();
     const excludeModal = useRef();
 
-    const isFocused = useIsFocused();
     useEffect(() => {
         const fetchUser = async () => {
             setloading(true)
             try {
                 const res = await listUser()
-                setuser(res);
                 setemail(res.email);
                 setname(res.name);
                 setcpf(res.cpf);
@@ -40,7 +36,7 @@ export default function AccountEditScreen({ navigation, }) {
             }
         }
         fetchUser();
-    }, [isFocused]);
+    }, []);
 
     const [email, setemail] = useState(' ');
     const [name, setname] = useState(' ');
@@ -64,8 +60,6 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
-
-    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : avatar ? { uri: avatar } : require('@imgs/user_placeholder.png')
     const [temporaryImg, settemporaryImg] = useState(false);
     const handleImage = async () => {
         const responsey = await ImagePicker.launchImageLibraryAsync({ base64: true, quality: 1, });
@@ -76,6 +70,8 @@ export default function AccountEditScreen({ navigation, }) {
             setavatar(old_avatar?.length > 0 ? old_avatar : null)
         }
     }
+
+    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : avatar ? { uri: avatar } : {uri: 'https://avatar.iran.liara.run/public/24'}
 
     const handleUpdate = async () => {
         setsuccess(null)
@@ -108,8 +104,7 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
-
-    if (loading) return <Loader />
+    if (loading) return <SkeletonBody />
 
     return (
         <Main style={{ paddingTop: 0, }}>
@@ -119,7 +114,7 @@ export default function AccountEditScreen({ navigation, }) {
 
                     <Header title="Editar perfil" />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', marginVertical: 20, }}>
-                        <Image source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
+                        <Image cachePolicy="disk" source={profile} style={{ width: 154, height: 154, borderRadius: 100, }} />
                         <Button bg={color.sc} onPress={handleImage} style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Upload size={20} color="#fff" />
                         </Button>
@@ -157,9 +152,9 @@ export default function AccountEditScreen({ navigation, }) {
 
                     {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
 
-                    <ButtonPrimary loading={loadingUpdate} onPress={handleUpdate} label="Salvar alterações" type="sc" />
+                    <ButtonPrimary loading={loadingUpdate} onPress={handleUpdate} label="Salvar alterações" type="pr" />
                     <Column style={{ height: 12, }} />
-                    <ButtonPrimary label="Sair" type="pr" onPress={handleLogout} />
+                    <ButtonPrimary label="Sair" type="sc" onPress={handleLogout} />
                     <Column style={{ height: 12, }} />
                     <ButtonPrimary label="Excluir Conta" type="q1" onPress={() => excludeModal.current?.expand()} />
 
@@ -183,5 +178,28 @@ export default function AccountEditScreen({ navigation, }) {
             </Scroll>
         </Main>
 
+    )
+}
+
+const SkeletonBody = () => {
+
+    const { color, font, margin } = useTheme();
+    return (
+        <Column style={{ marginTop: 30, }}>
+            <Column style={{ justifyContent: 'center', alignItems: 'center', }}>
+                <Skeleton height={154} width={154} radius={100} colorMode="light" />
+            </Column>
+            <Column style={{ justifyContent: 'center', alignItems: 'center', rowGap: 16, marginTop: 20, }}>
+                <Skeleton height={62} width={300} radius={12} colorMode="light" />
+                <Skeleton height={62} width={300} radius={12} colorMode="light" />
+                <Skeleton height={62} width={300} radius={12} colorMode="light" />
+                <Skeleton height={62} width={300} radius={12} colorMode="light" />
+                <Column style={{ rowGap: 12, }}>
+                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: color.pr, }} />
+                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: color.sc, }} />
+                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: '#000', }} />
+                </Column>
+            </Column>
+        </Column>
     )
 }

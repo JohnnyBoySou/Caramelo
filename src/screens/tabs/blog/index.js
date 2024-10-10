@@ -27,14 +27,13 @@ export default function BlogScreen({ navigation, route }) {
 
 
     const [loading, setloading] = useState(true);
-    const isFocused = useIsFocused();
     useEffect(() => {
         const fetchData = async () => {
             setloading(true)
             try {
                 const res = await listPosts()
                 setdata(res.data)
-                setdestaque(res.data.reverse().slice(0, 3))
+                setdestaque(res.data.reverse().slice(0, 8))
             } catch (error) {
                 console.log(error)
             } finally {
@@ -72,16 +71,15 @@ const Destaque = ({ data }) => {
     const navigation = useNavigation()
     const handleOpen = (item) => {
         navigation.navigate('BlogSingle', { item: item })
-        //Linking.openURL(item)
     }
     const Card = ({ item }) => {
         return (
             <Button pv={1} ph={1} radius={16} onPress={() => handleOpen(item)} style={{ backgroundColor: '#fff', paddingVertical: 12, }} >
                 <>
                     <Column style={{ marginHorizontal: 12, }}>
-                        <MotiImage source={{ uri: item?.media_url }} style={{ width: 300, height: 240, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
-                        <Title size={20} style={{ letterSpacing: -.7, marginBottom: 12, }}>{item?.caption?.length > 32 ? item?.caption?.slice(0, 32) + '...' : item?.caption}</Title>
-                        <ButtonPrimary label='Ver mais' onPress={() => handleOpen(item)} />
+                        <MotiImage source={{ uri: item.media_type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ flexGrow: 1, height: 240, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                        <Title size={18} style={{ letterSpacing: -.7, marginBottom: 12, lineHeight: 22, }}>{item?.caption?.length > 54 ? item?.caption?.slice(0, 54) + '...' : item?.caption}</Title>
+                        <ButtonPrimary pv={8} label='Ver mais' onPress={() => handleOpen(item)} />
                     </Column>
                 </>
             </Button>
@@ -134,25 +132,26 @@ export const Carrousel = ({ imgs }) => {
                     numberOfDots={imgs?.length}
 
                     activityColor={color.sc}
-                    disableColor={color.sc+60} />
+                    disableColor={color.sc + 60} />
             </Column>
         </Column>
     )
 }
 
 export const ListPosts = ({ data, navigation }) => {
-    const { color, font, margin } = useTheme()
     const Post = ({ item }) => {
         const handleOpen = (item) => {
             navigation.navigate('BlogSingle', { item: item })
         }
+
+        const type = item?.media_type
         return (
             <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(item) }} >
                 <Row>
-                    <MotiImage source={{ uri: item?.media_url }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                    <MotiImage source={{ uri: type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
                     <Column style={{ width: '70%', justifyContent: 'center', marginLeft: 12, }}>
-                        <Title size={18} style={{ lineHeight: 20, fontFamily: 'Font_Medium', }}>{item?.caption?.length > 38 ? item?.caption?.slice(0, 38) + '...' : item?.caption}</Title>
-                        <Label size={14} style={{ lineHeight: 14, marginTop: 4, }}>Publicado em {formatDateTime(item?.timestamp)}</Label>
+                        <Title size={16} style={{ lineHeight: 18, fontFamily: 'Font_Medium', }}>{item?.caption?.length > 72 ? item?.caption?.slice(0, 72) + '...' : item?.caption}</Title>
+                        <Label size={12} style={{ lineHeight: 14, marginTop: 6, opacity: .7, }}>Publicado em {formatDateTime(item?.timestamp)}</Label>
                     </Column>
                 </Row>
             </Button>
@@ -168,6 +167,9 @@ export const ListPosts = ({ data, navigation }) => {
                 data={data}
                 renderItem={({ item }) => <Post item={item} />}
                 keyExtractor={(item) => item.id}
+                windowSize={8}
+                initialNumToRender={8}
+                maxToRenderPerBatch={8}
                 ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#f1f1f1', marginVertical: 15, }} />}
             />
 
@@ -176,7 +178,7 @@ export const ListPosts = ({ data, navigation }) => {
 }
 
 const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) => {
-    const { color} = useTheme();
+    const { color } = useTheme();
     const dotStyle = (dotIndex) => {
         return useAnimatedStyle(() => {
             const width = withTiming(index === dotIndex ? 35 : 14, { duration: 300 });

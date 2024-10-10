@@ -2,33 +2,15 @@ import React, { useState, useRef } from 'react';
 import { Column, Title, Main, Row, Label, Button, C, LabelBT, Image, SCREEN_WIDTH, useTheme } from '@theme/global';
 import { ArrowLeft, ArrowRight } from 'lucide-react-native';
 import { AnimatePresence, MotiImage, MotiView, } from 'moti';
-
-import PagerView from 'react-native-pager-view';
-import Animated, { FadeInDown, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { Animated, ScrollView } from 'react-native'
+import { ExpandingDot } from "react-native-animated-pagination-dots";
+import { useNavigation } from '@react-navigation/native';
 
 export default function OnboardingPage({ navigation, route, }) {
     const { color, font } = useTheme()
 
     const pagerRef = useRef();
-    const handleScreen = (position) => {
-        pagerRef.current.setPage(position);
-        setCurrentIndex(position);
-    }
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const numberOfDots = 4;
 
-    const goToNext = () => {
-        let next = (currentIndex + 1) % numberOfDots;
-        setCurrentIndex(next);
-        pagerRef.current.setPage(next);
-    };
-
-    const goToPrevius = () => {
-        if (currentIndex == 0) return;
-        let prev = (currentIndex - 1) % numberOfDots;
-        setCurrentIndex(prev);
-        pagerRef.current.setPage(prev);
-    };
 
     const data = [
         {
@@ -51,6 +33,7 @@ export default function OnboardingPage({ navigation, route, }) {
             img: require('@imgs/onb5.png'),
             title: 'Consulte seu histórico!',
             desc: 'Veja todas as suas contribuições em um só lugar. Acompanhe o impacto das suas doações e mantenha-se informado sobre o envio das suas notas fiscais. Sua generosidade faz a diferença!',
+            next: true,
         },
     ]
     /*
@@ -60,6 +43,33 @@ export default function OnboardingPage({ navigation, route, }) {
             desc: 'Contribua para o bem-estar dos animais com apenas alguns cliques. Sua doação ajuda a transformar vidas e garantir cuidados essenciais para os nossos peludos. Juntos, podemos fazer a diferença!',
         },
       */
+
+    const [currentIndex, setCurrentIndex] = useState(0); // Índice atual
+    const scrollX = React.useRef(new Animated.Value(0)).current;
+
+    const handleScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+        {
+            useNativeDriver: false,
+            listener: (event) => {
+                const index = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH);
+                setCurrentIndex(index);
+            }
+        }
+    );
+
+    const goToNext = () => {
+        if (currentIndex < data.length - 1) {
+            pagerRef.current.scrollTo({ x: (currentIndex + 1) * SCREEN_WIDTH, animated: true });
+        }
+    };
+
+    const goToPrevius = () => {
+        if (currentIndex > 0) {
+            pagerRef.current.scrollTo({ x: (currentIndex - 1) * SCREEN_WIDTH, animated: true });
+        }
+    };
+
     return (
         <Main style={{}}>
             <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginVertical: 12, }}>
@@ -67,18 +77,50 @@ export default function OnboardingPage({ navigation, route, }) {
                 <Button onPress={() => { navigation.goBack() }} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc.sc3}>
                     <ArrowLeft size={20} color="#fff" />
                 </Button>
-                <PaginationDots
-                    index={currentIndex}
-                    numberOfDots={numberOfDots}
-                    activityColor={color.sc}
-                    disableColor="#ddd" />
+
+                <ExpandingDot
+                    data={data}
+                    expandingDotWidth={30}
+                    activeDotColor={color.sc}
+                    inActiveDotColor={color.sc+90}
+                    scrollX={scrollX}
+                    dotStyle={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: 5,
+                        marginHorizontal: 5
+                    }}
+                    containerStyle={{
+                        position: 'relative',
+                        paddingVertical: 12,
+                        top: 0,
+                        borderRadius: 100,
+                        paddingHorizontal: 12,
+                        backgroundColor: color.sc+10,
+                    }}
+                />
+
             </Row>
-            <PagerView style={{ flex: 1, }} initialPage={0} ref={pagerRef} onPageSelected={(event) => { handleScreen(event.nativeEvent.position) }}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1, }} ref={pagerRef} pagingEnabled onScroll={handleScroll}>
                 {data.map((item, index) => (
-                    <Card item={item} color={color} />
+                    <Card item={item} color={color} goToNext={goToNext} goToPrevius={goToPrevius} numberOfDots={data?.length} />
                 ))}
-            </PagerView>
-            <Row style={{ marginBottom: 20, zIndex: 99, paddingHorizontal: 24, justifyContent: 'space-between', }}>
+            </ScrollView>
+
+        </Main>
+    )
+}
+
+const Card = ({ item, goToNext, goToPrevius }) => {
+    const { color, font } = useTheme()
+    const navigation = useNavigation()
+
+    return (
+        <Column style={{ paddingVertical: 12, paddingHorizontal: 24, width: SCREEN_WIDTH, }}>
+            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={item?.img} style={{ width: '100%', height: 380, objectFit: 'cover', borderRadius: 24, }} />
+            <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, marginTop: 12, marginBottom: 10, }}>{item?.title}</Title>
+            <Label style={{ fontFamily: 'Font_Light' }}>{item?.desc}</Label>
+            <Row style={{ marginBottom: 20, zIndex: 99, marginTop: 20, justifyContent: 'space-between', }}>
                 <AnimatePresence>
                     <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
                         <Button onPress={goToPrevius} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc + 20, justifyContent: 'center', alignItems: 'center', }}>
@@ -87,60 +129,21 @@ export default function OnboardingPage({ navigation, route, }) {
                     </MotiView>
                 </AnimatePresence>
                 <AnimatePresence>
-                    {currentIndex != numberOfDots -1 &&
+                    {item?.next ?
+                        <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
+                            <Button onPress={() => navigation.navigate('AuthLogin')} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
+                                <LabelBT color="#fff">Continuar</LabelBT>
+                            </Button>
+                        </MotiView>
+                        :
                         <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
                             <Button onPress={goToNext} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
                                 <LabelBT color="#fff">Próximo</LabelBT>
                             </Button>
                         </MotiView>
                     }
-                    {currentIndex == numberOfDots -1 &&
-                        <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} exit={{ opacity: 0, scale: 0, }} transition={{ type: 'timing' }}>
-                            <Button onPress={() => navigation.navigate('AuthLogin')} ph={32} style={{ height: 54, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }}>
-                                <LabelBT color="#fff">Continuar</LabelBT>
-                            </Button>
-                        </MotiView>
-                    }
                 </AnimatePresence>
             </Row>
-        </Main>
-    )
-}
-
-const Card = ({ item }) => {
-    return (
-        <Column style={{ paddingVertical: 12, paddingHorizontal: 24, }}>
-            <MotiImage from={{ opacity: 0, scale: 0, rotate: '-12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} source={item?.img} style={{ width: '100%', height: 380, objectFit: 'cover', borderRadius: 24, }} />
-            <Title style={{ letterSpacing: -1, fontSize: 28, lineHeight: 32, marginTop: 12, marginBottom: 10, }}>{item?.title}</Title>
-            <Label style={{ fontFamily: 'Font_Light' }}>{item?.desc}</Label>
         </Column>
     )
 }
-
-const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) => {
-    const dotStyle = (dotIndex) => {
-        return useAnimatedStyle(() => {
-            const width = withTiming(index === dotIndex ? 35 : 14);
-            return {
-                backgroundColor: index === dotIndex ? activityColor : disableColor,
-                width,
-            };
-        });
-    };
-
-    return (
-        <Row>
-            {Array.from({ length: numberOfDots }).map((_, dotIndex) => (
-                <Animated.View
-                    key={dotIndex}
-                    style={[{
-                        height: 14,
-                        borderRadius: 100,
-                        marginHorizontal: 3,
-                    }, dotStyle(dotIndex)]}
-                />
-            ))}
-        </Row>
-    );
-};
-

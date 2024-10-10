@@ -22,6 +22,7 @@ export default function AccountScreen({ navigation, }) {
         setloading(true)
         try {
             const res = await listUser()
+            console.log(res)
             setuser(res);
         } catch (error) {
             console.log(error)

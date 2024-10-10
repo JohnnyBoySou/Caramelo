@@ -9,7 +9,7 @@ import { loginUser, verifyEstabelecimento, resetPassword, resetPasswordCode, res
 import { createToken } from '@hooks/token';
 import { useNavigation } from '@react-navigation/native';
 
-import { TextInput, ActivityIndicator } from 'react-native';
+import { TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { createOrigin } from '@hooks/origin';
 
 export default function AuthLoginScren({ navigation, }) {
@@ -36,11 +36,17 @@ export default function AuthLoginScren({ navigation, }) {
       setloading(true)
       try {
         const res = await loginUser(email, password)
+        console.log(res)
         if (res.token) {
           await createToken(res.token)
           setSuccess('Logado com sucesso!')
           setTimeout(() => {
             navigation.replace('Tabs')
+          }, 2000);
+        }else{
+          setSuccess('Email não verificado!')
+          setTimeout(() => {
+            navigation.navigate('ConfirmEmail', { email: email })
           }, 2000);
         }
       } catch (error) {
@@ -73,6 +79,8 @@ export default function AuthLoginScren({ navigation, }) {
   }
 
   return (
+    
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1, }} >
     <Main >
       <Scroll>
         <Column ph={margin.h}>
@@ -88,6 +96,7 @@ export default function AuthLoginScren({ navigation, }) {
               value={email}
               onSubmitEditing={() => { passRef.current?.focus() }}
               setValue={setemail}
+              keyboard="email-address"
             />
 
             <Input
@@ -181,6 +190,7 @@ export default function AuthLoginScren({ navigation, }) {
       </Modal>
 
     </Main>
+    </KeyboardAvoidingView>
   )
 }
 
