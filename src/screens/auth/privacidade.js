@@ -10,8 +10,8 @@ export default function PrivacidadeScreen() {
             <StatusBar style="dark" backgroundColor='#fff' />
             <Column ph={20}>
                 <Header rose title="Termos de Uso" />
+                <WebView style={{ flex: 1, }} source={{ uri: 'https://engenhariadigital.net/caramelo/termos/' }} />
             </Column>
-            <WebView style={{ flex: 1, }} source={{ uri: 'https://engenhariadigital.net/caramelo/termos/' }} />
         </Main>
     )
 }

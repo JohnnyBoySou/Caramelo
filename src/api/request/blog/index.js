@@ -60,15 +60,23 @@ export async function editComment(comment_id, post_id, message) {
 }
 
 export async function listPosts() {
-    const token = 'IGQWRQN1p5b2t0S2FaVmM4Vm92SVZAEOWlrc1ZA6aVIxQjM2Q2hYMlhlcDczYzlFWi1BUjNxUzMwOE8xd1gtNlVBRlotTDVVSGlZAMjh1eC1VWE1JcUF2bzEyZA2Y5V1FrenNTMmY0VGlrdXkyQ2djS1VWVnQ1Sm5iU0kZD';
+
+    const BASE_URL = await getBaseURL();
+    const token = await getToken();
+
+    const headers = { Authorization: `Bearer ${token}` }
     const fields = "media_url,media_type,caption,permalink,thumbnail_url,timestamp,username";
+
     try {
-        const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${token}&fields=${fields}`)
+        const response = await axios.get(`${BASE_URL}/usuarios/gettokeninstagram`, { headers });
+        const tokenInsta = response.data.token;
+        const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${tokenInsta}&fields=${fields}`)
         return res.data
     } catch (error) {
         console.error(error);
     }
 }
+
 
 export async function toggleLike(id) {
     return await postData('/usuarios/curtirdescurtir', { idpost: id });
