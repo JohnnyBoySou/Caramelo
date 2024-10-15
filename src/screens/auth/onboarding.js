@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Column, Title, Main, Row, Label, Button, C, LabelBT, Image, SCREEN_WIDTH, useTheme } from '@theme/global';
+import { Column, Title, Main, Row, Label, Button, C, LabelBT, Image, SCREEN_WIDTH, useTheme, Scroll } from '@theme/global';
 import { ArrowLeft, ArrowRight } from 'lucide-react-native';
 import { AnimatePresence, MotiImage, MotiView, } from 'moti';
 import { Animated, ScrollView } from 'react-native'
@@ -72,6 +72,8 @@ export default function OnboardingPage({ navigation, route, }) {
 
     return (
         <Main style={{}}>
+            <Scroll>
+
             <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 24, marginVertical: 12, }}>
                 <Image source={require('@imgs/logo_h.png')} style={{ width: 130, height: 40, }} />
                 <Button onPress={() => { navigation.goBack() }} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc.sc3}>
@@ -106,6 +108,9 @@ export default function OnboardingPage({ navigation, route, }) {
                     <Card item={item} color={color} goToNext={goToNext} goToPrevius={goToPrevius} numberOfDots={data?.length} />
                 ))}
             </ScrollView>
+
+            <Column style={{height: 120, }} />
+            </Scroll>
 
         </Main>
     )

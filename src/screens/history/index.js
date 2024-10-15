@@ -45,16 +45,16 @@ export default function HistoryScreen({ navigation, }) {
             <StatusBar style="light" backgroundColor={color.sc} />
             <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderRadius: 24, }}>
                 <HeaderHistory title='Histórico' />
-                <Row mv={20} style={{ columnGap: 12,   }}>
-                    <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30',  justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
+                <Row mv={20} style={{ columnGap: 12, }}>
+                    <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30', justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
                         <LabelBT style={{ color: type == 'Notas' ? color.sc : '#fff', }}>Notas fiscais</LabelBT>
                     </Button>
-                    {a && <><Button style={{ backgroundColor: type == 'Doacoes' ? '#fff' : '#ffffff30', flexGrow: 1, justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Doacoes') }} >
+                    <Button style={{ backgroundColor: type == 'Doacoes' ? '#fff' : '#ffffff30', justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Doacoes') }} >
                         <LabelBT style={{ color: type == 'Doacoes' ? color.sc : '#fff', }}>Doações</LabelBT>
                     </Button>
-                        <Button style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', width: 46, height: 46, }}>
-                            <Search size={22} color={color.sc} />
-                        </Button></>}
+                    {a && <Button style={{ backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', width: 46, height: 46, }}>
+                        <Search size={22} color={color.sc} />
+                    </Button>}
                 </Row>
             </Column>
 
@@ -118,6 +118,8 @@ const EmptyNota = () => {
 }
 
 const EmptyDonate = () => {
+    //    <ButtonPrimary pv={8} label='Fazer doação' onPress={() => { navigation.navigate('DonateValue') }} />
+
     const navigation = useNavigation();
     return (
         <Column style={{ justifyContent: 'center', alignItems: 'center', rowGap: 18, backgroundColor: '#f1f1f1', borderRadius: 12, paddingVertical: 20, paddingHorizontal: 20, }}>
@@ -125,7 +127,6 @@ const EmptyDonate = () => {
                 <Plus size={28} color='#5F101C' />
             </Column>
             <Title style={{ textAlign: 'center', }} size={18}>Nenhuma doação feita ainda.</Title>
-            <ButtonPrimary pv={8} label='Fazer doação' onPress={() => { navigation.navigate('DonateValue') }} />
         </Column>
     )
 }

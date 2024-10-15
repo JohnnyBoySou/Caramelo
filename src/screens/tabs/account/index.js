@@ -62,7 +62,11 @@ export default function AccountScreen({ navigation, }) {
                                 <Title color={color.tr} size={17} style={{ fontFamily: font.medium, marginVertical: 6, }}>Notas doadas</Title>
                                 <HeadTitle color={color.tr} size={42}>{user?.notas}</HeadTitle>
                             </Pressable>
-                          
+                            <Pressable onPress={() => { navigation.navigate('History') }} style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
+                                <HeartHandshake size={32} color="#3072C8" />
+                                <Title color="#3072C8" size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Doações feitas</Title>
+                                <HeadTitle color="#3072C8" size={42}>{user?.doacoes}</HeadTitle>
+                            </Pressable>
                         </Row>
                         <Row style={{ columnGap: 24, }}>
                             <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
@@ -83,10 +87,3 @@ export default function AccountScreen({ navigation, }) {
         </Main>
     )
 }
-
-/*
-  <Pressable onPress={() => { navigation.navigate('History') }} style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
-                                <HeartHandshake size={32} color="#3072C8" />
-                                <Title color="#3072C8" size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Doações feitas</Title>
-                                <HeadTitle color="#3072C8" size={42}>{user?.doacoes}</HeadTitle>
-                            </Pressable> */
