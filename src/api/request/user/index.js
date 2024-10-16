@@ -61,8 +61,8 @@ export const loginUser = async (email, password) => {
   const sanitizedPassword = validator.escape(password);
 
   return await postData('/auth', {
-    email: sanitizedEmail,
-    password: sanitizedPassword,
+    email: email,
+    password: password,
   });
 }
 
@@ -83,14 +83,14 @@ export const registerUser = async (params) => {
 // Redefinir senha - envio de email
 export const resetPassword = async (email) => {
   const sanitizedEmail = validator.normalizeEmail(email);
-  return await postData('/usuarios/esquecisenhaemail', { email: sanitizedEmail });
+  return await postData('/usuarios/esquecisenhaemail', { email: email });
 };
 
 // Redefinir senha - envio de código
 export const resetPasswordCode = async (email, code) => {
   const sanitizedEmail = validator.normalizeEmail(email);
   return await postData('/usuarios/esquecisenhacodigo', {
-    email: sanitizedEmail,
+    email: email,
     codigo: code,
   });
 };
@@ -108,7 +108,7 @@ export const resetPasswordNew = async (params) => {
 // Validação de token
 export const validateToken = async (token) => {
   const sanitizedToken = validator.escape(token);
-  return await postData('/token', { token: sanitizedToken });
+  return await postData('/token', { token: token });
 };
 
 // Atualizar perfil de usuário
@@ -131,7 +131,7 @@ export const listUser = async () => {
 export const verifyEmail = async (email, code) => {
   const sanitizedEmail = validator.normalizeEmail(email);
   return await postData('/usuarios/validacodigo', {
-    email: sanitizedEmail,
+    email: email,
     codigo: code,
   });
 };

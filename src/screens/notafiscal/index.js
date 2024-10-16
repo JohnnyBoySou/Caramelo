@@ -179,6 +179,8 @@ export default function NotafiscalScreen({ navigation }) {
                             <Label style={{ fontSize: 14, lineHeight: 16, marginTop: 5, color: color.secundary, }}>Envie várias de uma única vez. Escaneie todas as notas fiscais que desejar e clique em enviar logo abaixo.</Label>
                         </Column>
                     </Row>}
+                    <Column style={{ height: 24, }} />
+                    {notas?.length >= 1 && <ButtonPrimary label='Enviar notas fiscais' type='sc' onPress={handleFinish} />}
                 </Column>
             </Modal>
 

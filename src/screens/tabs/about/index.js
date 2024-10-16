@@ -158,7 +158,7 @@ export default function AboutScreen({ navigation, route }) {
                         </Button>
                     ))}
                     </Row>
-                <Column style={{ height: 120, }} />
+                <Column style={{ height: 200, }} />
                 </Column>
 
             </Scroll>

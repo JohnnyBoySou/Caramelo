@@ -13,7 +13,8 @@ import AsyncStaticScreen from '@screens/auth/async';
 //AUTH
 import AuthLoginScreen from '@screens/auth/login';
 import AuthRegisterScreen from '@screens/auth/register';
-import ConfirmEmail from '@screens/auth/confirmation';
+import ConfirmEmailScreen from '@screens/auth/confirmation';
+import ForgotPasswordScreen from '@screens/auth/forgot';
 
 //TABS SCREEN
 import AboutScreen from '@screens/tabs/about';
@@ -22,7 +23,7 @@ import HomeScreen from '@screens/tabs/home';
 
 //BLOG
 import BlogScreen from '@screens/tabs/blog';
-import BlogSearchScreen from './screens/tabs/blog/search';
+import BlogSearchScreen from '@screens/tabs/blog/search';
 import BlogSingleScreen from '@screens/tabs/blog/single';
 //ABOUT
 
@@ -61,7 +62,8 @@ export default function Router() {
 
         <Stack.Screen name="AuthLogin" component={AuthLoginScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="AuthRegister" component={AuthRegisterScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
-        <Stack.Screen name="ConfirmEmail" component={ConfirmEmail} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="Async" component={AsyncStaticScreen} options={{ ...TransitionPresets.RevealFromBottomAndroid, }} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />

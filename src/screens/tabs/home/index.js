@@ -242,7 +242,7 @@ export default function HomeScreen({ navigation, }) {
                     </Scroll>
                 </Column>
                 }
-                <Column style={{ height: 120, }} />
+                <Column style={{ height: 200, }} />
             </Scroll>
         </Column>
     )

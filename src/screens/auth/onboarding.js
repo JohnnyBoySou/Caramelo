@@ -109,7 +109,6 @@ export default function OnboardingPage({ navigation, route, }) {
                 ))}
             </ScrollView>
 
-            <Column style={{height: 120, }} />
             </Scroll>
 
         </Main>

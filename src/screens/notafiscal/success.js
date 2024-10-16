@@ -1,4 +1,4 @@
-import { Main, Scroll, Column, Label, Title, Row, Button, LabelBT, useTheme, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, ButtonPrimary } from '@theme/global';
 import { ArrowLeft } from 'lucide-react-native';
 
 import SucessAnim from '@anim/sucess';
@@ -25,8 +25,8 @@ export default function NotafiscalSuccessScreen({ navigation, route }) {
                     <Label style={{ textAlign: 'center', }}>Ficamos muito gratos por sua ajuda!</Label>
                 </Column>
 
-                <Column style={{  justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
-                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('NotafiscalSend') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
+                <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
+                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('Notafiscal') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
                     <Column style={{ height: 20, }} />
                     <ButtonPrimary type='sc' label='Ver minhas notas' onPress={() => { navigation.navigate('History') }} style={{ paddingHorizontal: 24, borderColor: color.secundary, }} />
                 </Column>

@@ -69,7 +69,7 @@ export default function AuthRegisterScreen({ navigation, }) {
 
             <Main>
                 <Scroll>
-                    <Column ph={margin.h}>
+                    <Column ph={margin.h} pv={20}>
                         <HeaderLogo />
                         <HeadTitle style={{ marginTop: 24, }} size={42}>Criar conta</HeadTitle>
                         <Label>Crie sua conta para conhecer mais sobre o Instituto Caramelo e poder participar das nossas campanhas!</Label>

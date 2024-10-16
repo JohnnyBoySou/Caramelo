@@ -37,7 +37,7 @@ export default function AccountScreen({ navigation, }) {
         <Main style={{ backgroundColor: '#fff', }}>
             <StatusBar style="dark" backgroundColor="#fff" animated />
             <Scroll>
-                <Column style={{ marginHorizontal: margin.h, }}>
+                <Column style={{ marginHorizontal: margin.h, marginVertical: 20, }}>
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
                         <Image source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
@@ -81,7 +81,7 @@ export default function AccountScreen({ navigation, }) {
                             </Column>
                         </Row>
                     </Column>
-
+                    <Column style={{height: 180, }} />
                 </Column>
             </Scroll>
         </Main>

@@ -74,10 +74,10 @@ const Destaque = ({ data }) => {
     }
     const Card = ({ item }) => {
         return (
-            <Button pv={1} ph={1} radius={16} onPress={() => handleOpen(item)} style={{ backgroundColor: '#fff', paddingVertical: 12, }} >
+            <Button pv={1} ph={1} radius={16} onPress={() => handleOpen(item)} style={{ backgroundColor: '#fff', paddingVertical: 12, marginBottom: 30, }} >
                 <>
                     <Column style={{ marginHorizontal: 12, }}>
-                        <MotiImage source={{ uri: item.media_type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ flexGrow: 1, height: 240, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                        <MotiImage source={{ uri: item.media_type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ flexGrow: 1, height: 200, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
                         <Title size={18} style={{ letterSpacing: -.7, marginBottom: 12, lineHeight: 22, }}>{item?.caption?.length > 54 ? item?.caption?.slice(0, 54) + '...' : item?.caption}</Title>
                         <ButtonPrimary pv={8} label='Ver mais' onPress={() => handleOpen(item)} />
                     </Column>
@@ -98,15 +98,7 @@ const Destaque = ({ data }) => {
     }
     return (
         <MotiView from={{ opacity: 0, translateY: 50, }} animate={{ opacity: 1, translateY: 0 }} >
-            <Column style={{ height: 340, marginTop: 10, marginBottom: 10, alignItems: 'center', }}>
-                <Swiper
-                    ref={swipRef}
-                    data={data}
-                    renderCard={(item) => <Card item={item} />}
-                />
-
-            </Column>
-            <MaterialIcons name="swipe" size={24} color={color.sc} style={{ alignSelf: 'center', marginBottom: 20, marginTop: 20, zIndex: -1, }} />
+            <Card item={data[0]} />
         </MotiView>
     )
 }
