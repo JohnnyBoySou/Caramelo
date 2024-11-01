@@ -5,13 +5,12 @@ import { Success, Error } from '@components/Forms/index';
 import { verifyEmail } from '@api/request/user';
 import { createToken } from '@hooks/token';
 import { Header } from '@components/Header';
-import { PinInput, } from '@pakenfit/react-native-pin-input';
 
 export default function ConfirmEmail({ route, navigation }) {
 
     const { color, font, margin, } = useTheme()
 
-    const email = route.params?.email ? route.params.email : 'adilac500@gmail.com';
+    const email = route.params?.email ? route.params.email : '';
 
     const [loading, setloading] = useState(false);
     const [error, seterror] = useState();
@@ -69,7 +68,9 @@ export default function ConfirmEmail({ route, navigation }) {
     return (
         <Main>
             <Column style={{ flex: 1, marginHorizontal: 20, marginVertical: 20, }}>
-                <Header title='Código de Confirmação' />
+                <Header title='' />
+                <Column style={{height: 12 }} />
+                <Title>Código de Confirmação</Title>
                 <Label style={{ marginTop: 10, }}>Digite o código que recebeu em seu e-mail, caso não encontre dê uma olhada na caixa de spam.</Label>
 
                 <Row style={{ columnGap: 12, marginVertical: 24, }}>

@@ -20,8 +20,8 @@ export function ButtonPrimary({ login = false, loading, type = 'pr', label, pv =
   const text = type === 'pr' ? color.sc : type === 'sc' ? '#fff' : type == 'lg' ? color.sc : type == 'tr' ? '#fff' : '#fff';
   return (
     <Button {...props} onPress={onPress} pv={pv} ph={ph} style={{ justifyContent: 'center', alignItems: 'center', }} bg={bg} radius={16}>
-      <Row>
-        {loading ? <Loader size={24} color={text}/> : <SubLabel style={{ fontSize: size, color: text, }}>{label}</SubLabel>}
+      <Row style={{ justifyContent: 'center', alignItems: 'center',  }}>
+        {loading ? <Loader size={24} color={text}/> : <SubLabel style={{ fontSize: size, color: text, textAlign: 'center', }}>{label}</SubLabel>}
       </Row>
     </Button>
   )

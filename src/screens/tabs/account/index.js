@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, Loader } from '@theme/global';
+import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, Loader, ButtonPrimary } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-react-native';
@@ -22,7 +22,6 @@ export default function AccountScreen({ navigation, }) {
         setloading(true)
         try {
             const res = await listUser()
-            console.log(res)
             setuser(res);
         } catch (error) {
             console.log(error)
@@ -40,7 +39,7 @@ export default function AccountScreen({ navigation, }) {
                 <Column style={{ marginHorizontal: margin.h, marginVertical: 20, }}>
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
-                        <Image source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
+                        <Image source={{ uri: user?.avatar ? user?.avatar : 'https://i.pinimg.com/736x/b5/fd/7c/b5fd7c873412482048376e2074cf6bcf.jpg' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
                         <Button bg={color.sc} onPress={() => { navigation.navigate('AccountEdit') }} style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Pencil size={20} color="#fff" />
                         </Button>
@@ -81,7 +80,9 @@ export default function AccountScreen({ navigation, }) {
                             </Column>
                         </Row>
                     </Column>
-                    <Column style={{height: 180, }} />
+                    <Column style={{ height: 18, }} />
+                    <ButtonPrimary type="pr" label="Acessar Política de Privacidade e Termos de Uso." onPress={() => {navigation.navigate('Privacidade')}} />
+                    <Column style={{ height: 180, }} />
                 </Column>
             </Scroll>
         </Main>

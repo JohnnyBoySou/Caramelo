@@ -57,7 +57,7 @@ export default function HomeScreen({ navigation, }) {
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
             <Scroll>
-                <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderRadius: 24, }}>
+                <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
                         <Pressable onPress={() => { navigation.navigate('Tabs', { screen: 'Account' }) }} >
@@ -200,7 +200,7 @@ export default function HomeScreen({ navigation, }) {
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginTop: 20, }}>
                         <Column style={{ width: 200, }}>
                             <HeadTitle>Nossas redes</HeadTitle>
-                            <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
+                            <Label>Nos acompanhe nas redes sociais agora mesmo!</Label>
                             <Row style={{ columnGap: 12, marginVertical: 12, }}>
                                 <Button onPress={() => { handleLink('https://www.instagram.com/instituto.caramelo/') }} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />

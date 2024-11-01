@@ -117,13 +117,10 @@ export default function NotafiscalScreen({ navigation }) {
                 />
 
                 <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: margin.h, position: 'absolute', bottom: 20, left: 0, right: 0, }}>
-                    <Button pv={1} ph={1} radius={8} onPress={() => { modalHelp.current?.expand() }} style={{ width: '80%', }}>
+                    <Button pv={1} ph={1} radius={8} onPress={() => { modalHelp.current?.expand() }} style={{ width: '100%', }}>
                         <Column style={{ backgroundColor: '#fff', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 12, }}>
                             <Label size={14}>Aponte sua câmera para o QR Code da nota fiscal e aguarde escanear.</Label>
                         </Column>
-                    </Button>
-                    <Button onPress={() => { setFacing(current => (current === 'back' ? 'front' : 'back')) }} style={{ width: 56, marginLeft: 12, height: 56, borderRadius: 100, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', }}>
-                        <RefreshCcw size={18} color={color.sc} />
                     </Button>
                 </Row>
             </Column>

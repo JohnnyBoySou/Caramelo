@@ -9,7 +9,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Skeleton } from 'moti/skeleton';
 import { listDonate, listNotas } from '@api/request/history';
 import { useNavigation } from '@react-navigation/native';
-import { formatValue } from '../../hooks/utils';
+import { formatValue } from '@hooks/utils';
 
 export default function HistoryScreen({ navigation, }) {
     const { color, font, margin, } = useTheme();
@@ -43,7 +43,7 @@ export default function HistoryScreen({ navigation, }) {
     return (
         <Main style={{ paddingTop: 0, backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style="light" backgroundColor={color.sc} />
-            <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderRadius: 24, }}>
+            <Column style={{ backgroundColor: color.sc, paddingHorizontal: margin.h, paddingTop: 50, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                 <HeaderHistory title='Histórico' />
                 <Row mv={20} style={{ columnGap: 12, }}>
                     <Button style={{ backgroundColor: type == 'Notas' ? '#fff' : '#ffffff30', justifyContent: 'center', alignItems: 'center', }} onPress={() => { settype('Notas') }} >
@@ -69,7 +69,6 @@ export default function HistoryScreen({ navigation, }) {
                     <Column style={{ width: 12, }}></Column>
                 </ScrollView>}
 
-
                 {loading ? <SkeletonBody /> : <>
                     {type == 'Notas' ?
                         <FlatList
@@ -79,7 +78,7 @@ export default function HistoryScreen({ navigation, }) {
                             showsVerticalScrollIndicator={false}
                             ListEmptyComponent={<EmptyNota />}
                             ListHeaderComponent={<Column style={{ height: 20, }}></Column>}
-                            ListFooterComponent={<Column style={{ height: 50, }}></Column>}
+                            ListFooterComponent={<Column style={{ height: 150, }}></Column>}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
@@ -93,12 +92,11 @@ export default function HistoryScreen({ navigation, }) {
                             style={{ height: 0.8 * SCREEN_HEIGHT, }}
                             ListEmptyComponent={<EmptyDonate />}
                             ListHeaderComponent={<Column style={{ height: 20, }}></Column>}
-                            ListFooterComponent={<Column style={{ height: 50, }}></Column>}
+                            ListFooterComponent={<Column style={{ height: 150, }}></Column>}
                             refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} colors={[color.sc]} />}
                             contentContainerStyle={{ paddingHorizontal: margin.h, }}
                             ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#d7d7d7', }} mv={16} />}
                         />}</>}
-
             </Column>
         </Main>
     )
@@ -118,7 +116,7 @@ const EmptyNota = () => {
 }
 
 const EmptyDonate = () => {
-    //    <ButtonPrimary pv={8} label='Fazer doação' onPress={() => { navigation.navigate('DonateValue') }} />
+    //<ButtonPrimary pv={8} label='Fazer doação' onPress={() => { navigation.navigate('DonateValue') }} />
 
     const navigation = useNavigation();
     return (
@@ -211,7 +209,7 @@ const dates = [
 
 const SkeletonBody = () => {
     return (
-        <Column style={{ marginHorizontal: 24, marginVertical: 0, rowGap: 16, }}>
+        <Column style={{ marginHorizontal: 24, marginVertical: 20, rowGap: 16, }}>
             <Row style={{ columnGap: 12, justifyContent: 'space-between', alignItems: 'center', flexGrow: 1, }}>
                 <Row style={{ justifyContent: 'center', alignItems: 'center', columnGap: 12, }}>
                     <Skeleton radius={12} height={76} width={76} colorMode='light' />

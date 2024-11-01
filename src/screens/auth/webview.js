@@ -12,8 +12,8 @@ export default function WebViewScreen({ route }) {
             <StatusBar style="dark" backgroundColor='#fff' />
             <Column ph={20} style={{ paddingBottom: 10, }}>
                 <Header title={name} />
-                <WebView style={{ flex: 1, }} source={{ uri: link }} />
             </Column>
+            <WebView style={{ flex: 1, }} source={{ uri: link }} />
         </Main>
     )
 }

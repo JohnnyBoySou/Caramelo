@@ -59,7 +59,7 @@ const Nota = ({ item, navigation }) => {
 
             <HeadTitle style={{ font: 'Font_Black', letterSpacing: -1, lineHeight: 32, fontSize: 32, textAlign: 'center', marginTop: 30, marginBottom: 20, }}>Agradecemos muito por usa ajuda!</HeadTitle>
 
-            <ButtonPrimary ph={50} onPress={() => { navigation.navigate('Tabs', { screen: 'Blog' }) }} label='Ver projetos' type='sc' />
+            <ButtonPrimary ph={50} onPress={() => { navigation.navigate('Tabs', { screen: 'Blog' }) }} label='Ver publicações' type='sc' />
         </Column>
     )
 }

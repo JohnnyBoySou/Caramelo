@@ -118,9 +118,9 @@ export default function AboutScreen({ navigation, route }) {
                 <Image style={{ width: '120%', height: 150, zIndex: 99, marginLeft: -50, objectFit: 'contain', marginBottom: -50, }} source={require('@imgs/about2.png')} />
                 <Column ph={margin.h} bg={color.pr} pv={20} style={{ borderTopLeftRadius: 12, paddingBottom: 120, }}>
                     <HeadTitle>Resgates marcantes</HeadTitle>
-                    <Label style={{ fontSize: 14, fontFamily: font.light, lineHeight: 18, }}>O Instituto Caramelo levou o nome de Instituto Luisa Mell de fevereiro 2015 até abril 2022. Abaixo os resgates mais emblemáticos da nossa história!</Label>
+                    <Label style={{ fontSize: 14, fontFamily: font.light, lineHeight: 18, }}>Os resgates mais emblemáticos da nossa história!</Label>
                     <Row style={{ flexWrap: 'wrap', columnGap: 12, rowGap: 12, marginVertical: 20, }}>
-                        {resgates.map((item, index) => (
+                        {resgates?.map((item, index) => (
                             <Button bg="#fff" radius={14} pv={4} onPress={() => { navigation.navigate('WebView', { name: item?.name, link: item?.link }) }}>
                                 <LabelBT style={{ textTransform: 'uppercase', }}>{item?.name}</LabelBT>
                             </Button>
@@ -132,7 +132,7 @@ export default function AboutScreen({ navigation, route }) {
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Column style={{ width: 200, }}>
                             <HeadTitle>Nossas redes</HeadTitle>
-                            <Label>Nós acompanhe nas redes sociais agora mesmo!</Label>
+                            <Label>Nos acompanhe nas redes sociais agora mesmo!</Label>
                             <Row style={{ columnGap: 12, marginVertical: 12, }}>
                                 <Button onPress={() => handleOpen('https://www.instagram.com/instituto.caramelo/')} bg="#f1f1f1" radius={12} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
                                     <FontAwesome6 name="instagram" size={22} color={color.sc} />
@@ -152,13 +152,13 @@ export default function AboutScreen({ navigation, route }) {
                 <Column bg={color.sc} pv={20} ph={20}>
                     <Title color={color.pr}>Links úteis</Title>
                     <Row style={{ flexWrap: 'wrap', columnGap: 12, rowGap: 12, marginTop: 20, }}>
-                    {links.map((item, index) => (
-                        <Button radius={18} bg={color.pr} onPress={() => { navigation.navigate('WebView', { name: item?.name, link: item?.link }) }} >
-                            <LabelBT color={color.sc}>{item?.name}</LabelBT>
-                        </Button>
-                    ))}
+                        {links.map((item, index) => (
+                            <Button radius={18} bg={color.pr} onPress={() => { navigation.navigate('WebView', { name: item?.name, link: item?.link }) }} >
+                                <LabelBT color={color.sc}>{item?.name}</LabelBT>
+                            </Button>
+                        ))}
                     </Row>
-                <Column style={{ height: 200, }} />
+                    <Column style={{ height: 200, }} />
                 </Column>
 
             </Scroll>

@@ -21,8 +21,7 @@ export default function NotafiscalSuccessScreen({ navigation, route }) {
 
                 <Column style={{ marginHorizontal: margin.h, justifyContent: 'center', alignItems: 'center', flex: 1, }}>
                     <SucessAnim />
-                    <Title style={{ fontSize: 32, lineHeight: 34, textAlign: 'center', marginVertical: 24, }}>{status}</Title>
-                    <Label style={{ textAlign: 'center', }}>Ficamos muito gratos por sua ajuda!</Label>
+                    <Title style={{ fontSize: 32, lineHeight: 34, textAlign: 'center', marginVertical: 24, }}>Agradecemos muito por sua ajuda!</Title>
                 </Column>
 
                 <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
