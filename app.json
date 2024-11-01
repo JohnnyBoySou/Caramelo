@@ -2,7 +2,7 @@
   "expo": {
     "name": "Caramelo",
     "slug": "Caramelo",
-    "version": "11.0.0",
+    "version": "13.0.0",
     "scheme": "caramelo",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.engd.caramelo",
-      "buildNumber": "11.0.0",
+      "buildNumber": "13.0.0",
       "infoPlist": {
         "NSCameraUsageDescription": "This application uses the camera to read barcodes to send invoices to institutions, each invoice aims to help declare taxes to the government."
       }
@@ -26,7 +26,7 @@
         "backgroundColor": "#EBB000"
       },
       "package": "com.engd.caramelo",
-      "versionCode": 11,
+      "versionCode": 13,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",

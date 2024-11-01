@@ -53,6 +53,8 @@ export default function HomeScreen({ navigation, }) {
         Linking.openURL(link);
     }
     const a = false;
+    
+    const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
@@ -61,7 +63,7 @@ export default function HomeScreen({ navigation, }) {
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
                         <Pressable onPress={() => { navigation.navigate('Tabs', { screen: 'Account' }) }} >
-                            <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={400} source={{ uri: user?.avatar ? user?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 48, height: 48, borderRadius: 100, }} />
+                            <MotiImage from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} delay={400} source={avatarImg} style={{ width: 48, height: 48, borderRadius: 100, borderWidth: 1, borderColor: '#fff' }} />
                         </Pressable>
                     </Row>
                     <Title align="center">Boa tarde, {'\n'}{user?.name}</Title>

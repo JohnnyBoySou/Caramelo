@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, Loader, ButtonPrimary } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
-import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil } from 'lucide-react-native';
+import { AtSign, HandHeart, HeartHandshake, MessageCircleHeart, Newspaper, Pencil } from 'lucide-react-native';
 import { listUser } from '@api/request/user';
 import { useIsFocused } from '@react-navigation/native';
 import { Pressable } from 'react-native';
@@ -30,6 +30,8 @@ export default function AccountScreen({ navigation, }) {
         }
     }
 
+
+    const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
     if (loading) return <Loader />
 
     return (
@@ -39,7 +41,7 @@ export default function AccountScreen({ navigation, }) {
                 <Column style={{ marginHorizontal: margin.h, marginVertical: 20, }}>
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
-                        <Image source={{ uri: user?.avatar ? user?.avatar : 'https://i.pinimg.com/736x/b5/fd/7c/b5fd7c873412482048376e2074cf6bcf.jpg' }} style={{ width: 154, height: 154, borderRadius: 100, }} />
+                        <Image source={avatarImg} style={{ width: 154, height: 154, borderRadius: 100, }} />
                         <Button bg={color.sc} onPress={() => { navigation.navigate('AccountEdit') }} style={{ marginTop: -30, width: 48, alignSelf: 'flex-end', height: 48, borderWidth: 4, borderColor: '#fff', borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                             <Pencil size={20} color="#fff" />
                         </Button>
@@ -69,7 +71,7 @@ export default function AccountScreen({ navigation, }) {
                         </Row>
                         <Row style={{ columnGap: 24, }}>
                             <Column style={{ borderWidth: 1, borderColor: '#DEDEDE', borderRadius: 24, flexGrow: 1, paddingVertical: 26, paddingHorizontal: 14, }}>
-                                <Newspaper size={32} color={color.pr} />
+                                <MessageCircleHeart size={32} color={color.pr} />
                                 <Title color={color.pr} size={18} style={{ fontFamily: font.medium, marginVertical: 6, }}>Comentários</Title>
                                 <HeadTitle color={color.pr} size={42}>{user?.comments}</HeadTitle>
                             </Column>
@@ -81,7 +83,9 @@ export default function AccountScreen({ navigation, }) {
                         </Row>
                     </Column>
                     <Column style={{ height: 18, }} />
-                    <ButtonPrimary type="pr" label="Acessar Política de Privacidade e Termos de Uso." onPress={() => {navigation.navigate('Privacidade')}} />
+                    <Button style={{ borderWidth: 2, borderColor: color.sc+60, }} radius={12} onPress={() => {navigation.navigate('Privacidade')}} >
+                        <Label style={{ textAlign: 'center' }}>Acessar política de privacidade e termos de uso</Label>
+                    </Button>
                     <Column style={{ height: 180, }} />
                 </Column>
             </Scroll>
