@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, useTheme, SCREEN_WIDTH } from '@theme/global';
-import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil, Upload } from 'lucide-react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Main, Scroll, Title, Column, Image, Button, ButtonPrimary, useTheme, SCREEN_WIDTH } from '@theme/global';
+import { Upload } from 'lucide-react-native';
 
 import { Input, Success, Error } from '@components/Forms/index';
 import { Header } from '@components/Header';
@@ -120,11 +120,6 @@ export default function AccountEditScreen({ navigation, }) {
                     </Column>
 
                     <Column style={{ rowGap: 20, marginBottom: 12, }}>
-                        <Input
-                            value={test}
-                            setValue={settest}
-                            label="TESTE"
-                        />
                         <Input
                             value={name}
                             setValue={setname}
