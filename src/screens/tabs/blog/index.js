@@ -1,51 +1,49 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, LabelBT, ButtonPrimary } from '@theme/global';
-import { Heart, MessageCircle, Search, Send } from 'lucide-react-native';
 
 import PagerView from 'react-native-pager-view';
 import Animated, { useAnimatedStyle, withTiming, interpolateColor } from 'react-native-reanimated';
 
-import { FlatList, Linking } from 'react-native';
+import { FlatList, ScrollView, RefreshControl } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Skeleton } from 'moti/skeleton';
 
 import { listPosts } from '@api/request/blog';
-import { MotiImage, MotiView } from 'moti';
+import { MotiImage, MotiView, } from 'moti';
 import { formatDateTime } from '@hooks/utils';
 
-import { Swiper } from 'rn-swiper-list';
-import { MaterialIcons } from '@expo/vector-icons';
-
-
-
+import { StatusBar } from 'expo-status-bar';
 
 export default function BlogScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
 
     const [destaque, setdestaque] = useState();
     const [data, setdata] = useState();
-
-
     const [loading, setloading] = useState(true);
-    useEffect(() => {
-        const fetchData = async () => {
-            setloading(true)
-            try {
-                const res = await listPosts()
-                setdata(res.data)
-                setdestaque(res.data.reverse().slice(0, 8))
-            } catch (error) {
-                console.log(error)
-            } finally {
-                setloading(false)
-            }
+
+    const isFocused = useIsFocused();
+    const fetchData = async () => {
+        setloading(true)
+        try {
+            const res = await listPosts()
+            setdata(res.data)
+            setdestaque(res.data.reverse().slice(0, 8))
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setloading(false)
         }
+    }
+    useEffect(() => {
         fetchData()
     }, [])
 
     return (
         <Column style={{ paddingTop: 0, backgroundColor: '#fff', }}>
-            <Scroll>
+            {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
+            <ScrollView refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={fetchData} />
+                }>
                 <Column style={{ paddingHorizontal: margin.h, backgroundColor: color.pr, paddingTop: 50, overflow: 'hidden', borderBottomLeftRadius: 32, borderBottomRightRadius: 32, }}>
                     <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} delay={300} source={require('@imgs/logo_blog.png')} style={{ width: 200, height: 52, marginBottom: 12, alignSelf: 'center', }} />
                     <Destaque data={destaque} />
@@ -56,14 +54,13 @@ export default function BlogScreen({ navigation, route }) {
                     <ListPosts data={data} navigation={navigation} />
                     <Column style={{ height: 120, }}></Column>
                 </Column>
-            </Scroll>
+            </ScrollView>
         </Column>
 
 
 
     )
 }
-
 
 const Destaque = ({ data }) => {
     const { color, margin } = useTheme();
@@ -102,7 +99,6 @@ const Destaque = ({ data }) => {
         </MotiView>
     )
 }
-
 
 export const Carrousel = ({ imgs }) => {
     const { color, margin } = useTheme();
@@ -202,7 +198,6 @@ const PaginationDots = ({ index, numberOfDots, activityColor, disableColor }) =>
         </Row>
     );
 };
-
 
 const SkeletonBody = () => {
     return (

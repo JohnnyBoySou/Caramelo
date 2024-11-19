@@ -1,9 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Linking, Pressable } from 'react-native';
+import { Linking, Pressable, ScrollView, RefreshControl } from 'react-native';
 import { Main, Scroll, Column, Row, Title, Image, Button, Label, ButtonPrimary, LabelBT, HeadTitle } from '@theme/global';
 import { ThemeContext } from 'styled-components/native';
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar'; 
 import { ArrowRight, ArrowUpRight, HeartHandshake, History } from 'lucide-react-native';
 
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -20,14 +19,11 @@ export default function HomeScreen({ navigation, }) {
     const isFocused = useIsFocused();
 
     const [user, setuser] = useState();
-    const [data, setdata] = useState();
+    const [data, setdata] = useState([]);
     const [destaque, setdestaque] = useState();
     const [loading, setloading] = useState();
 
-    useEffect(() => {
-        fetchData()
-    }, [isFocused])
-
+  
     const fetchData = async () => {
         setloading(true)
         try {
@@ -53,12 +49,18 @@ export default function HomeScreen({ navigation, }) {
         Linking.openURL(link);
     }
     const a = false;
-    
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
     const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
     return (
         <Column style={{ flex: 1, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
-            <Scroll>
+            <ScrollView refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={fetchData} />
+                }>
                 <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
@@ -245,7 +247,7 @@ export default function HomeScreen({ navigation, }) {
                 </Column>
                 }
                 <Column style={{ height: 200, }} />
-            </Scroll>
+            </ScrollView>
         </Column>
     )
 }

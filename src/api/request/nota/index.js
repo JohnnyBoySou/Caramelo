@@ -5,12 +5,12 @@ import getBaseURL from '@hooks/urls';
 async function postData(endpoint, data, token = null) {
     const BASE_URL = await getBaseURL();
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
     try {
         const response = await axios.post(`${BASE_URL}${endpoint}`, data, { headers });
         return response.data.message;
     } catch (error) {
         console.error(error);
+        console.log(error)
         let errMsg;
         try {
             const err = error?.response?.data || { message: 'An error occurred' };
@@ -25,7 +25,6 @@ async function postData(endpoint, data, token = null) {
 
 async function postDataAnonimo(endpoint, data,) {
     const BASE_URL = await getBaseURL();
-
     try {
         const response = await axios.post(`${BASE_URL}${endpoint}`, data);
         return response.data.message;
@@ -44,13 +43,16 @@ async function postDataAnonimo(endpoint, data,) {
 
 export async function sendNotafiscal(notas) {
     const token = await getToken();
+    console.log('Enviar nota fiscal')
     return await postData('/usuarios/doar/nota', { notas: notas, instituicao_id: 16, }, token);
 }
 
 export async function sendNotafiscalAnonima(notas) {
+    console.log('Enviar nota anonima')
     return await postDataAnonimo('/usuarios/doar/variasanonima', { instituicao_id: 16, notas, });
 }
 
 export async function verifyNota(params) {
+    console.log('Verificar nota')
     return await postData('/usuarios/validar/nota', { nota: params.nota });
 }

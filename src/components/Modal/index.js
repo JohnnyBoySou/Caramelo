@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { Column } from "@theme/global";
 const Modal = forwardRef(
@@ -21,11 +21,9 @@ const Modal = forwardRef(
           height: 8,
         }}
       >
-        <BottomSheetScrollView>
           <Column style={{ flex: 1, }}>
             {children} 
           </Column>
-        </BottomSheetScrollView>
       </BottomSheet>
     );
   }

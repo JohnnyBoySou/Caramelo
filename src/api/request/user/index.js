@@ -114,6 +114,7 @@ export const validateToken = async (token) => {
 // Atualizar perfil de usuário
 export const updateUser = async (params) => {
   const token = await getToken();
+  console.log('editar usuario')
   return await postData('/usuarios/editarperfil', {
     email: params.email,
     name: params.name,
@@ -124,12 +125,13 @@ export const updateUser = async (params) => {
 
 // Listar informações do usuário
 export const listUser = async () => {
+  console.log('listar usuario')
   return await getData('/usuarios/user');
 };
 
 // Verificar email com código
 export const verifyEmail = async (email, code) => {
-  const sanitizedEmail = validator.normalizeEmail(email);
+  console.log('verificar email')
   return await postData('/usuarios/validacodigo', {
     email: email,
     codigo: code,
@@ -137,7 +139,9 @@ export const verifyEmail = async (email, code) => {
 };
 
 export const logoutUser = async () => {
+  console.log('saiu')
   try {
+
     const res = await excludeToken();
     return true;
   } catch (error) {
@@ -147,6 +151,7 @@ export const logoutUser = async () => {
 
 // Exclusão de usuário
 export const excludeUser = async (password) => {
+  console.log('exclui conta')
   const token = await getToken();
   return await postData('/usuarios/exclusao', { password }, token);
 };
@@ -154,6 +159,7 @@ export const excludeUser = async (password) => {
 
 
 export const verifyEstabelecimento = async (email) => {
+  console.log('verifica estabelecimento')
   const BASE_URL = await getBaseURL();
   try {
     const res = await axios.post(`${BASE_URL}/usuarios/emailestabelecimento`, {

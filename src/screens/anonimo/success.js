@@ -1,11 +1,24 @@
-import { Main, Scroll, Column, Label, Title, Row, Button, LabelBT, useTheme, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Column, Title, Row, Button, useTheme, ButtonPrimary, } from '@theme/global';
 import { ArrowLeft } from 'lucide-react-native';
 
 import SucessAnim from '@anim/sucess';
+import { excludeAllNotas } from './hook';
+import { useEffect } from 'react';
 
-export default function AnonimoNotaSuccessScreen({ navigation, route }) {
-    const { color, font, margin } = useTheme();
-    const status = route.params?.status;
+export default function NotafiscalSuccessScreen({ navigation, route }) {
+    const { color,  margin } = useTheme();
+
+    const clearNotas = async () => {
+        try {
+            await excludeAllNotas();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        clearNotas();
+    }, [])
+
     return (
         <Main style={{ backgroundColor: "#fff", }}>
             <Scroll>
@@ -21,12 +34,12 @@ export default function AnonimoNotaSuccessScreen({ navigation, route }) {
 
                 <Column style={{ marginHorizontal: margin.h, justifyContent: 'center', alignItems: 'center', flex: 1, }}>
                     <SucessAnim />
-                    <Title style={{ fontSize: 32, lineHeight: 34, textAlign: 'center', marginVertical: 24, }}>{status}</Title>
-                    <Label style={{ textAlign: 'center', }}>Ficamos muito gratos por sua ajuda!</Label>
+                    <Title style={{ fontSize: 32, lineHeight: 34, textAlign: 'center', marginVertical: 24, }}>Agradecemos muito por sua ajuda!</Title>
                 </Column>
 
-                <Column style={{  justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
-                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('AnonimoNota') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
+                <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
+                    <ButtonPrimary label='Escanear outra nota' onPress={() => { navigation.navigate('AnonimoNota') }} style={{ paddingHorizontal: 32, borderColor: color.primary, }} />
+                    
                 </Column>
             </Scroll>
 

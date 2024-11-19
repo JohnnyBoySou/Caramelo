@@ -1,11 +1,24 @@
-import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, ButtonPrimary } from '@theme/global';
+import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, ButtonPrimary, LabelBT } from '@theme/global';
 import { ArrowLeft } from 'lucide-react-native';
 
 import SucessAnim from '@anim/sucess';
+import { excludeAllNotas } from './hook';
+import { useEffect } from 'react';
 
 export default function NotafiscalSuccessScreen({ navigation, route }) {
     const { color, font, margin } = useTheme();
-    const status = route.params?.status;
+
+    const clearNotas = async () => {
+        try {
+            await excludeAllNotas();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        clearNotas();
+    }, [])
+
     return (
         <Main style={{ backgroundColor: "#fff", }}>
             <Scroll>
@@ -25,9 +38,11 @@ export default function NotafiscalSuccessScreen({ navigation, route }) {
                 </Column>
 
                 <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
-                    <ButtonPrimary label='Nova nota fiscal' onPress={() => { navigation.navigate('Notafiscal') }} style={{ paddingHorizontal: 24, borderColor: color.primary, }} />
+                    <ButtonPrimary label='Escanear outra nota' onPress={() => { navigation.navigate('Notafiscal') }} style={{ paddingHorizontal: 32, borderColor: color.primary, }} />
                     <Column style={{ height: 20, }} />
-                    <ButtonPrimary type='sc' label='Ver minhas notas' onPress={() => { navigation.navigate('History') }} style={{ paddingHorizontal: 24, borderColor: color.secundary, }} />
+                    <Button radius={16} style={{ borderWidth: 2, borderColor: color.sc, paddingHorizontal: 45, paddingVertical: 12, }}>
+                        <LabelBT color={color.title}>Ver minhas notas</LabelBT>
+                    </Button>
                 </Column>
             </Scroll>
 

@@ -60,7 +60,7 @@ const TextArea = ({ value, setValue, disabled, label, mask, props }) => {
 
         <TextInput
           {...props}
-          style={{ fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : '#425a7a', height: 120, }}
+          style={{ fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : color.title, height: 120, }}
           ref={inputRef}
           onFocus={handleFocus}
           numberOfLines={3}

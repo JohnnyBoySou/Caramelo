@@ -82,7 +82,7 @@ export default function AuthLoginScren({ navigation, }) {
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1, }} >
       <Main >
         <Scroll>
-          <Column ph={margin.h} pv={20}>
+          <Column ph={margin.h} >
             <HeaderLogo />
             <Column style={{ height: 12, }} />
             <HeadTitle size={42}>Entrar</HeadTitle>
@@ -150,11 +150,11 @@ export default function AuthLoginScren({ navigation, }) {
           <Column>
 
             <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 20, }}>
-              <Column>
+              <Column style={{ width: 300, }}>
                 <Title>Preencha o email</Title>
                 <Label>Confirme o email do estabelecimento</Label>
               </Column>
-              <Button onPress={() => { modalAnonim.current?.close() }} style={{ width: 48, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
+              <Button onPress={() => { modalAnonim.current?.close() }} style={{ width: 48, position: 'absolute', right: 0, top: 0, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
                 <X size={24} color='#fff' />
               </Button>
             </Row>
@@ -167,7 +167,6 @@ export default function AuthLoginScren({ navigation, }) {
               <Column style={{ height: 12, }} />
 
               {successAnonimo ? <Success msg={successAnonimo} /> : errorAnonimo ? <Error msg={errorAnonimo} /> : null}
-
 
               <ButtonPrimary loading={loadingAnonimo} label='Verificar' onPress={handleAnonimo} />
             </Column>

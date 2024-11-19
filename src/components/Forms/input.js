@@ -12,10 +12,9 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
   const internalRef = useRef(null);
   const inputRef = ref || internalRef;
 
-
   const [secure, setsecure] = useState(pass);
   const inputAnimation = useAnimationState({
-    from: { translateY: 10, fontSize: 18, },
+    from: { translateY: 12, fontSize: 18, },
     to: { translateY: 0, fontSize: 14, },
   });
 
@@ -25,7 +24,7 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
     } else {
       inputAnimation.transitionTo('from');
     }
-  }, []);
+  }, [value]);
 
   const handleFocus = () => {
     setFocus(true); inputAnimation.transitionTo('to');
@@ -52,12 +51,11 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
 
 
   return (
-    <Pressable onPress={() => { inputRef.current.focus() }} >
 
-      <Column style={{ borderColor: disabled ? '#f1f1f1' : focus ? color.label : '#A9798150', backgroundColor: '#fff', flexGrow: 1, borderWidth: 2, paddingBottom: 8, paddingTop: 24, paddingHorizontal: 16, borderRadius: 14, }}>
+      <Column>
         <MotiText
           state={inputAnimation}
-          style={{ fontFamily: font.medium, color: color.label, letterSpacing: -0.6, position: 'absolute', top: 6, left: 16, zIndex: 1, }}
+          style={{ fontFamily: font.medium, color: color.label, letterSpacing: -0.6, position: 'absolute', top: 6, left: 16, zIndex: -1, }}
           transition={{ type: 'timing', duration: 200 }}
         >
           {label}
@@ -65,7 +63,11 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
 
         <TextInput
           {...props}
-          style={{ fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : color.title, }}
+        style={{
+          fontSize: 18, fontFamily: font.medium, color: disabled ? color.title + 60 : color.title,  
+          borderColor: disabled ? '#f1f1f1' : focus ? color.label : '#A9798150',  
+          borderWidth: 2, borderRadius: 14, paddingHorizontal: 16, paddingBottom: 8, paddingTop: 24
+          }}
           ref={inputRef}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -77,7 +79,7 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
           secureTextEntry={secure}
         />
 
-        {pass && <Pressable onPress={() => { setsecure(!secure) }} style={{ position: 'absolute', right: 0, top: 0,  width: 56, height: 56, justifyContent: 'center', alignItems: 'center',  }}>
+        {pass && <Pressable onPress={() => { setsecure(!secure) }} style={{ position: 'absolute', right: 2, top: 6,  width: 56, height: 56, justifyContent: 'center', alignItems: 'center',  }}>
           {secure ? <Eye
             size={24}
             color={color.title}
@@ -87,7 +89,6 @@ const Input = React.forwardRef(({ value, setValue, disabled, label, mask, props,
           />}
         </Pressable>}
       </Column>
-    </Pressable>
   );
 });
 

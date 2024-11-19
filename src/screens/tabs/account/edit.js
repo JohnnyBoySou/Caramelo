@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, useTheme } from '@theme/global';
+import { Main, Scroll, Title, Row, Column, HeadTitle, Label, Image, Button, ButtonPrimary, useTheme, SCREEN_WIDTH } from '@theme/global';
 import { AtSign, HandHeart, HeartHandshake, Newspaper, Pencil, Upload } from 'lucide-react-native';
 
 import { Input, Success, Error } from '@components/Forms/index';
@@ -104,14 +104,13 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
+    const [test, settest] = useState('TEST');
     if (loading) return <SkeletonBody />
 
     return (
-        <Main style={{ paddingTop: 0, }}>
+        <Main>
             <Scroll>
-                <Column style={{ marginHorizontal: margin.h, paddingTop: 20, }}>
-
-
+                <Column style={{ marginHorizontal: margin.h,  }}>
                     <Header title="Editar perfil" />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', marginVertical: 20, }}>
                         <Image cachePolicy="disk" source={profile} style={{ width: 154, height: 154, borderRadius: 100, }} />
@@ -121,6 +120,11 @@ export default function AccountEditScreen({ navigation, }) {
                     </Column>
 
                     <Column style={{ rowGap: 20, marginBottom: 12, }}>
+                        <Input
+                            value={test}
+                            setValue={settest}
+                            label="TESTE"
+                        />
                         <Input
                             value={name}
                             setValue={setname}
@@ -185,19 +189,22 @@ const SkeletonBody = () => {
 
     const { color, font, margin } = useTheme();
     return (
-        <Column style={{ marginTop: 30, }}>
+        <Column style={{ paddingTop: 50, backgroundColor: '#fff',}}>
+            <Column style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 20, }}>
+                <Skeleton height={52} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
+            </Column>
             <Column style={{ justifyContent: 'center', alignItems: 'center', }}>
                 <Skeleton height={154} width={154} radius={100} colorMode="light" />
             </Column>
             <Column style={{ justifyContent: 'center', alignItems: 'center', rowGap: 16, marginTop: 20, }}>
-                <Skeleton height={62} width={300} radius={12} colorMode="light" />
-                <Skeleton height={62} width={300} radius={12} colorMode="light" />
-                <Skeleton height={62} width={300} radius={12} colorMode="light" />
-                <Skeleton height={62} width={300} radius={12} colorMode="light" />
+                <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
+                <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
+                <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
+                <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
                 <Column style={{ rowGap: 12, }}>
-                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: color.pr, }} />
-                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: color.sc, }} />
-                <Column style={{ width: 300, height: 62, borderRadius: 16, backgroundColor: '#000', }} />
+                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.pr, }} />
+                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.sc, }} />
+                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: '#000', }} />
                 </Column>
             </Column>
         </Column>

@@ -4,19 +4,19 @@ import { ThemeContext } from 'styled-components/native';
 import { StatusBar } from 'expo-status-bar';
 import { AtSign, HandHeart, HeartHandshake, MessageCircleHeart, Newspaper, Pencil } from 'lucide-react-native';
 import { listUser } from '@api/request/user';
-import { useIsFocused } from '@react-navigation/native';
-import { Pressable } from 'react-native';
+import { Pressable, ScrollView, RefreshControl } from 'react-native';
+
+//import { useIsFocused } from '@react-navigation/native';
 
 export default function AccountScreen({ navigation, }) {
     const { color, font, margin } = useContext(ThemeContext);
     const [loading, setloading] = useState();
     const [user, setuser] = useState();
 
-
-    const isFocused = useIsFocused();
+    //const isFocused = useIsFocused();
     useEffect(() => {
         fetchData()
-    }, [isFocused])
+    }, [])
 
     const fetchData = async () => {
         setloading(true)
@@ -32,12 +32,21 @@ export default function AccountScreen({ navigation, }) {
 
 
     const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
-    if (loading) return <Loader />
+    if (loading) {
+        return (
+            <Main style={{ justifyContent: 'center', alignItems: 'center',  }}>
+                <Loader size={62} />
+            </Main>
+        )
+    }
 
     return (
         <Main style={{ backgroundColor: '#fff', }}>
             <StatusBar style="dark" backgroundColor="#fff" animated />
-            <Scroll>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl refreshing={loading} onRefresh={fetchData} />
+                }>
                 <Column style={{ marginHorizontal: margin.h, marginVertical: 20, }}>
                     <Image source={require('@imgs/account.png')} style={{ width: '100%', objectFit: 'contain', position: 'absolute', top: 40, }} />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', }}>
@@ -83,12 +92,12 @@ export default function AccountScreen({ navigation, }) {
                         </Row>
                     </Column>
                     <Column style={{ height: 18, }} />
-                    <Button style={{ borderWidth: 2, borderColor: color.sc+60, }} radius={12} onPress={() => {navigation.navigate('Privacidade')}} >
+                    <Button style={{ borderWidth: 2, borderColor: color.sc + 60, }} radius={12} onPress={() => { navigation.navigate('Privacidade') }} >
                         <Label style={{ textAlign: 'center' }}>Acessar política de privacidade e termos de uso</Label>
                     </Button>
                     <Column style={{ height: 180, }} />
                 </Column>
-            </Scroll>
+            </ScrollView>
         </Main>
     )
 }

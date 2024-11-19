@@ -77,7 +77,6 @@ export async function listPosts() {
     }
 }
 
-
 export async function toggleLike(id) {
     return await postData('/usuarios/curtirdescurtir', { idpost: id });
 }

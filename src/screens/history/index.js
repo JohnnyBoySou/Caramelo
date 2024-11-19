@@ -18,8 +18,8 @@ export default function HistoryScreen({ navigation, }) {
     const [date, setdate] = useState('TUDO');
     const [loading, setloading] = useState(false);
 
-    const [donate, setdonate] = useState();
-    const [notas, setnotas] = useState();
+    const [donate, setdonate] = useState([]);
+    const [notas, setnotas] = useState([]);
 
     const fetchData = async () => {
         setloading(true)

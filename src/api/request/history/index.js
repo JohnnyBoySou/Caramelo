@@ -5,13 +5,13 @@ import getBaseURL from '@hooks/urls';
 async function fetchData(endpoint) {
     const BASE_URL = await getBaseURL();
     const token = await getToken();
+
     try {
         const res = await axios.get(`${BASE_URL}${endpoint}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log(res.data.data)
         return res.data.data || res.data;
     } catch (error) {
         console.log(error.request)
@@ -32,9 +32,11 @@ async function fetchData(endpoint) {
 }
 
 export async function listDonate() {
+    console.log('listar doacoes')
     return await fetchData('/usuarios/doacoes');
 }
 export async function listNotas() {
+    console.log('listar notas')
     return await fetchData('/usuarios/notas');
 }
 
