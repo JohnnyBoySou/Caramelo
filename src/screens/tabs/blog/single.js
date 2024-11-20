@@ -3,8 +3,8 @@ import { Main, Scroll, Column, Label, Title, Row, Button, useTheme, Image, U, SC
 
 //COMPONENTS
 import Modal from '@components/Modal';
-import { KeyboardAvoidingView, Share, Platform, } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { KeyboardAvoidingView, Share, Platform, TextInput, } from 'react-native';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 //API
 import { publishComment, toggleLike, listComments, editComment, excludeComment } from '@api/request/blog';
 
@@ -15,9 +15,10 @@ import { StatusBar } from 'expo-status-bar';
 import { Input } from '@components/Forms';
 import { formatDateTime } from '@hooks/utils';
 import { listUser, } from '@api/request/user';
-import { isLike } from '../../../api/request/blog';
+import { isLike } from '@api/request/blog';
 import { MotiImage } from 'moti';
 import HeartAnim from '../../../assets/anim/heart';
+
 
 
 export default function BlogSingleScreen({ navigation, route }) {
@@ -139,8 +140,9 @@ export default function BlogSingleScreen({ navigation, route }) {
                 </Button>
             </Row>
 
-            <Modal ref={commentsRef} snapPoints={[0.1, 1 * SCREEN_HEIGHT]}>
-                <Column>
+            <Modal ref={commentsRef} snapPoints={[0.1, 0.9 * SCREEN_HEIGHT]}>
+
+                <Column style={{ flex: 1, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingBottom: 10, }}>
                         <Button onPress={() => { commentsRef.current?.close() }} radius={16} pv={0} ph={0} style={{ width: 46, height: 46, justifyContent: 'center', alignItems: 'center', }} bg={color.sc}>
                             <ArrowLeft size={24} color="#fff" />
@@ -150,7 +152,6 @@ export default function BlogSingleScreen({ navigation, route }) {
                             <HelpCircle size={24} color={color.sc} />
                         </Button>
                     </Row>
-
 
                     <ListComments data={comments} id={item?.id} fetchList={handleList} />
                 </Column>
@@ -176,10 +177,13 @@ export default function BlogSingleScreen({ navigation, route }) {
 
 const ListComments = ({ data, id, fetchList }) => {
     const { color, font, margin } = useTheme()
+
+
     const CommentItem = ({ item }) => {
+        const userAvatar = item?.avatar ? { uri: item?.avatar } : require('@imgs/user.png');
         return (
             <Row mv={12}>
-                <Image source={{ uri: item?.avatar ? item?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 54, height: 54, borderRadius: 100, }} />
+                <Image source={userAvatar} style={{ width: 54, height: 54, borderRadius: 100, }} />
                 <Column style={{ width: '68%', marginLeft: 12, }}>
                     <Title size={18} style={{ lineHeight: 20, }}>{item?.name}</Title>
                     <Label size={14} style={{ lineHeight: 18, }}>{item?.texto}</Label>
@@ -246,16 +250,19 @@ const ListComments = ({ data, id, fetchList }) => {
         }
     }
 
-
     useEffect(() => {
         handleUser();
     }, [])
 
+
+    const avatarImg = select?.avatar ? { uri: select?.avatar } : require('@imgs/user.png');
+
+    const [focusInput, setfocusInput] = useState();
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1, }} keyboardVerticalOffset={20}>
+        <>
             <FlatList
                 data={data}
-                style={{ paddingVertical: 12, height: 0.9 * SCREEN_HEIGHT, paddingHorizontal: 20, }}
+                style={{ paddingVertical: 12, height: SCREEN_HEIGHT, paddingHorizontal: 20, }}
                 renderItem={({ item }) => <CommentItem item={item} />}
                 ItemSeparatorComponent={() => <Column style={{ height: 1, backgroundColor: '#D1D1D1', }} />}
                 keyExtractor={item => item?.id}
@@ -267,37 +274,48 @@ const ListComments = ({ data, id, fetchList }) => {
                 </Column>}
                 ListFooterComponent={<Column style={{ height: 120, }}></Column>}
             />
-
-
-            <Column style={{ position: 'absolute', backgroundColor: '#FFF', borderTopWidth: 2, borderTopColor: '#F1F1F1', bottom: 0, paddingBottom: 20, paddingHorizontal: 20, paddingTop: 20, }}>
-                {select &&
-                    <Column>
-                        <Row style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 15, }}>
-                            <Image source={{ uri: select?.avatar ? select?.avatar : 'https://avatar.iran.liara.run/public/24' }} style={{ width: 54, height: 54, borderRadius: 100, }} />
-                            <Column style={{ width: '65%', marginLeft: 12, }}>
-                                <Title size={18} style={{ lineHeight: 20, }}>{select?.name}</Title>
-                                <Label size={14} style={{ lineHeight: 18, }}>{select?.texto}</Label>
-                            </Column>
-                            <Button bg='#C00000' style={{ justifyContent: 'center', alignItems: 'center', width: 42, height: 42, }} onPress={handleExclude}>
-                                <Trash size={18} color='#fff' />
-                            </Button>
-                        </Row>
-                    </Column>
-                }
-                <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-                    <Column style={{ flexGrow: 1, width: '78%', }}>
-                        <Input label="Comentário" setValue={setcomment} value={comment} />
-                    </Column>
-                    <Column style={{ width: 12 }} />
-                    <Button onPress={select ? handleEdit : handleComment} bg={color.sc} style={{ width: 64, justifyContent: 'center', alignItems: 'center', height: 64, }} radius={12}>
-                        <Row>
-                            {loading ? <Loader size={24} color='#fff' /> : <Send size={24} color="#fff" />}
-                        </Row>
-                    </Button>
-                </Row>
-            </Column>
-
-
-        </KeyboardAvoidingView>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'position' : 'height'} style={{ flex: 1, }}  keyboardVerticalOffset={90}>
+                <Column style={{ position: 'absolute', backgroundColor: '#FFF', borderTopWidth: 2, borderTopColor: '#F1F1F1', bottom: 5, paddingBottom: 30, paddingHorizontal: 20, paddingTop: 20, }}>
+                    {select &&
+                        <Column>
+                            <Row style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 15, }}>
+                                <Image source={avatarImg} style={{ width: 54, height: 54, borderRadius: 100, }} />
+                                <Column style={{ width: '65%', marginLeft: 12, }}>
+                                    <Title size={18} style={{ lineHeight: 20, }}>{select?.name}</Title>
+                                    <Label size={14} style={{ lineHeight: 18, }}>{select?.texto}</Label>
+                                </Column>
+                                <Button bg='#C00000' style={{ justifyContent: 'center', alignItems: 'center', width: 42, height: 42, }} onPress={handleExclude}>
+                                    <Trash size={18} color='#fff' />
+                                </Button>
+                            </Row>
+                        </Column>
+                    }
+                    <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
+                        <Column style={{ width: '78%', }}>
+                            <TextInput
+                                placeholder="Comentar"
+                                placeholderTextColor={color.sc+90}
+                                style={{
+                                    backgroundColor: '#fff',
+                                    borderWidth: 2, 
+                                    borderColor: focusInput ? color.sc : '#F1F1F1',
+                                    borderRadius: 12, paddingHorizontal: 12, paddingVertical: 20, fontFamily: font.medium, color: color.sc,
+                                }}
+                                value={comment}
+                                onChangeText={setcomment}
+                                onFocus={() => setfocusInput(true)}
+                                onBlur={() => setfocusInput(false)}
+                            />
+                        </Column>
+                        <Column style={{ width: 12 }} />
+                        <Button onPress={select ? handleEdit : handleComment} bg={color.sc} style={{ width: 64, justifyContent: 'center', alignItems: 'center', height: 64, }} radius={12}>
+                            <Row>
+                                {loading ? <Loader size={24} color='#fff' /> : <Send size={24} color="#fff" />}
+                            </Row>
+                        </Button>
+                    </Row>
+                </Column>
+            </KeyboardAvoidingView>
+        </>
     )
 }

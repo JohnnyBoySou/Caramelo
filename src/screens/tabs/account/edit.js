@@ -71,7 +71,7 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
-    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : avatar ? { uri: avatar } : {uri: 'https://avatar.iran.liara.run/public/24'}
+    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : avatar ? { uri: avatar } : require("@imgs/user.png");
 
     const handleUpdate = async () => {
         setsuccess(null)
@@ -104,7 +104,6 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
-    const [test, settest] = useState('TEST');
     if (loading) return <SkeletonBody />
 
     return (

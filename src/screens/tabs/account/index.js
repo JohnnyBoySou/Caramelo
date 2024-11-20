@@ -13,7 +13,6 @@ export default function AccountScreen({ navigation, }) {
     const [loading, setloading] = useState();
     const [user, setuser] = useState();
 
-    //const isFocused = useIsFocused();
     useEffect(() => {
         fetchData()
     }, [])
@@ -30,8 +29,7 @@ export default function AccountScreen({ navigation, }) {
         }
     }
 
-
-    const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
+    const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png');
     if (loading) {
         return (
             <Main style={{ justifyContent: 'center', alignItems: 'center',  }}>
