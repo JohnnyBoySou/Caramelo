@@ -77,7 +77,7 @@ export default function Router() {
           <Stack.Screen name="Privacidade" component={PrivacidadeScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
           <Stack.Screen name="WebView" component={WebViewScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         </Stack.Group>
-        <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
+        <Stack.Screen name="FAQ" component={FAQScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
 
         <Stack.Screen name="History" component={HistoryScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Group screenOptions={{ presentation: 'modal', gestureEnabled: true, }}>

@@ -5,7 +5,7 @@ import SucessAnim from '@anim/sucess';
 import { excludeAllNotas } from './hook';
 import { useEffect } from 'react';
 
-export default function NotafiscalSuccessScreen({ navigation, route }) {
+export default function NotafiscalSuccessScreen({ navigation, }) {
     const { color, font, margin } = useTheme();
 
     const clearNotas = async () => {

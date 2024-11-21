@@ -28,6 +28,7 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
     const modalHelp = useRef(null);
 
     const [loading, setloading] = useState(false);
+    const [loadingSend, setloadingSend] = useState(false);
     const [error, seterror] = useState();
     const [success, setsuccess] = useState();
     const [value, setvalue] = useState();
@@ -73,13 +74,22 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
         }
     }
 
+
     const handleFinish = async () => {
+        setloadingSend(true);
         try {
             const res = await sendNotafiscal(notas)
-            navigation.navigate('NotafiscalSuccess', { status: res })
+            setTimeout(() => {
+                navigation.replace('NotafiscalSuccess', { status: res })
+            }, 1500);
         } catch (err) {
-            navigation.navigate('NotafiscalError', { status: err.message })
+            setTimeout(() => {
+                navigation.replace('NotafiscalError', { status: err.message })
+            }, 1500);
         } finally {
+            setTimeout(() => {
+                setloadingSend(false);
+            }, 1500);
         }
     }
 
@@ -134,9 +144,8 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item, index }) => <ListNotas index={index} item={item} onRemove={handleRemove} />}
                         />
-
                         <Column style={{ height: 24, }} />
-                        {notas?.length >= 1 && <ButtonPrimary label='Enviar Notas Fiscais' type='pr' onPress={handleFinish} />}
+                        {notas?.length >= 1 && <ButtonPrimary disabled={loadingSend} loading={loadingSend} label='Enviar Notas Fiscais' type='pr' onPress={handleFinish} />}
                     </Column>}
             </Scroll>
 
@@ -148,9 +157,7 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
                             <X size={22} color="#fff" />
                         </Button>
                     </Row>
-
                     <Label style={{ fontSize: 16, lineHeight: 20, marginBottom: 20, marginTop: 10, color: color.label, }}>Envie várias notas fiscais de uma única vez. Escaneie todas as notas fiscais que desejar e clique em enviar, você também pode excluir uma nota clicando no ícone de lixeira ao lado direito da nota fiscal.</Label>
-
                     <ButtonPrimary label="Entendi" onPress={() => { modalHelp.current?.close() }} />
                 </Column>
             </Modal>
@@ -181,7 +188,7 @@ export const MessageError = ({ error, }) => {
             <Column style={{ backgroundColor: '#5F101C', width: 64, height: 64, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                 <MaterialCommunityIcons name="alert-circle-outline" size={32} color='#fff' />
             </Column>
-            <Title style={{ textAlign: 'center', fontSize: 18, lineHeight: 21, marginTop: 12, marginBottom: 20,}}>{error}</Title>
+            <Title style={{ textAlign: 'center', fontSize: 18, lineHeight: 21, marginTop: 12, marginBottom: 20, }}>{error}</Title>
             <Button onPress={() => { navigation.goBack() }} radius={16} style={{ borderWidth: 2, borderColor: color.sc, paddingHorizontal: 45, paddingVertical: 12, }}>
                 <LabelBT color={color.title}>Tentar novamente</LabelBT>
             </Button>
@@ -197,7 +204,7 @@ export const MessageAwait = () => {
                 <MaterialCommunityIcons name="qrcode-scan" size={24} color={color.sc} />
             </Column>
             <Title style={{ textAlign: 'center', fontSize: 18, marginTop: 12, }}>Aguarde</Title>
-            <Label style={{ textAlign: 'center', fontSize: 14,  }}>Estamos analisando sua nota fiscal.</Label>
+            <Label style={{ textAlign: 'center', fontSize: 14, }}>Estamos analisando sua nota fiscal.</Label>
 
             <ProgressBar indeterminate={true} style={{ height: 12, width: 140, borderRadius: 100, backgroundColor: color.pr, marginTop: 12, }} color={color.sc} />
         </MotiView>
