@@ -15,7 +15,7 @@ import { ProgressBar } from 'react-native-paper';
 //API
 import { MotiView, } from 'moti';
 import * as Haptics from 'expo-haptics';
-import { verifyNota,  sendNotafiscalAnonima } from '@api/request/nota';
+import { verifyNota, sendNotafiscalAnonima } from '@api/request/nota';
 import { useNavigation } from '@react-navigation/native';
 import { excludeNota, listNotas, addNota } from './hook';
 
@@ -70,13 +70,22 @@ export default function AnonimoNotaVerifyScreen({ navigation, route }) {
         }
     }
 
+    const [loadingSend, setloadingSend] = useState();
     const handleFinish = async () => {
+        setloadingSend(true);
         try {
             const res = await sendNotafiscalAnonima(notas)
-            navigation.navigate('AnonimoNotaSuccess', { status: res })
+            setTimeout(() => {
+                navigation.navigate('AnonimoNotaSuccess', { status: res })
+            }, 1500);
         } catch (err) {
-            navigation.navigate('AnonimoNotaError', { status: err.message })
+            setTimeout(() => {
+                navigation.navigate('AnonimoNotaError', { status: err.message })
+            }, 1500);
         } finally {
+            setTimeout(() => {
+                setloadingSend(false);
+            }, 1500);
         }
     }
 
@@ -133,7 +142,7 @@ export default function AnonimoNotaVerifyScreen({ navigation, route }) {
                         />
 
                         <Column style={{ height: 24, }} />
-                        {notas?.length >= 1 && <ButtonPrimary label='Enviar Notas Fiscais' type='pr' onPress={handleFinish} />}
+                        {notas?.length >= 1 && <ButtonPrimary disabled={loadingSend} loading={loadingSend} label='Enviar Notas Fiscais' type='pr' onPress={handleFinish} />}
                     </Column>}
             </Scroll>
 
@@ -178,7 +187,7 @@ export const MessageError = ({ error, }) => {
             <Column style={{ backgroundColor: '#5F101C', width: 64, height: 64, borderRadius: 100, justifyContent: 'center', alignItems: 'center', }}>
                 <MaterialCommunityIcons name="alert-circle-outline" size={32} color='#fff' />
             </Column>
-            <Title style={{ textAlign: 'center', fontSize: 18, lineHeight: 21, marginTop: 12, marginBottom: 20,}}>{error}</Title>
+            <Title style={{ textAlign: 'center', fontSize: 18, lineHeight: 21, marginTop: 12, marginBottom: 20, }}>{error}</Title>
             <Button onPress={() => { navigation.goBack() }} radius={16} style={{ borderWidth: 2, borderColor: color.sc, paddingHorizontal: 45, paddingVertical: 12, }}>
                 <LabelBT color={color.title}>Tentar novamente</LabelBT>
             </Button>
@@ -194,7 +203,7 @@ export const MessageAwait = () => {
                 <MaterialCommunityIcons name="qrcode-scan" size={24} color={color.sc} />
             </Column>
             <Title style={{ textAlign: 'center', fontSize: 18, marginTop: 12, }}>Aguarde</Title>
-            <Label style={{ textAlign: 'center', fontSize: 14,  }}>Estamos analisando sua nota fiscal.</Label>
+            <Label style={{ textAlign: 'center', fontSize: 14, }}>Estamos analisando sua nota fiscal.</Label>
 
             <ProgressBar indeterminate={true} style={{ height: 12, width: 140, borderRadius: 100, backgroundColor: color.pr, marginTop: 12, }} color={color.sc} />
         </MotiView>

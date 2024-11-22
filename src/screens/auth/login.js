@@ -154,7 +154,7 @@ export default function AuthLoginScren({ navigation, }) {
                 <Title>Preencha o email</Title>
                 <Label>Confirme o email do estabelecimento</Label>
               </Column>
-              <Button onPress={() => { modalAnonim.current?.close() }} style={{ width: 48, position: 'absolute', right: 0, top: 0, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
+              <Button onPress={() => { modalAnonim?.current?.close() }} style={{ width: 48, position: 'absolute', right: 0, top: 0, justifyContent: 'center', alignItems: 'center', height: 48, borderRadius: 100, backgroundColor: color.sc, }}>
                 <X size={24} color='#fff' />
               </Button>
             </Row>

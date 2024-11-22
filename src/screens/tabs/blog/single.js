@@ -180,10 +180,11 @@ const ListComments = ({ data, id, fetchList }) => {
 
 
     const CommentItem = ({ item }) => {
-        const userAvatar = item?.avatar ? { uri: item?.avatar } : require('@imgs/user.png');
+        console.log(item.avatar)
+        const userAvatar = item?.avatar === 'https://caramelo.engenhariadigital.net/' ? require('@imgs/user.png') : { uri: item?.avatar }
         return (
             <Row mv={12}>
-                <Image source={userAvatar} style={{ width: 54, height: 54, borderRadius: 100, }} />
+                <Image source={userAvatar} style={{ width: 54, height: 54, borderRadius: 100, backgroundColor: '#303030', }} />
                 <Column style={{ width: '68%', marginLeft: 12, }}>
                     <Title size={18} style={{ lineHeight: 20, }}>{item?.name}</Title>
                     <Label size={14} style={{ lineHeight: 18, }}>{item?.texto}</Label>
@@ -254,8 +255,7 @@ const ListComments = ({ data, id, fetchList }) => {
         handleUser();
     }, [])
 
-
-    const avatarImg = select?.avatar ? { uri: select?.avatar } : require('@imgs/user.png');
+    const avatarImg = select?.avatar === 'https://caramelo.engenhariadigital.net/' ? require('@imgs/user.png') : { uri: select?.avatar }
 
     const [focusInput, setfocusInput] = useState();
     return (

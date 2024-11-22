@@ -29,6 +29,7 @@ export default function AccountScreen({ navigation, }) {
         }
     }
 
+    console.log(user?.avatar)
     const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png');
     if (loading) {
         return (
