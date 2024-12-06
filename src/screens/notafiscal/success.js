@@ -40,7 +40,7 @@ export default function NotafiscalSuccessScreen({ navigation, }) {
                 <Column style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20, }}>
                     <ButtonPrimary label='Escanear outra nota' onPress={() => { navigation.navigate('Notafiscal') }} style={{ paddingHorizontal: 32, borderColor: color.primary, }} />
                     <Column style={{ height: 20, }} />
-                    <Button radius={16} style={{ borderWidth: 2, borderColor: color.sc, paddingHorizontal: 45, paddingVertical: 12, }}>
+                    <Button radius={16} onPress={() => { navigation.navigate('History') }} style={{ borderWidth: 2, borderColor: color.sc, paddingHorizontal: 45, paddingVertical: 12, }}>
                         <LabelBT color={color.title}>Ver minhas notas</LabelBT>
                     </Button>
                 </Column>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Row, Column, Title, Button, useTheme, SCREEN_HEIGHT, Label, HeadTitle, ButtonPrimary, SCREEN_WIDTH, LabelBT } from '@theme/global';
 
 //ICONS
-import { RefreshCcw, Keyboard, Trash2, Barcode, X, QrCode } from 'lucide-react-native';
+import { RefreshCcw, Keyboard, Trash2, Barcode, X, QrCode, } from 'lucide-react-native';
 
 //COMPONENTS
 import { Camera, CameraView } from 'expo-camera';
@@ -10,8 +10,9 @@ import { StatusBar } from 'expo-status-bar';
 import { Header } from '@components/Header';
 import Modal from '@components/Modal/index';
 import { TextArea } from '@components/Forms';
-import { MaterialCommunityIcons, AntDesign, } from '@expo/vector-icons';
-import { ProgressBar } from 'react-native-paper';
+import { MaterialCommunityIcons, MaterialIcons, Feather, } from '@expo/vector-icons';
+import Svg, { Rect, Defs, Filter, FeGaussianBlur, Mask } from 'react-native-svg';
+
 
 //API
 import { AnimatePresence, MotiView, } from 'moti';
@@ -37,6 +38,10 @@ export default function NotafiscalScreen({ navigation }) {
     const [error, seterror] = useState();
     const [success, setsuccess] = useState();
     const [value, setvalue] = useState();
+    const [focus, setfocus] = useState(true);
+    const [flash, setflash] = useState(false);
+    const [zoom, setzoom] = useState(false);
+    const [balance, setbalance] = useState(false);
 
     const handleScaned = (data) => {
         navigation.navigate('NotafiscalVerify', { nota: data.data })
@@ -53,36 +58,51 @@ export default function NotafiscalScreen({ navigation }) {
         </Column>
     }
 
+
+
     return (
         <Column style={{ backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style='light' />
-            <Column style={{ position: 'absolute', top: 50, zIndex: 99, width: '100%', paddingHorizontal: margin.h, }}>
+            <Column style={{ position: 'absolute', marginTop: 60, zIndex: 99, width: '100%', paddingHorizontal: margin.h, }}>
                 <Header title='Escanear Nota' />
             </Column>
-            <Column style={{ height: SCREEN_HEIGHT * .74, width: '100%', alignSelf: 'center', borderBottomLeftRadius: 24, borderBottomRightRadius: 24, overflow: 'hidden', }}>
+
+            <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: margin.h, }}>
+                <Button pv={1} ph={1} radius={8} onPress={() => { modalHelp?.current?.expand() }} style={{ width: '100%', }}>
+                    <Column style={{ backgroundColor: '#fff', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 12, }}>
+                        <Label size={16}>Aponte sua câmera para o QR Code da nota fiscal e aguarde escanear.</Label>
+                    </Column>
+                </Button>
+            </Row>
+
+
+            <Column style={{ height: SCREEN_HEIGHT * 1.1, width: SCREEN_WIDTH, alignSelf: 'center', position: 'absolute', borderRadius: 24, overflow: 'hidden', }}>
+                <Column style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: SCREEN_WIDTH, height: 1.1 * SCREEN_HEIGHT, zIndex: 9, }}>
+                    <Column style={{ width: SCREEN_WIDTH, height: 200, backgroundColor: '#00000080', }}></Column>
+                    <Row>
+                        <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
+                        <Column style={{ width: 250, height: 250, }}></Column>
+                        <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
+                    </Row>
+                    <Column style={{ width: SCREEN_WIDTH, height: 500, backgroundColor: '#00000080', }}></Column>
+                </Column>
                 <CameraView
                     style={{ flex: 1 }}
                     facing={facing}
                     onBarcodeScanned={(data) => handleScaned(data)}
+                    autoFocus='on'
+                    enableTorch={flash}
+                    zoom={0}
                 />
-                <Row style={{ justifyContent: 'space-between', alignItems: 'center', marginHorizontal: margin.h, position: 'absolute', bottom: 20, left: 0, right: 0, }}>
-                    <Button pv={1} ph={1} radius={8} onPress={() => { modalHelp?.current?.expand() }} style={{ width: '100%', }}>
-                        <Column style={{ backgroundColor: '#fff', borderRadius: 12, paddingVertical: 12, paddingHorizontal: 12, }}>
-                            <Label size={14}>Aponte sua câmera para o QR Code da nota fiscal e aguarde escanear.</Label>
-                        </Column>
-                    </Button>
-                </Row>
             </Column>
-            <MotiView from={{ opacity: 0, }} animate={{ opacity: 1, }} exit={{ opacity: 0, }} style={{ backgroundColor: error || success ? '#00000080' : 'transparent', position: 'absolute', top: 0, width: SCREEN_WIDTH, height: 1.1 * SCREEN_HEIGHT, justifyContent: 'center', alignItems: 'center', }}>
-                <AnimatePresence >
-                    {loading ? <MessageAwait /> : <>
-                        {error && <MessageError setvalue={setvalue} error={error} seterror={seterror} />}
-                        {success && <MessageSuccess handleFinish={handleFinish} setvalue={setvalue} setsuccess={setsuccess} />}</>}
-                </AnimatePresence>
-            </MotiView>
+            <Row style={{ bottom: 220, alignSelf: 'center', position: 'absolute', columnGap: 20}}>
+                <Button style={{ width: 56, height: 56, borderRadius: 100, zIndex: 99, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }} onPress={() => { setflash(!flash) }} >
+                    <MaterialCommunityIcons name={flash ? "flashlight-off" : "flashlight"} size={24} color="#FFF" />
+                </Button>
+            </Row>
 
-            <Row style={{ marginTop: 20, columnGap: 24, marginHorizontal: margin.h, }}>
-                <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('NotafiscalVerify') }} style={{ flexGrow: 1, }}>
+            <Row style={{ marginTop: 20, columnGap: 24, marginHorizontal: margin.h, position: 'absolute', bottom: 40, }}>
+                <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('NotafiscalList') }} style={{ flexGrow: 1, }}>
                     <Column style={{ flexGrow: 1, borderRadius: 18, backgroundColor: color.pr, paddingVertical: 20, paddingHorizontal: 20, }}>
                         <Column style={{ width: 48, marginBottom: 20, height: 48, borderRadius: 100, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', }}>
                             <Barcode size={18} color={color.sc} />
@@ -154,10 +174,17 @@ export default function NotafiscalScreen({ navigation }) {
 
                     <Column style={{ marginVertical: 20, rowGap: 20, }}>
                         <TextArea label="Digite o código da nota fiscal" setValue={setdigit} value={digit} />
-                        <ButtonPrimary label="Validar" onPress={() => navigation.navigate('NotafiscalVerify', { nota: digit})} />
+                        <ButtonPrimary label="Validar" onPress={() => navigation.navigate('NotafiscalVerify', { nota: digit })} />
                     </Column>
                 </Column>
             </Modal>
         </Column>
     );
 }
+/*
+<Button style={{ width: 56, height: 56, borderRadius: 100, zIndex: 99, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }} onPress={() => { setfocus(!focus) }} >
+                    <MaterialIcons name={focus ? "center-focus-weak" : "center-focus-strong"} size={24} color="#FFF" />
+                </Button>
+                <Button style={{ width: 56, height: 56, borderRadius: 100, zIndex: 99, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }} onPress={() => { setzoom(!zoom) }} >
+                    <Feather name={zoom ? "zoom-out" : "zoom-in"} size={24} color="#fff" />
+                </Button> */

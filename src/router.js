@@ -56,6 +56,7 @@ import PrivacidadeScreen from '@screens/auth/privacidade';
 import WebViewScreen from '@screens/auth/webview';
 //ICONS
 import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
+import NotafiscalListScreen from './screens/notafiscal/list';
 
 export default function Router() {
   return (
@@ -93,6 +94,7 @@ export default function Router() {
         <Stack.Screen name="NotafiscalSuccess" component={NotafiscalSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="NotafiscalError" component={NotafiscalErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="NotafiscalVerify" component={NotafiscalVerifyScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="NotafiscalList" component={NotafiscalListScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         
         <Stack.Screen name="DonateType" component={DonateTypeScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="DonateValue" component={DonateValueScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
