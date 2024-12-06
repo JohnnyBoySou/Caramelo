@@ -28,10 +28,8 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
     const modalHelp = useRef(null);
 
     const [loading, setloading] = useState(false);
-    const [loadingSend, setloadingSend] = useState(false);
     const [error, seterror] = useState();
     const [success, setsuccess] = useState();
-    const [value, setvalue] = useState();
 
     const [notas, setnotas] = useState([]);
     const fetchNotas = async () => {
@@ -73,36 +71,6 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
         }
     }
 
-
-    const handleFinish = async () => {
-        setloadingSend(true);
-        try {
-            const res = await sendNotafiscal(notas)
-            setTimeout(() => {
-                navigation.replace('NotafiscalSuccess', { status: res })
-            }, 1500);
-        } catch (err) {
-            setTimeout(() => {
-                navigation.replace('NotafiscalError', { status: err.message })
-            }, 1500);
-        } finally {
-            setTimeout(() => {
-                setloadingSend(false);
-            }, 1500);
-        }
-    }
-
-    const handleRemove = async (item) => {
-        try {
-            await excludeNota(item);
-        } catch (error) {
-            console.log(error)
-        }
-        finally {
-            fetchNotas();
-        }
-    };
-
     useEffect(() => {
         fetchNotas();
         if (nota) {
@@ -117,15 +85,13 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
         <Main style={{ backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style='light' />
             <Scroll>
-
                 <Column style={{ paddingHorizontal: margin.h, }}>
                     <Header title='Notas escaneadas' />
                 </Column>
-
                 <Column style={{ paddingVertical: 20, paddingHorizontal: 30, marginTop: 30, }}>
                     {!error && !success ? <MessageAwait /> : <></>}
-                    {error && <MessageError setvalue={setvalue} error={error} seterror={seterror} />}
-                    {success && <MessageSuccess handleFinish={handleFinish} setvalue={setvalue} setsuccess={setsuccess} />}
+                    {error && <MessageError  error={error} />}
+                    {success && <MessageSuccess  />}
                 </Column>
                 <Column style={{ marginHorizontal: margin.h, flexGrow: 1,  }}>
                 <Button onPress={() => { navigation.goBack() }} mh={20} radius={16} style={{ borderWidth: 2, borderColor: color.sc,  paddingVertical: 12, }}>
@@ -133,7 +99,6 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
                 </Button>
                 </Column>
             </Scroll>
-
             <Modal ref={modalHelp} snapPoints={[0.1, 300]}>
                 <Column style={{ marginHorizontal: margin.h, flexGrow: 1, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
@@ -150,20 +115,6 @@ export default function NotafiscalVerifyScreen({ navigation, route }) {
     );
 }
 
-export const ListNotas = ({ item, onRemove, index }) => {
-    const { color } = useTheme();
-    return (
-        <Row style={{ borderColor: '#d7d7d7', borderRadius: 8, borderWidth: 1, paddingVertical: 12, paddingHorizontal: 12, marginTop: 12, justifyContent: 'space-between', alignItems: 'center', }}>
-            <Row style={{ justifyContent: 'center', alignItems: 'center', }}>
-                <Title>#{index + 1}</Title>
-                <Label style={{ fontSize: 14, marginLeft: 12, }}>{item?.toString().slice(0, 20) + '...'}</Label>
-            </Row>
-            <Button onPress={() => onRemove(item)} style={{ borderWidth: 1.5, borderColor: color.sc, width: 45, height: 45, borderRadius: 12, justifyContent: 'center', alignItems: 'center', }}>
-                <Trash2 size={18} color={color.sc} />
-            </Button>
-        </Row>
-    )
-}
 
 export const MessageError = ({ error, }) => {
     const { color } = useTheme();
@@ -184,8 +135,7 @@ export const MessageAwait = () => {
     return (
         <MotiView style={{ justifyContent: 'center', alignItems: 'center', }}>
             <MotiView from={{ opacity: 0, scale: 0, }} animate={{ opacity: 1, scale: 1, }} style={{ width: 124, height: 124, borderRadius: 100, backgroundColor: color.sc + 20, justifyContent: 'center', alignItems: 'center', marginBottom: 30, }}>
-
-                <Column style={{ borderRadius: 100, backgroundColor: color.sc + 20, width: 64, height: 64, justifyContent: 'center', alignItems: 'center', }}>
+                <Column style={{ borderRadius: 100, backgroundColor: color.sc + 20, width: 72, height: 72, justifyContent: 'center', alignItems: 'center', }}>
                     <MaterialCommunityIcons name="qrcode-scan" size={24} color={color.sc} />
                 </Column>
             </MotiView>

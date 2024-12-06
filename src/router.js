@@ -46,14 +46,16 @@ import NotafiscalSuccessScreen from './screens/notafiscal/success';
 import NotafiscalErrorScreen from './screens/notafiscal/error';
 import NotafiscalVerifyScreen from './screens/notafiscal/verify';
 
-import AnonimoNotaScreen from './screens/anonimo';
-import AnonimoNotaSuccessScreen from './screens/anonimo/success';
-import AnonimoNotaErrorScreen from './screens/anonimo/error';
-import AnonimoNotaVerifyScreen from './screens/anonimo/verify';
+import AnonimoNotaScreen from '@screens/anonimo';
+import AnonimoNotaSuccessScreen from '@screens/anonimo/success';
+import AnonimoNotaErrorScreen from '@screens/anonimo/error';
+import AnonimoNotaVerifyScreen from '@screens/anonimo/verify';
+import AnonimoNotaListScreen from '@screens/anonimo/list';
 //GERAL
 import FAQScreen from '@screens/tabs/account/faq';
 import PrivacidadeScreen from '@screens/auth/privacidade';
 import WebViewScreen from '@screens/auth/webview';
+
 //ICONS
 import { HeartHandshake, Home, UserRound } from 'lucide-react-native';
 import NotafiscalListScreen from './screens/notafiscal/list';
@@ -89,6 +91,7 @@ export default function Router() {
         <Stack.Screen name="AnonimoNotaSuccess" component={AnonimoNotaSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="AnonimoNotaError" component={AnonimoNotaErrorScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />
         <Stack.Screen name="AnonimoNotaVerify" component={AnonimoNotaVerifyScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
+        <Stack.Screen name="AnonimoNotaList" component={AnonimoNotaListScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         
         <Stack.Screen name="Notafiscal" component={NotafiscalScreen} options={{ ...TransitionPresets.SlideFromRightIOS, }} />
         <Stack.Screen name="NotafiscalSuccess" component={NotafiscalSuccessScreen} options={{ ...TransitionPresets.ModalPresentationIOS, }} />

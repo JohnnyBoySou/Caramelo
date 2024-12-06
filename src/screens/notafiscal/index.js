@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Row, Column, Title, Button, useTheme, SCREEN_HEIGHT, Label, HeadTitle, ButtonPrimary, SCREEN_WIDTH, LabelBT } from '@theme/global';
+import { Row, Column, Title, Button, useTheme, SCREEN_HEIGHT, Label, HeadTitle, ButtonPrimary, SCREEN_WIDTH } from '@theme/global';
 
 //ICONS
-import { RefreshCcw, Keyboard, Trash2, Barcode, X, QrCode, } from 'lucide-react-native';
+import { Keyboard, Barcode, X, } from 'lucide-react-native';
 
 //COMPONENTS
 import { Camera, CameraView } from 'expo-camera';
@@ -10,17 +10,13 @@ import { StatusBar } from 'expo-status-bar';
 import { Header } from '@components/Header';
 import Modal from '@components/Modal/index';
 import { TextArea } from '@components/Forms';
-import { MaterialCommunityIcons, MaterialIcons, Feather, } from '@expo/vector-icons';
-import Svg, { Rect, Defs, Filter, FeGaussianBlur, Mask } from 'react-native-svg';
+import { MaterialCommunityIcons, } from '@expo/vector-icons';
 
 
-//API
-import { AnimatePresence, MotiView, } from 'moti';
 
 export default function NotafiscalScreen({ navigation }) {
     const { color, font, margin } = useTheme();
     const [hasPermission, setHasPermission] = useState(null);
-    const [facing, setFacing] = useState('back');
 
     useEffect(() => {
         const getCameraPermission = async () => {
@@ -34,14 +30,7 @@ export default function NotafiscalScreen({ navigation }) {
     const modalDigit = useRef(null);
 
     const [digit, setdigit] = useState();
-    const [loading, setloading] = useState(false);
-    const [error, seterror] = useState();
-    const [success, setsuccess] = useState();
-    const [value, setvalue] = useState();
-    const [focus, setfocus] = useState(true);
     const [flash, setflash] = useState(false);
-    const [zoom, setzoom] = useState(false);
-    const [balance, setbalance] = useState(false);
 
     const handleScaned = (data) => {
         navigation.navigate('NotafiscalVerify', { nota: data.data })
@@ -63,7 +52,7 @@ export default function NotafiscalScreen({ navigation }) {
     return (
         <Column style={{ backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style='light' />
-            <Column style={{ position: 'absolute', marginTop: 60, zIndex: 99, width: '100%', paddingHorizontal: margin.h, }}>
+            <Column style={{ position: 'absolute', marginTop: 50, zIndex: 99, width: '100%', paddingHorizontal: margin.h, }}>
                 <Header title='Escanear Nota' />
             </Column>
 
@@ -74,7 +63,6 @@ export default function NotafiscalScreen({ navigation }) {
                     </Column>
                 </Button>
             </Row>
-
 
             <Column style={{ height: SCREEN_HEIGHT * 1.1, width: SCREEN_WIDTH, alignSelf: 'center', position: 'absolute', borderRadius: 24, overflow: 'hidden', }}>
                 <Column style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: SCREEN_WIDTH, height: 1.1 * SCREEN_HEIGHT, zIndex: 9, }}>
@@ -88,19 +76,19 @@ export default function NotafiscalScreen({ navigation }) {
                 </Column>
                 <CameraView
                     style={{ flex: 1 }}
-                    facing={facing}
                     onBarcodeScanned={(data) => handleScaned(data)}
+                    facing='back'
                     autoFocus='on'
                     enableTorch={flash}
                     zoom={0}
                 />
             </Column>
-            <Row style={{ bottom: 220, alignSelf: 'center', position: 'absolute', columnGap: 20}}>
-                <Button style={{ width: 56, height: 56, borderRadius: 100, zIndex: 99, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }} onPress={() => { setflash(!flash) }} >
+
+            <Row style={{ bottom: 220, alignSelf: 'center', position: 'absolute', columnGap: 20 }}>
+                <Button style={{ width: 56, height: 56, borderRadius: 100, backgroundColor: color.sc, justifyContent: 'center', alignItems: 'center', }} onPress={() => { setflash(!flash) }} >
                     <MaterialCommunityIcons name={flash ? "flashlight-off" : "flashlight"} size={24} color="#FFF" />
                 </Button>
             </Row>
-
             <Row style={{ marginTop: 20, columnGap: 24, marginHorizontal: margin.h, position: 'absolute', bottom: 40, }}>
                 <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('NotafiscalList') }} style={{ flexGrow: 1, }}>
                     <Column style={{ flexGrow: 1, borderRadius: 18, backgroundColor: color.pr, paddingVertical: 20, paddingHorizontal: 20, }}>
