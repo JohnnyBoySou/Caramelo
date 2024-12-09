@@ -163,6 +163,7 @@ export default function AuthLoginScren({ navigation, }) {
                 label="Email"
                 value={email}
                 setValue={setemail}
+                keyboard="email-address"
               />
               <Column style={{ height: 12, }} />
 
