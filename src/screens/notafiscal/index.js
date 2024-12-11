@@ -1,22 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Row, Column, Title, Button, useTheme, SCREEN_HEIGHT, Label, HeadTitle, ButtonPrimary, SCREEN_WIDTH } from '@theme/global';
 
 //ICONS
 import { Keyboard, Barcode, X, } from 'lucide-react-native';
 
 //COMPONENTS
-import { Camera, CameraView } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
 import { Header } from '@components/Header';
 import Modal from '@components/Modal/index';
 import { TextArea } from '@components/Forms';
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
 
+//EXPO CAMERA
+import { CameraView, Camera } from 'expo-camera';
 
+//VISION CAMERA
+//import { Gesture, GestureDetector, } from 'react-native-gesture-handler'
+//import { useCameraPermission, Camera, useCodeScanner, useCameraDevice, } from 'react-native-vision-camera';
+//import { runOnJS } from 'react-native-reanimated';
 
 export default function NotafiscalScreen({ navigation }) {
     const { color, font, margin } = useTheme();
-    const [hasPermission, setHasPermission] = useState(null);
+    const [hasPermission, setHasPermission] = useState();
+    // const [focusPoint, setFocusPoint] = useState({ x: 1, y: 1 });
+    // const device = useCameraDevice('back')
+    // const { hasPermission, requestPermission } = useCameraPermission()
+    const a = false;
+    /*
+    const codeScanner = useCodeScanner({
+        codeTypes: ['qr', 'ean-13'],
+        onCodeScanned: (codes) => {
+            console.log(codes[0])
+            console.log(`Scanned ${codes.length} codes!`)
+        }
+        })
+        //requestPermission();
+    */
 
     useEffect(() => {
         const getCameraPermission = async () => {
@@ -25,6 +44,47 @@ export default function NotafiscalScreen({ navigation }) {
         };
         getCameraPermission();
     }, []);
+
+    /* 
+    const camera = useRef(null)
+    const focus = useCallback((point) => {
+        const c = camera.current
+        if (c == null) return
+        c.focus(point)
+    }, [])
+    
+    const gesture = Gesture.Tap()
+    .onEnd(({ x, y }) => {
+        runOnJS(focus)({ x, y })
+    })
+    
+    const handleBarcodeScanned = (scanResult) => {
+        // O scanResult possui as coordenadas do QR Code detectado na tela
+        const { bounds } = scanResult;
+        
+        if (bounds) {
+            const centerX = (bounds.topLeft.x + bounds.bottomRight.x) / 2;
+            const centerY = (bounds.topLeft.y + bounds.bottomRight.y) / 2;
+            
+            // Normaliza as coordenadas para a escala de 0 a 1
+            const normalizedX = centerX / device.width;
+            const normalizedY = centerY / device.height;
+            
+            // Atualiza o ponto de foco para o centro do QR Code
+            setFocusPoint({ x: normalizedX, y: normalizedY });
+        }
+    };
+
+     <Camera
+                            style={{ flex: 1, width: SCREEN_WIDTH, height: SCREEN_HEIGHT, }}
+                            device={device}
+                            ref={camera}
+                            isActive={true}
+                            focusMode='manual'
+                            focusPoint={focusPoint}
+                            codeScanner={codeScanner}
+                        />
+    */
 
     const modalHelp = useRef(null);
     const modalDigit = useRef(null);
@@ -46,7 +106,8 @@ export default function NotafiscalScreen({ navigation }) {
             <Title align="center" >Permissão para acessar a câmera foi negada</Title>
         </Column>
     }
-
+    // <GestureDetector gesture={gesture}>
+    // </GestureDetector>
 
 
     return (
@@ -81,6 +142,7 @@ export default function NotafiscalScreen({ navigation }) {
                     autoFocus='on'
                     enableTorch={flash}
                     zoom={0}
+                    barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
                 />
             </Column>
 
@@ -89,6 +151,7 @@ export default function NotafiscalScreen({ navigation }) {
                     <MaterialCommunityIcons name={flash ? "flashlight-off" : "flashlight"} size={24} color="#FFF" />
                 </Button>
             </Row>
+
             <Row style={{ marginTop: 20, columnGap: 24, marginHorizontal: margin.h, position: 'absolute', bottom: 40, }}>
                 <Button pv={1} ph={1} radius={1} onPress={() => { navigation.navigate('NotafiscalList') }} style={{ flexGrow: 1, }}>
                     <Column style={{ flexGrow: 1, borderRadius: 18, backgroundColor: color.pr, paddingVertical: 20, paddingHorizontal: 20, }}>
@@ -167,6 +230,7 @@ export default function NotafiscalScreen({ navigation }) {
                 </Column>
             </Modal>
         </Column>
+
     );
 }
 /*

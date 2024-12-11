@@ -37,6 +37,7 @@
     "react-dom": "18.3.1",
     "react-native": "0.76.2",
     "react-native-animated-pagination-dots": "^0.1.73",
+    "react-native-camera-view": "^0.1.1",
     "react-native-cheerio": "^1.0.0-rc.4",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-pager-view": "6.4.1",
