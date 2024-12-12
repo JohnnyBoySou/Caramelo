@@ -149,7 +149,7 @@ export default function AboutScreen({ navigation, route }) {
                     </Row>
                 </Column>
 
-                <Column bg={color.sc} pv={20} ph={20}>
+                <Column bg={color.sc} pv={20} ph={20} style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Title color={color.pr}>Links úteis</Title>
                     <Row style={{ flexWrap: 'wrap', columnGap: 12, rowGap: 12, marginTop: 20, }}>
                         {links.map((item, index) => (
@@ -158,7 +158,7 @@ export default function AboutScreen({ navigation, route }) {
                             </Button>
                         ))}
                     </Row>
-                    <Column style={{ height: 200, }} />
+                    <Column style={{ height: 140, }} />
                 </Column>
 
             </Scroll>

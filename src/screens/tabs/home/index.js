@@ -30,8 +30,8 @@ export default function HomeScreen({ navigation, }) {
             const res = await listUser()
             setuser(res);
             const posts = await listPosts()
-            setdata(posts.data.slice(0, 4))
-            setdestaque(posts.data[4])
+            setdata(posts)
+            setdestaque(posts[0])
         } catch (error) {
             console.log(error)
         } finally {
@@ -56,11 +56,10 @@ export default function HomeScreen({ navigation, }) {
 
     const avatarImg = user?.avatar ? { uri: user?.avatar } : require('@imgs/user.png')
     return (
-        <Column style={{ flex: 1, backgroundColor: '#fff', }}>
+        <Column style={{ flex: 1, backgroundColor:color.pr, }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
-            <ScrollView refreshControl={
-                    <RefreshControl refreshing={loading} onRefresh={fetchData} />
-                }>
+            <ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} />} >
+                <Column style={{ backgroundColor: '#FFF', }}>
                 <Column style={{ paddingTop: 50, paddingHorizontal: margin.h, paddingBottom: 20, backgroundColor: color.pr, borderBottomLeftRadius: 24, borderBottomRightRadius: 24, }}>
                     <Row style={{ justifyContent: 'space-between', alignItems: 'center', }}>
                         <Image source={require('@imgs/logo_home.png')} style={{ width: 48, height: 48, }} />
@@ -71,7 +70,7 @@ export default function HomeScreen({ navigation, }) {
                     <Title align="center">Boa tarde, {'\n'}{user?.name}</Title>
                 </Column>
 
-                <ScrollView horizontal style={{ marginVertical: 24, }} contentContainerStyle={{ columnGap: 12, }} showsHorizontalScrollIndicator={false}>
+                <ScrollView horizontal style={{ marginVertical: 24, backgroundColor: '#fff',}} contentContainerStyle={{ columnGap: 12, }} showsHorizontalScrollIndicator={false}>
                     <Column style={{ width: 12, }} />
                     <Button bg={color.pr} pv={12} ph={12} radius={12} onPress={() => { navigation.navigate('Notafiscal') }} >
                         <Column style={{}}>
@@ -111,14 +110,14 @@ export default function HomeScreen({ navigation, }) {
 
                 <Button pv={1} ph={1} mleft={20} mright={20} radius={12} onPress={() => { handleOpen(destaque) }} style={{ borderWidth: 1, borderColor: '#F1F1F1', marginBottom: 10, }}>
                     <>
-                        <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 30, right: 40, zIndex: 99, borderRadius: 12, }}>
+                        <Column style={{ backgroundColor: color.pr, paddingVertical: 3, paddingHorizontal: 12, position: 'absolute', top: 20, right: 20, zIndex: 99, borderRadius: 12, }}>
                             <Title style={{ letterSpacing: -.7, fontSize: 12, }}>EM DESTAQUE</Title>
                         </Column>
-                        <MotiImage source={{ uri: destaque?.media_type == 'VIDEO' ? destaque.thumbnail_url : destaque?.media_url }} style={{ flexGrow: 1, backgroundColor: '#D7D7D7', height: 300, borderRadius: 12, }} />
+                        <MotiImage source={{ uri: destaque?.image }} style={{ flexGrow: 1, backgroundColor: '#D7D7D7', height: 300, borderRadius: 12, }} />
                         <Row style={{ marginHorizontal: 12, justifyContent: 'space-between', alignItems: 'center', }}>
 
-                            {destaque?.caption ?
-                                <Title size={18} style={{ letterSpacing: -.7, width: '80%', marginTop: 10, marginBottom: 10, }}>{destaque?.caption?.length > 45 ? destaque?.caption?.slice(0, 45) + '...' : destaque?.caption}</Title>
+                            {destaque?.title ?
+                                <Title size={18} style={{ letterSpacing: -.7, width: '80%', marginTop: 10, marginBottom: 10, }}>{destaque?.title?.length > 45 ? destaque?.title?.slice(0, 45) + '...' : destaque?.title}</Title>
                                 : <Column style={{ marginTop: 10, marginLeft: -10, }}><Skeleton width={250} height={46} radius={12} colorMode="light" /></Column>}
 
                             <Button bg={color.pr} style={{ width: 48, height: 48, justifyContent: 'center', alignItems: 'center', }}>
@@ -129,8 +128,7 @@ export default function HomeScreen({ navigation, }) {
 
                 </Button>
 
-                {a &&
-                    <Column ph={margin.h} pv={20}>
+                {a && <Column ph={margin.h} pv={20}>
                         <Title color={color.tr}>Ajude</Title>
                         <Row style={{ backgroundColor: color.tr + 20, marginTop: 12, borderTopLeftRadius: 12, borderTopRightRadius: 12, paddingVertical: 12, paddingHorizontal: 20, }}>
                             <Column style={{ width: '68%', }}>
@@ -246,7 +244,9 @@ export default function HomeScreen({ navigation, }) {
                     </Scroll>
                 </Column>
                 }
-                <Column style={{ height: 200, }} />
+                    <Column style={{ height: 150, backgroundColor: '#fff', marginBottom: -30, borderRadius: 24, flexGrow: 1,}} />
+                </Column>
+                    
             </ScrollView>
         </Column>
     )

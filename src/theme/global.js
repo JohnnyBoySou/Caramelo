@@ -57,7 +57,7 @@ background-color: ${props => props.bg || 'transparent'}
 
 export const Main = styled.View`
   flex: 1;
-  padding-top: 36;
+  padding-top: 36px;
   background-color: ${props => props.bg || props.theme.background};
 `
 export const Scroll = styled(ScrollView).attrs(() => ({
@@ -116,28 +116,29 @@ export const HeadTitle = styled.Text`
   color: ${props => props.color || props.theme.color.title};
   font-family: ${props => props.theme.font.bold};
   text-align: ${props => props.align || 'left'};
+
   line-height: ${props => props.lineHeight || props.size + 3 || '36px'};
 `;
 
 export const Title = styled.Text`
-  font-size: ${props => props.size || '24px'};
+  font-size: ${props => props.size ? `${props.size}px` : "24px"};
   color: ${props => props.color || props.theme.color.title};
   font-family: ${props => props.theme.font.semibold};
   text-align: ${props => props.align || 'left'};
-  line-height: ${props => props.lineHeight || props.size + 3 || '28px'};
+  line-height: ${props => props.lineHeight ? `${props.lineHeight}px` : `${parseInt(props.size || "28") + 3}px`};
 `;
 
 export const Label = styled.Text`
-  font-size: ${props => props.size || '16px'};
+  font-size: ${props => props.size ? `${props.size}px` : "16px"};
   color: ${props => props.color || props.theme.color.label};
   font-family: ${props => props.theme.font.regular};
   text-align: ${props => props.align || 'left'};
   letter-spacing: -.8px;
-  line-height: ${props => props.lineHeight || props.size || '20px'};
+  line-height: ${props => props.lineHeight ? `${props.lineHeight}px` : `${parseInt(props.size || "20") + 3}px`};
 `;
 
 export const LabelBT = styled.Text`
-  font-size: ${props => props.size || '16px'};
+  font-size: ${props => props.size ? `${props.size}px` : "16px"};
   color: ${props => props.color || props.theme.color.label};
   font-family: ${props => props.theme.font.semibold};
   letter-spacing: -0.6px;
@@ -147,7 +148,7 @@ export const LabelBT = styled.Text`
 
 
 export const SubLabel = styled.Text`
-  font-size: ${props => props.size || '14px'};
+  font-size: ${props => props.size ? `${props.size}px` : "14px"};
   color: ${props => props.color || props.theme.color.sublabel};
   font-family: ${props => props.theme.font.bold};
   text-align: ${props => props.align || 'left'};

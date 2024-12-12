@@ -26,7 +26,6 @@ export default function AccountEditScreen({ navigation, }) {
                 setname(res.name);
                 setcpf(res.cpf);
                 settel(res.whatsapp);
-                setavatar(res.avatar);
                 setold_avatar(res.avatar);
             } catch (error) {
                 console.log(error)
@@ -42,25 +41,16 @@ export default function AccountEditScreen({ navigation, }) {
     const [name, setname] = useState(' ');
     const [cpf, setcpf] = useState(' ');
     const [tel, settel] = useState(' ');
-    const [avatar, setavatar] = useState('');
-    const [old_avatar, setold_avatar] = useState();
     const [success, setsuccess] = useState();
     const [error, seterror] = useState();
     const [password, setpassword] = useState();
-
-    const handleLogout = async () => {
-        try {
-            const res = await logoutUser();
-            if (res) {
-                navigation.navigate('AuthLogin');
-            }
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
-
+    
+    
+    const [old_avatar, setold_avatar] = useState();
     const [temporaryImg, settemporaryImg] = useState(false);
+    const [avatar, setavatar] = useState('');
+
+
     const handleImage = async () => {
         const responsey = await ImagePicker.launchImageLibraryAsync({ base64: true, quality: 1, });
         if (!responsey.canceled) {
@@ -71,14 +61,20 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
-    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : avatar ? { uri: avatar } : require("@imgs/user.png");
+    const profile = temporaryImg ? { uri: `file://${temporaryImg}` } : old_avatar ? { uri: old_avatar } : require("@imgs/user.png");
 
     const handleUpdate = async () => {
         setsuccess(null)
         seterror(null)
         setloadingUpdate(true)
         try {
-            const res = await updateUser({ name: name, whatsapp: tel, avatar: avatar, email: email, });
+            const updateData = {};
+            if (name) updateData.name = name;
+            if (tel) updateData.whatsapp = tel;
+            if (avatar) updateData.avatar = avatar;
+            if (email) updateData.email = email;
+
+            const res = await updateUser(updateData);
             if (res) {
                 setsuccess('Perfil atualizado com sucesso!')
             }
@@ -104,12 +100,24 @@ export default function AccountEditScreen({ navigation, }) {
         }
     }
 
+    const handleLogout = async () => {
+        try {
+            const res = await logoutUser();
+            if (res) {
+                navigation.navigate('AuthLogin');
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
     if (loading) return <SkeletonBody />
 
     return (
         <Main>
             <Scroll>
-                <Column style={{ marginHorizontal: margin.h,  }}>
+                <Column style={{ marginHorizontal: margin.h, }}>
                     <Header title="Editar perfil" />
                     <Column style={{ justifyContent: 'center', alignItems: 'center', width: 160, alignSelf: 'center', marginVertical: 20, }}>
                         <Image cachePolicy="disk" source={profile} style={{ width: 154, height: 154, borderRadius: 100, }} />
@@ -150,7 +158,7 @@ export default function AccountEditScreen({ navigation, }) {
 
                     {success ? <Success msg={success} /> : error ? <Error msg={error} /> : null}
 
-                    <ButtonPrimary loading={loadingUpdate} onPress={handleUpdate} label="Salvar alterações" type="pr" />
+                    <ButtonPrimary loading={loadingUpdate} disabled={loadingUpdate} onPress={handleUpdate} label="Salvar alterações" type="pr" />
                     <Column style={{ height: 12, }} />
                     <ButtonPrimary label="Sair" type="sc" onPress={handleLogout} />
                     <Column style={{ height: 12, }} />
@@ -183,7 +191,7 @@ const SkeletonBody = () => {
 
     const { color, font, margin } = useTheme();
     return (
-        <Column style={{ paddingTop: 50, backgroundColor: '#fff',}}>
+        <Column style={{ paddingTop: 50, backgroundColor: '#fff', }}>
             <Column style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 20, }}>
                 <Skeleton height={52} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
             </Column>
@@ -196,9 +204,9 @@ const SkeletonBody = () => {
                 <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
                 <Skeleton height={62} width={SCREEN_WIDTH - 40} radius={12} colorMode="light" />
                 <Column style={{ rowGap: 12, }}>
-                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.pr, }} />
-                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.sc, }} />
-                <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: '#000', }} />
+                    <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.pr, }} />
+                    <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: color.sc, }} />
+                    <Column style={{ width: SCREEN_WIDTH - 40, height: 62, borderRadius: 16, backgroundColor: '#000', }} />
                 </Column>
             </Column>
         </Column>

@@ -6,12 +6,15 @@ import { Keyboard, Barcode, X } from 'lucide-react-native';
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
 
 //COMPONENTS
-import { Camera, CameraView } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
 import { Header } from '@components/Header';
 import Modal from '@components/Modal/index';
 import { TextArea } from '@components/Forms';
 //API
+
+//EXPO CAMERA
+import { Camera, CameraView } from 'expo-camera';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 
 export default function AnonimoNotaScreen({ navigation }) {
     const { color, font, margin } = useTheme();
@@ -30,6 +33,20 @@ export default function AnonimoNotaScreen({ navigation }) {
 
     const [digit, setdigit] = useState();
     const [flash, setflash] = useState(false);
+
+    const [zoom, setZoom] = useState(0);
+    const handleZoomToggle = () => {
+        setZoom((prevZoom) => (prevZoom === 0.5 ? 0 : 0.5)); // Alterna entre zoom máximo e padrão
+    };
+
+    const tapGesture = Gesture.Tap()
+        .numberOfTaps(2)
+        .onEnd(() => {
+            runOnJS(handleZoomToggle)();
+        });
+
+
+
 
     const handleScaned = (data) => {
         navigation.navigate('AnonimoNotaVerify', { nota: data.data })
@@ -66,7 +83,9 @@ export default function AnonimoNotaScreen({ navigation }) {
                     <Column style={{ width: SCREEN_WIDTH, height: 200, backgroundColor: '#00000080', }}></Column>
                     <Row>
                         <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
+                        <GestureDetector gesture={tapGesture}>
                         <Column style={{ width: 250, height: 250, }}></Column>
+                        </GestureDetector>
                         <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
                     </Row>
                     <Column style={{ width: SCREEN_WIDTH, height: 500, backgroundColor: '#00000080', }}></Column>
@@ -77,7 +96,8 @@ export default function AnonimoNotaScreen({ navigation }) {
                     facing='back'
                     autoFocus='on'
                     enableTorch={flash}
-                    zoom={0}
+                    zoom={zoom}
+                    barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
                 />
             </Column>
 

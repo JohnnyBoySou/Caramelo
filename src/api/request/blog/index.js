@@ -61,17 +61,21 @@ export async function editComment(comment_id, post_id, message) {
 
 export async function listPosts() {
 
+    /*   
     const BASE_URL = await getBaseURL();
     const token = await getToken();
-
     const headers = { Authorization: `Bearer ${token}` }
     const fields = "media_url,media_type,caption,permalink,thumbnail_url,timestamp,username";
+    */
 
     try {
-        const response = await axios.get(`${BASE_URL}/usuarios/gettokeninstagram`, { headers });
-        const tokenInsta = response.data.token;
-        const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${tokenInsta}&fields=${fields}`)
-        return res.data
+        const res = await axios.get("https://rss.app/feeds/v1.1/3vuvvKZD3r9IdSTw.json");
+        return res.data.items
+
+        //const response = await axios.get(`${BASE_URL}/usuarios/gettokeninstagram`, { headers });
+      //  const tokenInsta = response.data.token;
+       // const res = await axios.get(`https://graph.instagram.com/me/media?access_token=${tokenInsta}&fields=${fields}`)
+       // return res.data
     } catch (error) {
         console.error(error);
     }

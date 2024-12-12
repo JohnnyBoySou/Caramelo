@@ -13,19 +13,38 @@ import { MaterialCommunityIcons, } from '@expo/vector-icons';
 
 //EXPO CAMERA
 import { CameraView, Camera } from 'expo-camera';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { runOnJS } from 'react-native-reanimated';
 
 //VISION CAMERA
 //import { Gesture, GestureDetector, } from 'react-native-gesture-handler'
 //import { useCameraPermission, Camera, useCodeScanner, useCameraDevice, } from 'react-native-vision-camera';
-//import { runOnJS } from 'react-native-reanimated';
+//
 
 export default function NotafiscalScreen({ navigation }) {
     const { color, font, margin } = useTheme();
     const [hasPermission, setHasPermission] = useState();
+
+
+
+
+
+    const [zoom, setZoom] = useState(0);
+    const handleZoomToggle = () => {
+        setZoom((prevZoom) => (prevZoom === 0.5 ? 0 : 0.5)); // Alterna entre zoom máximo e padrão
+    };
+
+    const tapGesture = Gesture.Tap()
+        .numberOfTaps(2)
+        .onEnd(() => {
+            runOnJS(handleZoomToggle)();
+        });
+
+
+
     // const [focusPoint, setFocusPoint] = useState({ x: 1, y: 1 });
     // const device = useCameraDevice('back')
     // const { hasPermission, requestPermission } = useCameraPermission()
-    const a = false;
     /*
     const codeScanner = useCodeScanner({
         codeTypes: ['qr', 'ean-13'],
@@ -106,10 +125,6 @@ export default function NotafiscalScreen({ navigation }) {
             <Title align="center" >Permissão para acessar a câmera foi negada</Title>
         </Column>
     }
-    // <GestureDetector gesture={gesture}>
-    // </GestureDetector>
-
-
     return (
         <Column style={{ backgroundColor: '#fff', flex: 1, }}>
             <StatusBar style='light' />
@@ -126,11 +141,14 @@ export default function NotafiscalScreen({ navigation }) {
             </Row>
 
             <Column style={{ height: SCREEN_HEIGHT * 1.1, width: SCREEN_WIDTH, alignSelf: 'center', position: 'absolute', borderRadius: 24, overflow: 'hidden', }}>
+
                 <Column style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: SCREEN_WIDTH, height: 1.1 * SCREEN_HEIGHT, zIndex: 9, }}>
                     <Column style={{ width: SCREEN_WIDTH, height: 200, backgroundColor: '#00000080', }}></Column>
                     <Row>
                         <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
-                        <Column style={{ width: 250, height: 250, }}></Column>
+                        <GestureDetector gesture={tapGesture}>
+                            <Column style={{ width: 250, height: 250, }}></Column>
+                        </GestureDetector>
                         <Column style={{ flexGrow: 1, height: 250, backgroundColor: '#00000080', }}></Column>
                     </Row>
                     <Column style={{ width: SCREEN_WIDTH, height: 500, backgroundColor: '#00000080', }}></Column>
@@ -141,7 +159,7 @@ export default function NotafiscalScreen({ navigation }) {
                     facing='back'
                     autoFocus='on'
                     enableTorch={flash}
-                    zoom={0}
+                    zoom={zoom}
                     barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
                 />
             </Column>
@@ -230,7 +248,6 @@ export default function NotafiscalScreen({ navigation }) {
                 </Column>
             </Modal>
         </Column>
-
     );
 }
 /*

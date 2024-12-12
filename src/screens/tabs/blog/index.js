@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Main, Scroll, Column, Row, Button, useTheme, Title, Label, Image, LabelBT, ButtonPrimary } from '@theme/global';
+import { Column, Row, Button, useTheme, Title, Label, Image, ButtonPrimary } from '@theme/global';
 
 import PagerView from 'react-native-pager-view';
 import Animated, { useAnimatedStyle, withTiming, interpolateColor } from 'react-native-reanimated';
@@ -26,8 +26,8 @@ export default function BlogScreen({ navigation, route }) {
         setloading(true)
         try {
             const res = await listPosts()
-            setdata(res.data)
-            setdestaque(res.data.reverse().slice(0, 8))
+            setdata(res)
+            setdestaque(res[0])
         } catch (error) {
             console.log(error)
         } finally {
@@ -41,9 +41,7 @@ export default function BlogScreen({ navigation, route }) {
     return (
         <Column style={{ paddingTop: 0, backgroundColor: '#fff', }}>
             {isFocused && <StatusBar style='dark' backgroundColor={color.pr} />}
-            <ScrollView refreshControl={
-                    <RefreshControl refreshing={loading} onRefresh={fetchData} />
-                }>
+            <ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} />}>
                 <Column style={{ paddingHorizontal: margin.h, backgroundColor: color.pr, paddingTop: 50, overflow: 'hidden', borderBottomLeftRadius: 32, borderBottomRightRadius: 32, }}>
                     <MotiImage from={{ opacity: 0, scale: 0, rotate: '12deg' }} animate={{ opacity: 1, scale: 1, rotate: '0deg' }} delay={300} source={require('@imgs/logo_blog.png')} style={{ width: 200, height: 52, marginBottom: 12, alignSelf: 'center', }} />
                     <Destaque data={destaque} />
@@ -63,8 +61,6 @@ export default function BlogScreen({ navigation, route }) {
 }
 
 const Destaque = ({ data }) => {
-    const { color, margin } = useTheme();
-    const swipRef = useRef()
     const navigation = useNavigation()
     const handleOpen = (item) => {
         navigation.navigate('BlogSingle', { item: item })
@@ -74,8 +70,8 @@ const Destaque = ({ data }) => {
             <Button pv={1} ph={1} radius={16} onPress={() => handleOpen(item)} style={{ backgroundColor: '#fff', paddingVertical: 12, marginBottom: 30, }} >
                 <>
                     <Column style={{ marginHorizontal: 12, }}>
-                        <MotiImage source={{ uri: item.media_type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ flexGrow: 1, height: 200, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
-                        <Title size={18} style={{ letterSpacing: -.7, marginBottom: 12, lineHeight: 22, }}>{item?.caption?.length > 54 ? item?.caption?.slice(0, 54) + '...' : item?.caption}</Title>
+                        <MotiImage source={{ uri: item?.image }} style={{ flexGrow: 1, height: 200, marginBottom: 10, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                        <Title size={18} style={{ letterSpacing: -.7, marginBottom: 12, lineHeight: 22, }}>{item?.title?.length > 54 ? item?.title?.slice(0, 54) + '...' : item?.title}</Title>
                         <ButtonPrimary pv={8} label='Ver mais' onPress={() => handleOpen(item)} />
                     </Column>
                 </>
@@ -95,7 +91,7 @@ const Destaque = ({ data }) => {
     }
     return (
         <MotiView from={{ opacity: 0, translateY: 50, }} animate={{ opacity: 1, translateY: 0 }} >
-            <Card item={data[0]} />
+            <Card item={data} />
         </MotiView>
     )
 }
@@ -132,14 +128,13 @@ export const ListPosts = ({ data, navigation }) => {
             navigation.navigate('BlogSingle', { item: item })
         }
 
-        const type = item?.media_type
         return (
             <Button pv={1} ph={1} radius={2} onPress={() => { handleOpen(item) }} >
                 <Row>
-                    <MotiImage source={{ uri: type === 'VIDEO' ? item.thumbnail_url : item?.media_url }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
+                    <MotiImage source={{ uri: item?.image }} style={{ width: 84, height: 84, borderRadius: 12, objectFit: 'cover', backgroundColor: '#D1D1D1', }} />
                     <Column style={{ width: '70%', justifyContent: 'center', marginLeft: 12, }}>
-                        <Title size={16} style={{ lineHeight: 18, fontFamily: 'Font_Medium', }}>{item?.caption?.length > 72 ? item?.caption?.slice(0, 72) + '...' : item?.caption}</Title>
-                        <Label size={12} style={{ lineHeight: 14, marginTop: 6, opacity: .7, }}>Publicado em {formatDateTime(item?.timestamp)}</Label>
+                        <Title size={16} style={{ lineHeight: 18, fontFamily: 'Font_Medium', }}>{item?.title?.length > 72 ? item?.title?.slice(0, 72) + '...' : item?.title}</Title>
+                        <Label size={12} style={{ lineHeight: 14, marginTop: 6, opacity: .7, }}>Publicado em {formatDateTime(item?.date_published)}</Label>
                     </Column>
                 </Row>
             </Button>
