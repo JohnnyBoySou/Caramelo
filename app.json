@@ -22,11 +22,11 @@
       }
     },
     "android": {
+      "package": "com.engd.caramelo",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#EBB000"
       },
-      "package": "com.engd.caramelo",
       "versionCode": 24,
       "permissions": [
         "android.permission.CAMERA",
